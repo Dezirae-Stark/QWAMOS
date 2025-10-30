@@ -1,0 +1,85 @@
+# Build artifacts
+build/output/
+*.o
+*.ko
+*.so
+*.a
+*.bin
+*.img
+*.qcow2
+*.zip
+
+# Kernel build
+kernel/arch/*/boot/Image*
+kernel/arch/*/boot/*.dtb
+kernel/.config
+kernel/.config.old
+kernel/Module.symvers
+kernel/modules.order
+
+# U-Boot build
+bootloader/u-boot/*.bin
+bootloader/u-boot/*.img
+bootloader/u-boot/u-boot
+
+# Toolchain
+toolchain/
+android-ndk-*/
+
+# VM images (too large for git)
+vms/**/*.img
+vms/**/*.qcow2
+vms/**/*.iso
+
+# Crypto keys (NEVER commit private keys)
+*.key
+*.pem
+*.key.kyber
+*_private.*
+bootloader/keys/private/
+
+# React Native
+frontend/node_modules/
+frontend/.expo/
+frontend/dist/
+frontend/android/build/
+frontend/ios/build/
+frontend/**/*.apk
+frontend/**/*.ipa
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary
+tmp/
+temp/
+*.tmp
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Secrets
+.env
+secrets/
+credentials/
+
+# Device-specific (don't commit proprietary blobs)
+device/*/proprietary/
+vendor/*/proprietary/
+ashigaru_analysis/
