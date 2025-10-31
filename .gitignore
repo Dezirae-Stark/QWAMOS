@@ -1,85 +1,42 @@
+# QWAMOS - Git Ignore File
+
+# U-Boot source (cloned from upstream)
+bootloader/u-boot-source/
+
 # Build artifacts
-build/output/
 *.o
-*.ko
-*.so
 *.a
+*.so
+*.elf
 *.bin
 *.img
-*.qcow2
-*.zip
+*.map
+*.sym
+*.srec
 
-# Kernel build
-kernel/arch/*/boot/Image*
-kernel/arch/*/boot/*.dtb
-kernel/.config
-kernel/.config.old
-kernel/Module.symvers
-kernel/modules.order
+# Build directories
+build/toolchain/liboqs/
+build/toolchain/android-ndk-r27/
+build/env.sh
 
-# U-Boot build
-bootloader/u-boot/*.bin
-bootloader/u-boot/*.img
-bootloader/u-boot/u-boot
+# Python
+__pycache__/
+*.py[cod]
 
-# Toolchain
-toolchain/
-android-ndk-*/
-
-# VM images (too large for git)
-vms/**/*.img
-vms/**/*.qcow2
-vms/**/*.iso
-
-# Crypto keys (NEVER commit private keys)
+# Cryptographic keys (NEVER commit private keys!)
+*.priv
 *.key
-*.pem
-*.key.kyber
-*_private.*
-bootloader/keys/private/
+keys/
 
-# React Native
-frontend/node_modules/
-frontend/.expo/
-frontend/dist/
-frontend/android/build/
-frontend/ios/build/
-frontend/**/*.apk
-frontend/**/*.ipa
+# Signed images
+*.signed
+*.sig.json
+
+# Temporary files
+*.tmp
+*.log
+*.swp
 
 # IDE
 .vscode/
 .idea/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-logs/
-
-# Temporary
-tmp/
-temp/
-*.tmp
-
-# Python
-__pycache__/
-*.pyc
-*.pyo
-.venv/
-venv/
-
-# Secrets
-.env
-secrets/
-credentials/
-
-# Device-specific (don't commit proprietary blobs)
-device/*/proprietary/
-vendor/*/proprietary/
-ashigaru_analysis/
