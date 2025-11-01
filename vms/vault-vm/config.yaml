@@ -1,0 +1,124 @@
+# QWAMOS VM Configuration: vault-vm
+# AEGIS Vault - Airgapped cold storage for cryptocurrency wallets
+
+vm:
+  name: vault-vm
+  type: airgapped
+  description: "AEGIS Vault - Airgapped cold storage for cryptocurrency"
+
+hardware:
+  cpu:
+    cores: 1
+    model: cortex-a57
+    features: [neon, vfp4]
+
+  memory:
+    size: 512  # MB - minimal for security
+    hugepages: false
+
+  disk:
+    primary:
+      path: /data/data/com.termux/files/home/QWAMOS/vms/vault-vm/disk.qcow2
+      size: 2G
+      format: qcow2
+      cache: none  # No caching for airgapped security
+      encryption: chacha20-poly1305-triple  # Triple encryption
+
+  graphics:
+    type: virtio-gpu-pci
+    acceleration: false
+
+  audio:
+    enabled: false
+
+  # QR code camera for airgapped communication
+  qr_device:
+    enabled: true
+    camera: /dev/video0
+
+network:
+  mode: airgapped
+  device: none  # NO NETWORK DEVICE AT ALL
+
+  # AIRGAPPED - Zero network connectivity
+  interfaces: []
+
+  firewall:
+    allow_outbound: false  # Absolutely no network
+    allow_inbound: false
+    allowed_ports: []
+
+boot:
+  kernel: /data/data/com.termux/files/home/QWAMOS/kernel/Image
+  initrd: /data/data/com.termux/files/home/QWAMOS/kernel/initramfs_static.cpio.gz
+  cmdline: "console=ttyAMA0 root=/dev/vda rw net.ifnames=0 nonetwork"
+
+machine:
+  type: virt
+  gic_version: 3
+  accel: tcg  # Will use KVM when available on real hardware
+
+security:
+  isolation_level: maximum  # Highest security
+  seccomp: true
+  apparmor: true
+
+  # Airgapped security policy
+  airgap:
+    enabled: true
+    network_disabled: true
+    usb_disabled: true
+    bluetooth_disabled: true
+    wifi_disabled: true
+
+  firewall:
+    # Block everything - airgapped
+    iptables_rules:
+      - "-P INPUT DROP"
+      - "-P OUTPUT DROP"
+      - "-P FORWARD DROP"
+
+  storage_encryption:
+    algorithm: chacha20-poly1305
+    kdf: argon2id
+    key_size: 256
+    iterations: 3  # Triple encryption for cold storage
+
+  # QR code authentication
+  qr_auth:
+    enabled: true
+    signing_required: true
+    max_transaction_value: null  # Require QR for all transactions
+
+autostart: false  # Only start when needed for transactions
+priority: critical
+
+# Purpose: Cold storage wallet
+role: vault
+
+# Dependencies - NONE (airgapped)
+depends_on: []
+
+# Cryptocurrency wallets installed
+wallets:
+  - bitcoin  # Ashigaru-Mobile Bitcoin wallet
+  - monero
+  - ethereum
+
+# Services to start
+services:
+  - ashigaru-wallet  # Bitcoin wallet from Ashigaru integration
+  - qr-scanner       # QR code transaction signing
+
+# AEGIS Vault features
+aegis_features:
+  - multisig_support: true
+  - hardware_signing: true
+  - qr_transactions: true
+  - seed_backup: encrypted
+  - recovery_mode: qr_restore
+
+qemu_extra_args:
+  - "-nographic"
+  - "-device"
+  - "usb-ehci,id=usb"  # For QR scanner camera

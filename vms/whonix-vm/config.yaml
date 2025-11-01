@@ -1,0 +1,109 @@
+# QWAMOS VM Configuration: whonix-vm
+# Whonix Gateway - Tor transparent proxy for network anonymity
+
+vm:
+  name: whonix-vm
+  type: gateway
+  description: "Whonix Gateway - Tor transparent proxy for anonymity"
+
+hardware:
+  cpu:
+    cores: 2
+    model: cortex-a57
+    features: [neon, vfp4]
+
+  memory:
+    size: 1024  # MB
+    hugepages: false
+
+  disk:
+    primary:
+      path: /data/data/com.termux/files/home/QWAMOS/vms/whonix-vm/disk.qcow2
+      size: 8G
+      format: qcow2
+      cache: writeback
+      encryption: chacha20-poly1305
+
+  graphics:
+    type: virtio-gpu-pci
+    acceleration: false  # Gateway doesn't need graphics
+
+  audio:
+    enabled: false
+
+network:
+  mode: isolated
+  device: virtio-net-pci
+  mac: 52:54:00:12:34:57
+
+  # Whonix Gateway network configuration
+  interfaces:
+    - name: eth0
+      ip: 10.152.152.10
+      netmask: 255.255.255.0
+      gateway: 10.152.152.1
+
+  tor:
+    enabled: true
+    socks_port: 9050
+    trans_port: 9040
+    dns_port: 5300
+    control_port: 9051
+
+  firewall:
+    allow_outbound: true  # Only through Tor
+    allow_inbound: false
+    allowed_ports:
+      - 9050  # SOCKS proxy
+      - 9040  # Transparent proxy
+      - 5300  # Tor DNS
+
+boot:
+  kernel: /data/data/com.termux/files/home/QWAMOS/kernel/Image
+  initrd: /data/data/com.termux/files/home/QWAMOS/kernel/initramfs_static.cpio.gz
+  cmdline: "console=ttyAMA0 root=/dev/vda rw net.ifnames=0"
+
+machine:
+  type: virt
+  gic_version: 3
+  accel: tcg  # Will use KVM when available on real hardware
+
+security:
+  isolation_level: high
+  seccomp: true
+  apparmor: true
+
+  firewall:
+    # Whonix Gateway firewall rules
+    iptables_rules:
+      - "-A OUTPUT -m owner --uid-owner debian-tor -j ACCEPT"
+      - "-A OUTPUT -j REJECT"
+
+  storage_encryption:
+    algorithm: chacha20-poly1305
+    kdf: argon2id
+    key_size: 256
+
+  # Tor-only network policy
+  network_policy:
+    - block_clearnet: true
+    - force_tor: true
+    - leak_testing: enabled
+
+autostart: true
+priority: high
+
+# Purpose: Anonymity gateway
+role: gateway
+
+# Dependencies
+depends_on: []
+
+# Services to start
+services:
+  - tor
+  - iptables
+  - dnsmasq
+
+qemu_extra_args:
+  - "-nographic"
