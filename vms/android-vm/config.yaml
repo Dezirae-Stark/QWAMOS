@@ -1,0 +1,74 @@
+# QWAMOS VM Configuration: android-vm
+# Primary Android guest VM for daily usage
+
+vm:
+  name: android-vm
+  type: android
+  description: "Primary Android 14 AOSP guest VM"
+
+hardware:
+  cpu:
+    cores: 4
+    model: cortex-a57
+    features: [neon, vfp4]
+
+  memory:
+    size: 4096  # MB
+    hugepages: false
+
+  disk:
+    primary:
+      path: /data/data/com.termux/files/home/QWAMOS/vms/android-vm/disk.qcow2
+      size: 32G
+      format: qcow2
+      cache: writeback
+      encryption: chacha20-poly1305
+
+  graphics:
+    type: virtio-gpu-pci
+    acceleration: true
+
+  audio:
+    enabled: true
+    backend: alsa
+
+network:
+  mode: nat
+  device: virtio-net-pci
+  mac: 52:54:00:12:34:56
+  nat_rules:
+    - host_port: 5555
+      guest_port: 5555
+      protocol: tcp
+      description: "ADB debugging"
+
+boot:
+  kernel: /data/data/com.termux/files/home/QWAMOS/kernel/Image
+  initrd: /data/data/com.termux/files/home/QWAMOS/kernel/initramfs_static.cpio.gz
+  cmdline: "console=ttyAMA0 root=/dev/vda rw"
+
+machine:
+  type: virt
+  gic_version: 3
+  accel: tcg  # Will use KVM when available on real hardware
+
+security:
+  isolation_level: high
+  seccomp: true
+  apparmor: true
+
+  firewall:
+    allow_outbound: true
+    allow_inbound: false
+    allowed_ports: []
+
+  storage_encryption:
+    algorithm: chacha20-poly1305
+    kdf: argon2id
+    key_size: 256
+
+autostart: true
+priority: high
+
+qemu_extra_args:
+  - "-nographic"
