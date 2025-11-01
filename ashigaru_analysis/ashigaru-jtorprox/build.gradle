@@ -1,0 +1,30 @@
+allprojects  {
+  group = 'com.msopentech.thali'
+  version = '0.0.15-samourai'
+}
+
+subprojects {
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+  }
+}
+
+evaluationDependsOn ":universal"
+evaluationDependsOn ":java"
+
+
+tasks.register("publishAllModules") {
+  group = "publishing"
+  description = "Publishes all configured modules to Maven"
+
+  dependsOn ":universal:publish"
+  dependsOn ":java:publish"
+  //dependsOn ":android:publish"
+  //dependsOn ":android_tor_installer:publish"
+
+  doLast {
+    println("All modules have been published.")
+  }
+}

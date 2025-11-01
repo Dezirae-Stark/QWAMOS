@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_rectangle_bottom_sheet"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="14dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="0dp"
+                android:text="An app update is available"
+                android:textSize="16sp"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/white_FF"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/tvCurrentVersionLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Current app version"
+                android:textColor="@color/white_too"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/title"
+                app:layout_constraintTop_toBottomOf="@+id/title"
+                app:layout_constraintBottom_toTopOf="@+id/tvLatestVersionLabel"
+                android:layout_marginTop="80dp" />
+
+            <TextView
+                android:id="@+id/tvCurrentVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="V1.1.0"
+                android:background="@drawable/rounded_rectangle"
+                android:backgroundTint="@color/grey_transparent"
+                android:textColor="@color/networking"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tvCurrentVersionLabel"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvCurrentVersionLabel"
+                android:layout_marginEnd="40dp"/>
+
+            <TextView
+                android:id="@+id/tvLatestVersionLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Latest app version"
+                android:textColor="@color/white_too"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="16sp"
+                android:layout_marginTop="15dp"
+                app:layout_constraintStart_toStartOf="@+id/title"
+                app:layout_constraintTop_toBottomOf="@+id/tvCurrentVersionLabel"
+                app:layout_constraintBottom_toTopOf="@+id/centeredTextView" />
+
+            <TextView
+                android:id="@+id/tvLatestVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="v2.0.0"
+                android:background="@drawable/rounded_rectangle"
+                android:backgroundTint="@color/tx_broadcast_normal_bg"
+                android:textColor="@color/networking"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvCurrentVersion"
+                app:layout_constraintTop_toTopOf="@+id/tvLatestVersionLabel"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvLatestVersionLabel" />
+
+            <TextView
+                android:id="@+id/centeredTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/download_the_latest_ashigaru_apk"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/title"
+                app:layout_constraintEnd_toEndOf="@+id/tvCurrentVersion"
+                app:layout_constraintTop_toBottomOf="@+id/tvLatestVersionLabel"
+                app:layout_constraintBottom_toTopOf="@+id/notesBtn"
+                android:layout_marginTop="80dp"
+                android:layout_marginBottom="45dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/notesBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:text="Show release notes"
+                android:textAllCaps="false"
+                android:textColor="@color/networking"
+                android:fontFamily="@font/roboto_medium"
+                app:backgroundTint="@color/tx_broadcast_normal_bg"
+                app:cornerRadius="12dp"
+                app:layout_constraintTop_toBottomOf="@id/centeredTextView"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginBottom="40dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+</LinearLayout>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CircleImageView">
+        <attr name="civ_border_width" format="dimension" />
+        <attr name="civ_border_color" format="color" />
+        <attr name="civ_border_overlay" format="boolean" />
+        <attr name="civ_fill_color" format="color" />
+        <attr name="civ_circle_background_color" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="CodeScannerView">
+        <attr name="maskColor" format="color" />
+        <attr name="frameColor" format="color" />
+        <attr name="autoFocusButtonColor" format="color" />
+        <attr name="flashButtonColor" format="color" />
+        <attr name="autoFocusButtonVisible" format="boolean" />
+        <attr name="flashButtonVisible" format="boolean" />
+        <attr name="frameThickness" format="dimension" />
+        <attr name="frameCornersSize" format="dimension" />
+        <attr name="frameCornersRadius" format="dimension" />
+        <attr name="frameAspectRatioWidth" format="float" />
+        <attr name="frameAspectRatioHeight" format="float" />
+        <attr name="frameSize" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="WormDotsIndicator">
+        <attr name="dotsColor" format="color" />
+        <attr name="dotsSize" format="dimension" />
+        <attr name="dotsSpacing" format="dimension" />
+        <attr name="dotsCornerRadius" format="dimension" />
+        <attr name="dotsStrokeWidth" format="dimension" />
+        <attr name="dotsStrokeColor" format="color" />
+        <attr name="dotsClickable" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="CustomPreference">
+        <attr name="isSwitch" format="boolean" />
+        <attr name="isAutosave" format="boolean" />
+    </declare-styleable>
+
+    <attr name="mpm_primaryTextColor" format="color|reference" />
+
+    <attr name="mpm_secondaryTextColor" format="color|reference" />
+
+    <attr name="mpm_activeIconColor" format="color|reference" />
+
+    <attr name="mpm_separatorColor" format="color|reference" />
+
+    <attr name="mpm_paddingBottom" format="dimension" />
+
+    <attr name="mpm_paddingStart" format="dimension" />
+
+    <attr name="mpm_paddingEnd" format="dimension" />
+
+    <attr name="mpm_paddingTop" format="dimension" />
+
+    <attr name="materialPopupMenuStyle" format="reference" />
+
+    <declare-styleable name="MaterialRecyclerViewPopupWindow">
+        <attr name="android:dropDownHorizontalOffset" />
+        <attr name="android:dropDownVerticalOffset" />
+        <attr name="android:backgroundDimEnabled" />
+        <attr name="android:backgroundDimAmount" />
+        <attr name="mpm_paddingBottom" />
+        <attr name="mpm_paddingStart" />
+        <attr name="mpm_paddingEnd" />
+        <attr name="mpm_paddingTop" />
+    </declare-styleable>
+
+</resources>

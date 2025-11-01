@@ -1,0 +1,19 @@
+{
+  "version": "v1.1.1",
+  "notes": {
+    "important": [
+    ],
+    "new": [
+    ],
+    "updates": [
+      "Rename and reorder account names in Wallet Address Calculator tool."
+    ],
+    "fixes": [
+      "App crash on startup when launching in offline mode.",
+      "Copying extended public keys to clipboard in Settings menu does not copy full string."
+    ],
+    "other": [
+      "Reproducibility enhancements based on user feedback."
+    ]   
+  }
+}

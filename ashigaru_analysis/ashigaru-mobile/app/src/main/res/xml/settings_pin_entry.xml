@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/options_scramble_pin"
+        android:summary="@string/options_scramble_pin2"
+        android:key="scramble"
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="true"
+        app:allowDividerAbove="true"
+        app:isSwitch="true"
+        />
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/options_haptic_feedback"
+        android:summary="@string/options_haptic_feedback2"
+        android:key="haptic_feedback"
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="true"
+        app:allowDividerAbove="true"
+        app:isSwitch="true"
+        />
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/options_change_pin"
+        android:summary="@string/options_change_pin2"
+        android:key="change_pin"
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="true"
+        app:allowDividerAbove="true"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        />
+</PreferenceScreen>

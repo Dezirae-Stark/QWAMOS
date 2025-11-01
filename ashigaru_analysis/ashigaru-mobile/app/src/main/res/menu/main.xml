@@ -1,0 +1,94 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+    <item
+        android:id="@+id/action_refresh"
+        android:icon="@drawable/pairing_icon"
+        android:title=""
+        android:visible="true"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_share_receive"
+        android:icon="@drawable/ic_share_white_24dp"
+        android:title=""
+        android:visible="true"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_scan_qr"
+        android:icon="@drawable/qrcode_scan"
+        android:title=""
+        android:visible="true"
+        app:showAsAction="always"
+        android:iconTint="@color/white"/>
+
+    <item
+        android:id="@+id/action_network_dashboard"
+        android:icon="@drawable/ic_network_check_black_24dp"
+        android:title=""
+        android:visible="true"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_postmix_balance"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_whirlpool_v2"
+        android:title="Postmix transactions"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_menu_account"
+        android:title=""
+        android:visible="false" />
+    <item
+        android:id="@+id/action_batch"
+        android:orderInCategory="100"
+        android:title="@string/options_batch"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_backup"
+        android:orderInCategory="100"
+        android:title="@string/options_export"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_utxo"
+        android:orderInCategory="100"
+        android:title="@string/options_utxo"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_fees"
+        android:orderInCategory="100"
+        android:title="@string/options_fees"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_ricochet"
+        android:orderInCategory="100"
+        android:title="@string/action_ricochet"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_empty_ricochet"
+        android:orderInCategory="100"
+        android:title="@string/action_empty_ricochet"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_sign"
+        android:orderInCategory="100"
+        android:title="@string/options_sign"
+        app:showAsAction="never" />
+    <!--
+    <item
+        android:id="@+id/action_support"
+        android:orderInCategory="100"
+        android:title="@string/action_support"
+        app:showAsAction="never" />
+        -->
+
+    <!--For Testing -->
+    <item
+        android:id="@+id/action_mock_fees"
+        android:orderInCategory="100"
+        android:visible="false"
+        android:title="Mock main-net fees"
+        app:showAsAction="never" />
+
+</menu>

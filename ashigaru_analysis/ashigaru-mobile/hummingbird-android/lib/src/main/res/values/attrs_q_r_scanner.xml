@@ -1,0 +1,10 @@
+<resources>
+    <declare-styleable name="QRScanner">
+        <attr name="enableUrProgress" format="boolean" />
+        <attr name="enableQrMode" format="enum" >
+            <enum name="auto" value="0" />
+            <enum name="qr" value="1" />
+            <enum name="ur" value="2" />
+        </attr>
+    </declare-styleable>
+</resources>

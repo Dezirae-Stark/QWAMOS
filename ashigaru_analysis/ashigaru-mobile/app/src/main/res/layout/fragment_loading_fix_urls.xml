@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".util.QRBottomSheetDialog">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".util.QRBottomSheetDialog"
+        android:layout_marginBottom="160dp">
+
+        <TextView
+            android:id="@+id/titleBottomsheet"
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/fix_orphaned_urls"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/titleBottomsheet">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/circle_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:cardCornerRadius="250dp"
+                android:layout_marginTop="100dp"
+                app:cardBackgroundColor="@color/white_flojo"
+                android:layout_gravity="center">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal">
+
+                    <ImageView
+                        android:id="@+id/successCheck"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@color/green_ui_2"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_check_white"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone"/>
+
+                    <ImageView
+                        android:id="@+id/loadingImage"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:tint="@color/background_black"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_tooltip_plus_outline"
+                        android:layout_centerInParent="true"
+                        android:visibility="visible"/>
+
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/broadcastProgress"
+                        style="@style/Widget.MaterialComponents.CircularProgressIndicator"
+                        android:layout_width="500dp"
+                        android:layout_height="500dp"
+                        app:indicatorSize="100dp"
+                        android:layout_centerInParent="true"
+                        android:indeterminate="true"
+                        android:scaleType="centerCrop"
+                        android:visibility="visible"
+                        app:indicatorColor="@color/white"
+                        app:trackThickness="3dp"
+                        />
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/successful_verificatin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="100dp"
+                android:paddingBottom="10dp"
+                android:text="Processing"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="16sp"
+                android:textColor="@color/mpm_white"
+                android:textStyle="bold"
+                app:layout_constraintHorizontal_bias="0.0"
+                android:layout_gravity="center" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

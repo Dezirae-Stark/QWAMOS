@@ -1,0 +1,1789 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/networking">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:id="@+id/toolbar"
+            android:layout_height="wrap_content"
+            android:background="@color/toolbar" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="16dp"
+    android:paddingBottom="30dp"
+    android:paddingStart="10dp"
+    android:paddingEnd="7dp"
+    android:scrollbarSize="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Deposit BIP44"
+            android:textStyle="bold"
+            android:fontFamily="@font/roboto_medium"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:paddingBottom="5dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Script type:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Legacy"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Derivation path:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/DEPOSIT_BIP44_path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="m/44'/0'/0'"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/receive_index_blockchain_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light" />
+
+            <TextView
+                android:id="@+id/BIP44_RECEIVE_BLOCKCHAIN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="7"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text3 and text4 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/receive_index_internal_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/BIP44_RECEIVE_INTERNAL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text5 and text6 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/change_index_blockchain_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/BIP44_CHANGE_BLOCKCHAIN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text7 and text8 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/change_index_internal_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/BIP44_CHANGE_INTERNAL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:dividerColor="@color/separator"/>
+
+        <!--- BIP 49 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Deposit BIP49"
+            android:textStyle="bold"
+            android:fontFamily="@font/roboto_medium"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:paddingTop="20dp"
+            android:paddingBottom="5dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Script type:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Segwit Compatibility"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Derivation path:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/DEPOSIT_BIP49_path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="m/49'/0'/0'"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/receive_index_blockchain_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light" />
+
+            <TextView
+                android:id="@+id/BIP49_RECEIVE_BLOCKCHAIN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="7"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text3 and text4 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/receive_index_internal_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/BIP49_RECEIVE_INTERNAL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text5 and text6 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/change_index_blockchain_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/BIP49_CHANGE_BLOCKCHAIN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text7 and text8 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/change_index_internal_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/BIP49_CHANGE_INTERNAL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:dividerColor="@color/separator"/>
+
+        <!--- BIP 84 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Deposit BIP84"
+            android:textStyle="bold"
+            android:fontFamily="@font/roboto_medium"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:paddingTop="20dp"
+            android:paddingBottom="5dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Script type:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Native Segwit"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Derivation path:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/DEPOSIT_BIP84_path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="m/84'/0'/0'"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/receive_index_blockchain_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light" />
+
+            <TextView
+                android:id="@+id/BIP84_RECEIVE_BLOCKCHAIN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="7"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text3 and text4 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/receive_index_internal_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/BIP84_RECEIVE_INTERNAL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text5 and text6 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/change_index_blockchain_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/BIP84_CHANGE_BLOCKCHAIN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text7 and text8 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/change_index_internal_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/BIP84_CHANGE_INTERNAL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:dividerColor="@color/separator"/>
+
+        <!--- PREMIX BIP 84 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Premix BIP84"
+            android:textStyle="bold"
+            android:fontFamily="@font/roboto_medium"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:paddingTop="20dp"
+            android:paddingBottom="5dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Script type:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Native Segwit"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Derivation path:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/PREMIX_BIP84_path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="m/84'/0'/2147483645'"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/receive_index_blockchain_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light" />
+
+            <TextView
+                android:id="@+id/PREMIX_RECEIVE_BLOCKCHAIN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="7"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text3 and text4 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/receive_index_internal_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/PREMIX_RECEIVE_INTERNAL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text5 and text6 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/change_index_blockchain_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/PREMIX_CHANGE_BLOCKCHAIN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text7 and text8 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/change_index_internal_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/PREMIX_CHANGE_INTERNAL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:dividerColor="@color/separator"/>
+
+        <!--- Postmix BIP 84 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Postmix BIP84"
+            android:textStyle="bold"
+            android:fontFamily="@font/roboto_medium"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:paddingTop="20dp"
+            android:paddingBottom="5dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Script type:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Native Segwit"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Derivation path:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/POSTMIX_BIP84_path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="m/84'/0'/2147483646'"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!--- Postmix change BIP 84 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Postmix-change Legacy"
+            android:textStyle="bold"
+            android:fontFamily="@font/roboto_medium"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:paddingTop="20dp"
+            android:paddingBottom="5dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Script type:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Legacy"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Derivation path:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/POSTMIX_LEGACY_path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="m/84'/0'/2147483646'"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!--- Postmix change BIP 84 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Postmix-change Segwit Compatibility"
+            android:textStyle="bold"
+            android:fontFamily="@font/roboto_medium"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:paddingTop="20dp"
+            android:paddingBottom="5dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Script type:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Segwit Compatibility"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Derivation path:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/POSTMIX_COMPAT_path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="m/84'/0'/2147483646'"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/postmix_shared_indexes"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:fontFamily="@font/roboto_light" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/receive_index_blockchain_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light" />
+
+            <TextView
+                android:id="@+id/POSTMIX_RECEIVE_BLOCKCHAIN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="7"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text3 and text4 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/receive_index_internal_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/POSTMIX_RECEIVE_INTERNAL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text5 and text6 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/change_index_blockchain_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/POSTMIX_CHANGE_BLOCKCHAIN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text7 and text8 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/change_index_internal_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/POSTMIX_CHANGE_INTERNAL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:dividerColor="@color/separator"/>
+
+        <!--- BADBANK BIP 84 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bad Bank BIP84"
+            android:textStyle="bold"
+            android:fontFamily="@font/roboto_medium"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:paddingTop="20dp"
+            android:paddingBottom="5dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Script type:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Native Segwit"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Derivation path:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/BADBANK_BIP84_path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="m/84'/0'/2147483644'"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/receive_index_blockchain_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light" />
+
+            <TextView
+                android:id="@+id/BADBANK_RECEIVE_BLOCKCHAIN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="7"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text3 and text4 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/receive_index_internal_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/BADBANK_RECEIVE_INTERNAL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text5 and text6 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/change_index_blockchain_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/BADBANK_CHANGE_BLOCKCHAIN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text7 and text8 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/change_index_internal_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/BADBANK_CHANGE_INTERNAL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:dividerColor="@color/separator"/>
+
+        <!--- Swaps Deposit BIP 84 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Swaps Deposit BIP84"
+            android:textStyle="bold"
+            android:fontFamily="@font/roboto_medium"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:paddingTop="20dp"
+            android:paddingBottom="5dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Script type:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Native Segwit"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Derivation path:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/SWAPS_DEPOSIT_path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="m/84'/0'/2147483643'"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/receive_index_blockchain_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light" />
+
+            <TextView
+                android:id="@+id/SWAPS_DEPOSIT_RECEIVE_BLOCKCHAIN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="7"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text3 and text4 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/receive_index_internal_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/SWAPS_DEPOSIT_RECEIVE_INTERNAL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text5 and text6 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/chg_bc_ct_sw_deposit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/change_index_blockchain_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/SWAPS_DEPOSIT_CHANGE_BLOCKCHAIN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text7 and text8 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/chg_int_ct_sw_deposit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/change_index_internal_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/SWAPS_DEPOSIT_CHANGE_INTERNAL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:dividerColor="@color/separator"/>
+
+        <!--- Swaps refund BIP 84 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Swaps Refunds BIP84"
+            android:textStyle="bold"
+            android:fontFamily="@font/roboto_medium"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:paddingTop="20dp"
+            android:paddingBottom="5dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Script type:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Native Segwit"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Derivation path:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/SWAPS_REFUNDS_path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="m/84'/0'/2147483642'"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/receive_index_blockchain_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light" />
+
+            <TextView
+                android:id="@+id/SWAPS_REFUNDS_RECEIVE_BLOCKCHAIN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="7"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text3 and text4 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/rec_int_ct_sw_refunds"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/receive_index_internal_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/SWAPS_REFUNDS_RECEIVE_INTERNAL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text5 and text6 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/chg_bc_ct_sw_refunds"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/change_index_blockchain_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/SWAPS_REFUNDS_CHANGE_BLOCKCHAIN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text7 and text8 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/chg_int_ct_sw_refunds"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/change_index_internal_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/SWAPS_REFUNDS_CHANGE_INTERNAL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:dividerColor="@color/separator"/>
+
+        <!--- Swaps ASB BIP 84 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Swaps ASB BIP84"
+            android:textStyle="bold"
+            android:fontFamily="@font/roboto_medium"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:paddingTop="20dp"
+            android:paddingBottom="5dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Script type:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Native Segwit"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Derivation path:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/ASB_BIP84_path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="m/84'/0'/2147483641'"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/receive_index_blockchain_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light" />
+
+            <TextView
+                android:id="@+id/SWAPS_ASB_RECEIVE_BLOCKCHAIN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="7"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text3 and text4 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/rec_int_ct_sw_asb"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/receive_index_internal_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/SWAPS_ASB_RECEIVE_INTERNAL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text5 and text6 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/chg_bc_ct_sw_asb"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/change_index_blockchain_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/SWAPS_ASB_CHANGE_BLOCKCHAIN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+        <!-- Text7 and text8 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/chg_int_ct_sw_asb"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/change_index_internal_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/SWAPS_ASB_CHANGE_INTERNAL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:dividerColor="@color/separator"/>
+
+        <!--- Ricochet BIP 84 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ricochet BIP84"
+            android:textStyle="bold"
+            android:fontFamily="@font/roboto_medium"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:paddingTop="20dp"
+            android:paddingBottom="5dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Script type:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Native Segwit"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Derivation path:"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/RICOCHET_BIP84_path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="m/84'/0'/2147483647'"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Text3 and text4 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/rec_int_ct_ric"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:text="@string/receive_index_internal_count"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/RICOCHET_RECEIVE_INTERNAL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8"
+                android:textSize="14sp"
+                android:textColor="@color/grey_transparent"
+                android:fontFamily="@font/roboto_mono"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
+</LinearLayout>

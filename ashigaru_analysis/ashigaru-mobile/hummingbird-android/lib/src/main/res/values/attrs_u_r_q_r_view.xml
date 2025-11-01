@@ -1,0 +1,7 @@
+<resources>
+    <declare-styleable name="URQRView">
+        <attr name="qrcontent" format="string" />
+        <attr name="fps" format="integer" />
+        <attr name="margin" format="integer" />
+    </declare-styleable>
+</resources>

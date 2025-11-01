@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".util.QRBottomSheetDialog">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".util.QRBottomSheetDialog"
+        android:layout_marginBottom="50dp">
+
+        <TextView
+            android:id="@+id/titleBottomsheet"
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/options_prune"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textiviewfileloc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/titleBottomsheet"
+            app:layout_constraintTop_toBottomOf="@+id/titleBottomsheet"
+            android:layout_marginTop="30dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:text="@string/encrypted_wallet_location"
+            />
+
+        <TextView
+            android:id="@+id/file_location_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/titleBottomsheet"
+            app:layout_constraintTop_toBottomOf="@+id/textiviewfileloc"
+            android:layout_marginTop="5dp"
+            android:text="/internal/Documents/Ashigaru/Backup/ashigaru.txt"
+            />
+
+        <TextView
+            android:id="@+id/are_you_sure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/titleBottomsheet"
+            app:layout_constraintTop_toBottomOf="@+id/file_location_text"
+            android:layout_marginTop="30dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:text="@string/sure_to_prune"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/yes_button"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:text="@string/yes"
+            android:textAllCaps="false"
+            android:textColor="@color/off_black"
+            app:backgroundTint="@color/warning_yellow"
+            app:cornerRadius="12dp"
+            android:layout_marginTop="45dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintTop_toBottomOf="@+id/are_you_sure"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/cancel_button"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:text="@string/cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/off_black"
+            app:backgroundTint="@color/chill_blue"
+            app:cornerRadius="12dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintTop_toBottomOf="@+id/yes_button"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

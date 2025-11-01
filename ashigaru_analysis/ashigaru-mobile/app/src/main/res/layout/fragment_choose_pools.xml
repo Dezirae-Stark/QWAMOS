@@ -1,0 +1,140 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.samourai.wallet.whirlpool.newPool.fragments.SelectPoolFragment">
+
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/poolLoadingProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:indicatorColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/poolRecyclerView"
+        app:layout_constraintEnd_toEndOf="@+id/fetchPoolRetryButton"
+        app:layout_constraintStart_toStartOf="@+id/fetchPoolRetryButton"
+        app:layout_constraintTop_toTopOf="@+id/poolRecyclerView"
+        app:trackColor="@android:color/transparent">
+
+    </com.google.android.material.progressindicator.CircularProgressIndicator>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fetchPoolRetryButton"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        app:elevation="0dp"
+        android:shadowColor="@color/transparent"
+        android:text="@string/retry"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:backgroundTint="?attr/backgroundColor"
+        android:textColorLink="?attr/colorAccent"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/poolRecyclerView"
+        app:layout_constraintStart_toStartOf="@+id/poolRecyclerView"
+        app:layout_constraintTop_toTopOf="@+id/poolRecyclerView"
+        tools:visibility="visible" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/poolRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:scrollbars="vertical"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/poolFee" />
+
+
+    <TextView
+        android:id="@+id/textView22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Cycle Priority"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/feeLowBtn"
+        android:layout_width="110dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="16dp"
+        android:text="LOW"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:textAllCaps="true"
+        android:textColor="@color/txt_grey"
+        app:backgroundTint="@color/windowDark"
+        app:cornerRadius="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/feeNormalBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView22"
+        app:rippleColor="@color/white"
+        app:strokeColor="@color/white"
+        app:strokeWidth="1dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/feeNormalBtn"
+        android:layout_width="110dp"
+        android:layout_height="54dp"
+        android:text="NORMAL"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:textColor="@color/white"
+        app:backgroundTint="@color/blue_ui_2"
+        app:cornerRadius="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/feeLowBtn"
+        app:layout_constraintEnd_toStartOf="@+id/feeHighBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/feeLowBtn"
+        app:layout_constraintTop_toTopOf="@+id/feeLowBtn"
+        app:strokeColor="@color/txt_grey"
+        app:strokeWidth="1dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/feeHighBtn"
+        android:layout_width="110dp"
+        android:layout_height="54dp"
+        android:text="Next Block"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:textColor="@color/white"
+        app:backgroundTint="@color/windowDark"
+        app:cornerRadius="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/feeNormalBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/feeNormalBtn"
+        app:layout_constraintTop_toTopOf="@+id/feeNormalBtn"
+        app:strokeColor="@color/txt_grey"
+        app:strokeWidth="1dp" />
+
+    <TextView
+        android:id="@+id/poolFee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/feeLowBtn"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/feeLowBtn"
+        app:layout_constraintTop_toBottomOf="@+id/feeLowBtn"
+        tools:text="20 b" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

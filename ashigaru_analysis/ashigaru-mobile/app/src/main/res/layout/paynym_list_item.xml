@@ -1,0 +1,75 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/paynym_list_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical">
+
+
+    <com.samourai.wallet.widgets.CircleImageView
+        android:id="@+id/paynym_avatar"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:transitionName="profile"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/paynym" />
+
+    <LinearLayout
+        android:id="@+id/myLinearLayout"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/paynym_avatar"
+        app:layout_constraintHorizontal_bias="0.52"
+        app:layout_constraintStart_toEndOf="@+id/paynym_avatar"
+        app:layout_constraintTop_toTopOf="@+id/paynym_avatar"
+        >
+
+        <TextView
+            android:id="@+id/paynym_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:textSize="14sp"
+            android:fontFamily="@font/roboto_medium"
+            android:textColor="@color/white"
+            tools:text="The Name"
+            />
+
+        <TextView
+            android:id="@+id/paynym_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:textSize="14sp"
+            android:fontFamily="@font/roboto_mono"
+            tools:text="+whiteflower"
+            />
+
+</LinearLayout>
+
+
+
+    <ImageView
+        android:id="@+id/arrow"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_chevron_right_white_24dp"
+        android:tint="#7E7E7E"
+        app:layout_constraintBottom_toBottomOf="@+id/myLinearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/myLinearLayout" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,48 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id "org.jetbrains.kotlin.jvm"
+}
+
+repositories {
+    mavenLocal()
+    maven {url = uri('https://jitpack.io')}
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':whirlpool-protocol')
+    implementation project(':extlibj')
+    implementation project(':soroban-client-java')
+    implementation 'org.apache.commons:commons-text:1.2'
+}
+
+group = 'io.samourai.code.whirlpool'
+version = '1.0.6'
+description = 'whirlpool-client'
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+            groupId = group
+            artifactId = project.name
+            version = version
+            pom {
+                name.set(project.name)
+                description.set("Generated from Ashigary-Mobile")
+            }
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}
+java.targetCompatibility = JavaVersion.VERSION_1_8

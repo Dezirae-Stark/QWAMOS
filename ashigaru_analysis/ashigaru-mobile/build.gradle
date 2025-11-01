@@ -1,0 +1,59 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    ext {
+        compose_version =  '1.5.3'
+        kotlin_version = '1.9.10'
+    }
+
+
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+        google()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.7.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+plugins {
+    id 'maven-publish'
+}
+
+allprojects {
+    repositories {
+        mavenLocal()
+        maven { url 'https://jitpack.io' }
+        google()
+        maven {
+            url "https://raw.githubusercontent.com/guardianproject/gpmaven/master"
+        }
+    }
+
+    configurations.all {
+        // Don't cache SNAPSHOTS
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
+}
+
+// Define publish tasks for each module
+tasks.register("publishAllModules") {
+    group = "publishing"
+    description = "Publishes all configured modules to Maven"
+
+    dependsOn ":bitcoinj:publish"
+    dependsOn ":extlibj:publish"
+    dependsOn ":boltzmann-java:publish"
+    dependsOn ":whirlpool-client:publish"
+    dependsOn ":xmanager-protocol:publish"
+    dependsOn ":soroban-client-java:publish"
+    dependsOn ":whirlpool-protocol:publish"
+
+    doLast {
+        println("All modules have been published.")
+    }
+}

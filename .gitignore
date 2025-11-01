@@ -40,3 +40,4 @@ keys/
 # IDE
 .vscode/
 .idea/
+build/toolchain/android-ndk/

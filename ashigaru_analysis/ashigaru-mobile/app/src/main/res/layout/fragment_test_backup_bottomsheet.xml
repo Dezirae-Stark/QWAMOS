@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".util.QRBottomSheetDialog">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".util.QRBottomSheetDialog"
+        android:layout_marginBottom="50dp">
+
+        <TextView
+            android:id="@+id/titleBottomsheet"
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/test_wallet_file"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/noteText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/titleBottomsheet"
+            app:layout_constraintTop_toBottomOf="@+id/titleBottomsheet"
+            android:layout_marginTop="100dp"
+            android:textStyle="bold"
+            android:text="@string/type_bip_passphrase"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/passphrase_text"
+            app:layout_constraintStart_toStartOf="@+id/noteText"
+            app:layout_constraintTop_toBottomOf="@+id/noteText"
+            android:layout_gravity="center_horizontal"
+            android:textColorHint="@color/primary_light"
+            android:textColor="@color/primary_light"
+            android:inputType="textPassword"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:textSize="25sp"
+            android:background="@color/gray_ui_2"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/test_button"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:text="Test"
+            android:textAllCaps="false"
+            android:textColor="@color/off_black"
+            app:backgroundTint="@color/warning_yellow"
+            app:cornerRadius="12dp"
+            android:layout_marginTop="100dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintTop_toBottomOf="@+id/passphrase_text"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

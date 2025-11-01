@@ -1,0 +1,46 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+    <item
+        android:id="@+id/action_scan_qr"
+        android:icon="@drawable/qrcode_scan"
+        android:orderInCategory="100"
+        android:title="@string/scan_code"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_paynym_share_qr"
+        android:icon="@drawable/ic_share_white_24dp"
+        android:orderInCategory="100"
+        android:title="@string/share_qr"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/sign"
+        android:orderInCategory="100"
+        android:title="@string/options_sign"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_unarchive"
+        android:orderInCategory="100"
+        android:title="@string/action_unarchive"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_sync_all"
+        android:orderInCategory="100"
+        android:title="@string/action_sync_all"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_claim_paynym"
+        android:orderInCategory="100"
+        android:title="Claim Paynym"
+        app:showAsAction="never" />
+    <!--
+    <item
+        android:id="@+id/action_support"
+        android:orderInCategory="100"
+        android:title="@string/action_support"
+        app:showAsAction="never" />
+        -->
+</menu>
