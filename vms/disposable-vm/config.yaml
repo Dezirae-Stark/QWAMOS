@@ -1,0 +1,135 @@
+# QWAMOS VM Configuration: disposable-vm
+# Disposable VM - Ephemeral throwaway instance for risky operations
+
+vm:
+  name: disposable-vm
+  type: disposable
+  description: "Disposable VM - Ephemeral instance destroyed after use"
+
+hardware:
+  cpu:
+    cores: 1
+    model: cortex-a57
+    features: [neon, vfp4]
+
+  memory:
+    size: 256  # MB - minimal resources
+    hugepages: false
+
+  disk:
+    primary:
+      path: /data/data/com.termux/files/home/QWAMOS/vms/disposable-vm/disk.qcow2
+      size: 1G
+      format: qcow2
+      cache: unsafe  # Ephemeral - no persistence needed
+      encryption: none  # Will be destroyed anyway
+      snapshot: true   # Use overlay for true disposability
+
+  graphics:
+    type: virtio-gpu-pci
+    acceleration: false
+
+  audio:
+    enabled: false
+
+network:
+  mode: isolated
+  device: virtio-net-pci
+  mac: 52:54:00:12:34:59
+
+  # Disposable VM routes through Whonix for anonymity
+  interfaces:
+    - name: eth0
+      ip: 10.152.152.30
+      netmask: 255.255.255.0
+      gateway: 10.152.152.10  # Whonix Gateway
+
+  proxy:
+    enabled: true
+    socks_proxy: "socks5://10.152.152.10:9050"
+
+  firewall:
+    allow_outbound: true  # Only through Whonix
+    allow_inbound: false
+    allowed_ports: []
+
+boot:
+  kernel: /data/data/com.termux/files/home/QWAMOS/kernel/Image
+  initrd: /data/data/com.termux/files/home/QWAMOS/kernel/initramfs_static.cpio.gz
+  cmdline: "console=ttyAMA0 root=/dev/vda rw net.ifnames=0 quiet"
+
+machine:
+  type: virt
+  gic_version: 3
+  accel: tcg
+
+security:
+  isolation_level: medium
+  seccomp: true
+  apparmor: true
+
+  # Disposable security - no persistence
+  disposable:
+    enabled: true
+    auto_destroy: true
+    max_lifetime: 3600  # 1 hour maximum
+    snapshot_base: true
+
+  firewall:
+    iptables_rules:
+      - "-A OUTPUT -d 10.152.152.10 -j ACCEPT"
+      - "-A OUTPUT ! -d 127.0.0.0/8 -j REJECT"
+
+  storage_encryption:
+    algorithm: none  # Ephemeral - will be wiped
+    kdf: none
+    key_size: 0
+
+  # Memory wipe on shutdown
+  memory_wipe:
+    enabled: true
+    method: triple_overwrite
+
+autostart: false  # Only start on demand
+priority: low
+
+# Purpose: Risky/untrusted operations
+role: disposable
+
+# Dependencies
+depends_on:
+  - whonix-vm
+
+# Minimal software
+packages:
+  - alpine-base
+  - bash
+  - curl
+  - wget
+
+# Services
+services:
+  - sshd  # For remote control only
+
+# Disposable VM lifecycle
+lifecycle:
+  on_start: create_snapshot
+  on_stop: destroy_snapshot
+  on_crash: wipe_memory
+
+# Self-destruct triggers
+self_destruct:
+  triggers:
+    - inactivity_timeout: 3600  # 1 hour
+    - memory_exhaustion: true
+    - network_disconnection: false
+    - manual_trigger: true
+
+  actions:
+    - wipe_disk: true
+    - wipe_memory: true
+    - delete_vm: true
+
+qemu_extra_args:
+  - "-nographic"
+  - "-snapshot"  # Critical: Always use snapshot mode

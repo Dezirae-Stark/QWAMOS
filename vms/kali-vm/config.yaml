@@ -1,0 +1,117 @@
+# QWAMOS VM Configuration: kali-vm
+# Kali Linux - KALI-WFH penetration testing suite
+
+vm:
+  name: kali-vm
+  type: pentesting
+  description: "Kali Linux - KALI-WFH penetration testing suite"
+
+hardware:
+  cpu:
+    cores: 2
+    model: cortex-a57
+    features: [neon, vfp4]
+
+  memory:
+    size: 2048  # MB
+    hugepages: false
+
+  disk:
+    primary:
+      path: /data/data/com.termux/files/home/QWAMOS/vms/kali-vm/disk.qcow2
+      size: 16G
+      format: qcow2
+      cache: writeback
+      encryption: chacha20-poly1305
+
+  graphics:
+    type: virtio-gpu-pci
+    acceleration: true
+
+  audio:
+    enabled: false
+
+network:
+  mode: isolated
+  device: virtio-net-pci
+  mac: 52:54:00:12:34:58
+
+  # Kali network isolated through Whonix Gateway
+  interfaces:
+    - name: eth0
+      ip: 10.152.152.20
+      netmask: 255.255.255.0
+      gateway: 10.152.152.10  # Points to whonix-vm
+
+  proxy:
+    enabled: true
+    socks_proxy: "socks5://10.152.152.10:9050"  # Whonix Tor SOCKS
+    http_proxy: "http://10.152.152.10:8118"     # Whonix Polipo
+
+  firewall:
+    allow_outbound: true  # Only through Whonix Gateway
+    allow_inbound: false
+    allowed_ports: []
+
+boot:
+  kernel: /data/data/com.termux/files/home/QWAMOS/kernel/Image
+  initrd: /data/data/com.termux/files/home/QWAMOS/kernel/initramfs_static.cpio.gz
+  cmdline: "console=ttyAMA0 root=/dev/vda rw net.ifnames=0"
+
+machine:
+  type: virt
+  gic_version: 3
+  accel: tcg  # Will use KVM when available on real hardware
+
+security:
+  isolation_level: high
+  seccomp: true
+  apparmor: true
+
+  firewall:
+    # Force all traffic through Whonix Gateway
+    iptables_rules:
+      - "-A OUTPUT -d 10.152.152.10 -j ACCEPT"  # Allow to Whonix
+      - "-A OUTPUT ! -d 127.0.0.0/8 -j REJECT"  # Block direct internet
+
+  storage_encryption:
+    algorithm: chacha20-poly1305
+    kdf: argon2id
+    key_size: 256
+
+  # Network anonymity through Whonix
+  network_policy:
+    - block_clearnet: true
+    - force_proxy: true
+    - dns_leak_protection: enabled
+
+autostart: false  # Start manually when needed
+priority: medium
+
+# Purpose: Penetration testing
+role: pentesting
+
+# Dependencies - requires Whonix Gateway
+depends_on:
+  - whonix-vm
+
+# Kali tools preinstalled
+tools:
+  - nmap
+  - metasploit
+  - burpsuite
+  - sqlmap
+  - aircrack-ng
+  - wireshark
+  - john
+  - hashcat
+  - hydra
+  - gobuster
+
+# Services to start
+services:
+  - ssh
+  - postgresql  # For Metasploit
+
+qemu_extra_args:
+  - "-nographic"
