@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/whirlpool_explore_menu"
+        android:icon="@drawable/ic_explore_black_24dp"
+        android:title=""
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/whirpool_chart_menu"
+        android:icon="@drawable/ic_insert_chart_black_24dp"
+        android:title=""
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/refresh_cycle_details"
+        android:title="Refresh"
+        app:showAsAction="never">
+
+    </item>
+</menu>

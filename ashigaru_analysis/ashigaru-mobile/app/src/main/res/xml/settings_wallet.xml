@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/show_mnemonic"
+        android:summary="@string/show_mnemonic2"
+        android:key="showMnemonic"
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="true"
+        app:allowDividerAbove="true"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        />
+
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/check_bip39"
+        android:summary="@string/check_bip392"
+        android:key="checkBip39"
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="true"
+        app:allowDividerAbove="true"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        />
+
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/view_extended_pubkeys"
+        android:summary="@string/view_extended_pubkeys2"
+        android:key="viewExtendedPubkeys"
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="true"
+        app:allowDividerAbove="true"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        />
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/copy_or_share_wallet_info"
+        android:summary="@string/copy_or_share_wallet_info2"
+        android:key="shareWalletInfo"
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="true"
+        app:allowDividerAbove="true"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        />
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/show_logs"
+        android:summary="@string/show_logs2"
+        android:key="showLogs"
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="true"
+        app:allowDividerAbove="true"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        />
+</PreferenceScreen>

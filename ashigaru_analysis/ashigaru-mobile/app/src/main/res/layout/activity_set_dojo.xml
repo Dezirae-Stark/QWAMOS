@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/setUpWalletContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".onboard.SetUpWalletActivity">
+
+        <TextView
+            android:id="@+id/titleDojoMessaje"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="Configure your Dojo server"
+            android:textAlignment="textStart"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline27"
+            app:layout_constraintEnd_toStartOf="@+id/guideline25"
+            app:layout_constraintStart_toStartOf="@+id/guideline24"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.23000002"
+            android:fontFamily="@font/roboto_bold"/>
+
+        <TextView
+            android:id="@+id/torStatusMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Tor Status: "
+            app:layout_constraintBottom_toTopOf="@+id/guideline28"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/titleDojoMessaje"
+            app:layout_constraintTop_toBottomOf="@+id/titleDojoMessaje"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/torStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Active"
+            app:layout_constraintBottom_toTopOf="@+id/guideline28"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/torStatusMessage"
+            app:layout_constraintTop_toBottomOf="@+id/titleDojoMessaje"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ImageView
+            android:id="@+id/dojo_logo"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/dojo_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/offlineModeMessage"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="Wallet is in offline mode."
+            android:textAlignment="textStart"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline25"
+            app:layout_constraintStart_toStartOf="@+id/guideline24"
+            app:layout_constraintTop_toBottomOf="@+id/guideline27"
+            app:layout_constraintVertical_bias="0.23000002"
+            android:visibility="invisible"
+            android:fontFamily="@font/roboto_bold"/>
+
+        <TextView
+            android:id="@+id/dojoCredsFoundText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:text="The following Dojo server credentials have\nbeen detected within your encrypted backup"
+            android:fontFamily="@font/roboto_medium"
+            app:layout_constraintTop_toTopOf="@+id/offlineModeMessage"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/titleDojoMessaje"
+            app:layout_constraintTop_toBottomOf="@+id/titleDojoMessaje"
+            app:layout_constraintVertical_bias="0.0"
+            android:visibility="invisible"
+            android:textSize="15sp"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.06" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline25"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.94" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline27"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.18" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline28"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.36" />
+
+        <TextView
+            android:id="@+id/dojoUrlText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
+            android:text="Dojo URL: "
+            app:layout_constraintTop_toTopOf="@+id/dojoCredsFoundText"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/titleDojoMessaje"
+            app:layout_constraintTop_toBottomOf="@+id/titleDojoMessaje"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/dojoURL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
+            android:text=""
+            app:layout_constraintTop_toTopOf="@+id/dojoCredsFoundText"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/dojoUrlText"
+            app:layout_constraintTop_toBottomOf="@+id/titleDojoMessaje"
+            app:layout_constraintVertical_bias="0.0"
+            android:layout_marginStart="50dp"
+            android:fontFamily="@font/roboto_mono"
+            android:textColor="@color/warning_yellow"
+            android:maxLines="1"/>
+
+        <TextView
+            android:id="@+id/dojoAPIText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Dojo API key: "
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/titleDojoMessaje"
+            app:layout_constraintTop_toBottomOf="@+id/dojoUrlText"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/dojoAPI"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text=""
+            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginEnd="150dp"
+            app:layout_constraintStart_toEndOf="@id/dojoAPIText"
+            app:layout_constraintTop_toBottomOf="@+id/dojoURL"
+            app:layout_constraintVertical_bias="0.0"
+            android:layout_marginStart="30dp"
+            android:fontFamily="@font/roboto_mono"
+
+            android:textColor="@color/warning_yellow"
+            android:maxLines="1"/>
+
+        <TextView
+            android:id="@+id/explorerURLText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Explorer URL: "
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/titleDojoMessaje"
+            app:layout_constraintTop_toBottomOf="@+id/dojoAPIText"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/explorerURL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text=""
+            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginEnd="150dp"
+            app:layout_constraintStart_toEndOf="@id/explorerURLText"
+            app:layout_constraintTop_toBottomOf="@+id/dojoAPI"
+            app:layout_constraintVertical_bias="0.0"
+            android:layout_marginStart="30dp"
+            android:fontFamily="@font/roboto_mono"
+            android:textColor="@color/warning_yellow"
+            android:maxLines="1"/>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/setUpWalletScanDojo"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/scan_qr"
+            android:textAllCaps="false"
+            app:layout_constraintTop_toBottomOf="@id/explorerURL"
+            app:layout_constraintEnd_toStartOf="@id/setUpWalletPasteJSON"
+            android:layout_marginTop="25dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/setUpWalletPasteJSON"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Paste JSON"
+            android:textAllCaps="false"
+            app:iconTint="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/explorerURL"
+            app:layout_constraintEnd_toEndOf="@id/guideline25"
+            android:layout_marginTop="25dp"/>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/setUpWalletCreateNewWallet"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="100dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="Continue"
+            android:textAllCaps="false"
+            android:textColor="@color/off_black"
+            app:backgroundTint="@color/disabled_grey"
+            app:cornerRadius="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            android:enabled="false"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/changeDojoCredsBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="45dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="Change Dojo Credentials"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:backgroundTint="@android:color/transparent"
+            app:cornerRadius="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            android:enabled="true"
+            android:visibility="gone"
+            android:background="?android:attr/selectableItemBackground"
+            android:elevation="0dp"
+            android:outlineProvider="none"/>
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/dojoConnectingCircle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:indicatorColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone"
+            app:trackColor="@android:color/transparent"
+            android:layout_marginBottom="15dp"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</ScrollView>

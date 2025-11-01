@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/stealth_mode"
+        android:summary="@string/enable_stealth_mode_to_protect"
+        android:key="stealth"
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="true"
+        app:allowDividerAbove="true"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        />
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/options_pin_entry"
+        android:summary="@string/options_pin_entry2"
+        android:key="change_pin2"
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="true"
+        app:allowDividerAbove="true"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        />
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/options_wipe"
+        android:summary="@string/options_wipe2"
+        android:key="wipe"
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="true"
+        app:allowDividerAbove="true"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        />
+</PreferenceScreen>

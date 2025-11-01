@@ -1,0 +1,54 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        google()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:${androidplugin}"
+    }
+}
+
+android {
+    namespace "com.ashigaru"
+    compileSdkVersion 35
+
+    defaultConfig {
+        minSdkVersion 26
+        targetSdkVersion 35
+        versionCode 1
+        versionName "0.0.15-samourai"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+tasks.register('sourceJar', Jar) {
+    from android.sourceSets.main.java.srcDirs
+    archiveClassifier.set('source')
+}
+
+dependencies {
+    implementation project(':universal')
+    implementation 'org.torproject:tor-android-binary:0.3.5.8-rc-v2'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    google()
+    maven { url "https://repo.spring.io/plugins-release" }
+    maven { url "https://raw.githubusercontent.com/guardianproject/gpmaven/master" }
+
+}

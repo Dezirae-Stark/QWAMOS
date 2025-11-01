@@ -1,0 +1,43 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id "org.jetbrains.kotlin.jvm"
+}
+
+repositories {
+    mavenLocal()
+    maven {url = uri('https://jitpack.io')}
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.google.guava:guava:32.1.3-android'
+    implementation 'it.unimi.dsi:fastutil:8.3.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.5'
+    implementation 'ch.qos.logback:logback-classic:1.2.10'
+
+    testImplementation 'junit:junit:4.13.2'
+}
+
+group = 'io.samourai.code.wallet'
+version = '1.0.7'
+description = 'boltzmann-java'
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}
+java.targetCompatibility = JavaVersion.VERSION_1_8

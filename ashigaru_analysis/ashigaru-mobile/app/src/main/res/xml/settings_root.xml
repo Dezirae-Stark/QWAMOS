@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/options_security"
+        android:key="security"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        app:iconSpaceReserved="true"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true" />
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/options_cat_wallet"
+        android:key="wallet"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        app:iconSpaceReserved="true"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true" />
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/options_txs"
+        android:key="txs"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        app:iconSpaceReserved="true"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true" />
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/options_backups"
+        android:key="troubleshoot"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        app:iconSpaceReserved="true"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true" />
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/options_cat_other"
+        android:key="other"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        app:iconSpaceReserved="true"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true" />
+
+</PreferenceScreen>

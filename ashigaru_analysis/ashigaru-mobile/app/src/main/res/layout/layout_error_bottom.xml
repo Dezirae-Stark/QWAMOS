@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.MaterialComponents"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/titleBottomsheet"
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="16dp"
+            android:paddingBottom="10dp"
+            android:text="@string/test_wallet_file"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/circle_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:cardCornerRadius="250dp"
+            android:layout_marginTop="20dp"
+            app:cardBackgroundColor="@color/red"
+            android:layout_gravity="center">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/successCheck"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_exclamation_thick"
+                    android:layout_centerInParent="true"
+                    android:visibility="visible"/>
+
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/unsuccessful_verificatin"
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:paddingBottom="10dp"
+            android:text="@string/unsuccessful_verification_check"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/error_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textStyle="bold"
+            app:layout_constraintHorizontal_bias="0.0"
+            android:text="@string/verification_error_message"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/try_again_btn"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="@string/try_again"
+            android:textAllCaps="false"
+            android:textColor="@color/off_black"
+            app:backgroundTint="@color/chill_blue"
+            app:cornerRadius="12dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintTop_toBottomOf="@+id/are_you_sure"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/checkPassIndepen"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="@string/check_passphrase_independentyly"
+            android:textAllCaps="false"
+            android:textColor="@color/off_black"
+            app:backgroundTint="@color/warning_yellow"
+            app:cornerRadius="12dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintTop_toBottomOf="@+id/try_again_btn"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+
+
+        <FrameLayout
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            android:layout_width="match_parent"
+            android:id="@+id/contentContainer"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

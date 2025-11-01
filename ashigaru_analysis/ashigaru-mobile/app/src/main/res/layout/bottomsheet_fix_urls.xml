@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/pubkeysFrame"
+    android:theme="@style/Theme.MaterialComponents"
+    tools:context=".util.QRBottomSheetDialog">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".util.QRBottomSheetDialog"
+>
+
+        <TextView
+            android:id="@+id/titleBottomsheet"
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:text="Fixed orphaned URLs"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/titleBottomsheet"
+            app:layout_constraintTop_toBottomOf="@+id/titleBottomsheet"
+            android:layout_marginTop="40dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:text="@string/if_you_do_not_use_ashigaru_mobile_for_a_long_period_of_time_it_is_possible"
+            />
+
+        <TextView
+            android:id="@+id/text3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/text2"
+            app:layout_constraintTop_toBottomOf="@+id/text2"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:text="@string/if_this_occurs_first_try_rectifying_the_issue_by_updating_your_app"
+            />
+
+        <TextView
+            android:id="@+id/text4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/text3"
+            app:layout_constraintTop_toBottomOf="@+id/text3"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:text="@string/alternatively_you_may_manually_paste_the"
+            />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/jsonBox"
+            app:layout_constraintStart_toStartOf="@id/text4"
+            app:layout_constraintTop_toBottomOf="@+id/text4"
+            android:layout_width="match_parent"
+            android:layout_height="105dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardBackgroundColor="@color/clever_gray"
+            android:elevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/pgpMessageText"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/roboto_medium"
+                    android:hint="@string/paste_ashigaru_mobile_latest_text_file_pgp_signed_message"
+                    android:background="@android:color/transparent"
+                    android:textColor="@color/grey_semi_transparent"
+                    android:textSize="11sp"
+                    android:padding="0dp" />
+
+                <ImageView
+                    android:id="@+id/paste_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_content_paste"
+                    android:layout_marginStart="12dp"
+                    app:tint="@color/grey_semi_transparent" />
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/fixUrlsButton"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:text="@string/fix_orphaned_urls"
+            android:textAllCaps="false"
+            android:textColor="@color/off_black"
+            app:backgroundTint="@color/disabled_button"
+            app:cornerRadius="12dp"
+            android:layout_marginTop="25dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintTop_toBottomOf="@+id/jsonBox"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:enabled="false"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

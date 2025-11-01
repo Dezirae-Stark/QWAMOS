@@ -1,0 +1,45 @@
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+group = 'io.samourai.code.whirlpool.Tor_Onion_Proxy_Library'
+version = '0.0.15-samourai'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation 'io.samourai.code.whirlpool:jtorctl:0.2.3-samourai'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+}
+
+tasks.register('sourcesJar', Jar) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+            groupId = group
+            artifactId = project.name
+            version = version
+            pom {
+                name.set(project.name)
+                description.set("Generated")
+            }
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}

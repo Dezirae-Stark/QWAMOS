@@ -1,0 +1,202 @@
+plugins {
+    id 'idea'
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdk 34
+    useLibrary 'org.apache.http.legacy'
+    flavorDimensions "versionCode"
+    defaultConfig {
+        applicationId 'com.ashigaru.wallet'
+        minSdkVersion 21
+        targetSdk 33
+        versionCode 111
+        versionName '1.1.1'
+        // Enabling multidex support.
+        multiDexEnabled true
+        vectorDrawables {
+            useSupportLibrary true
+        }
+        aaptOptions {
+            cruncherEnabled = false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildTypes {
+        release {
+            vcsInfo.include false
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        applicationVariants.all { variant ->
+            variant.buildConfigField "String", "XOR_1", "\""+getApiKey("XOR_1")+"\""
+            variant.buildConfigField "String", "XOR_2", "\""+getApiKey("XOR_2")+"\""
+        }
+    }
+    packagingOptions {
+        resources {
+            excludes += ['/META-INF/{AL2.0,LGPL2.1}', 'META-INF/DEPENDENCIES.txt', 'META-INF/LICENSE.txt', 'META-INF/NOTICE.txt', 'META-INF/NOTICE', 'META-INF/LICENSE', 'META-INF/DEPENDENCIES', 'META-INF/notice.txt', 'META-INF/license.txt', 'META-INF/dependencies.txt', 'META-INF/LGPL2.1', 'META-INF/proguard/androidx-annotations.pro', '/META-INF/{AL2.0,LGPL2.1}', 'META-INF/DEPENDENCIES.txt', 'META-INF/LICENSE.txt', 'META-INF/NOTICE.txt', 'META-INF/NOTICE', 'META-INF/LICENSE', 'META-INF/DEPENDENCIES', 'META-INF/notice.txt', 'META-INF/license.txt', 'META-INF/dependencies.txt', 'META-INF/LGPL2.1', 'META-INF/proguard/androidx-annotations.pro', 'META-INF/kotlinx_coroutines_core.version']
+        }
+    }
+    productFlavors {
+        production {
+            applicationId 'com.ashigaru.wallet'
+            versionCode 111
+            versionName "1.1.1"
+            resValue "string", "app_name", "Ashigaru"
+            resValue "string", "version_name", "1.1.1"
+        }
+        staging {
+            applicationId 'com.ashigaru.wallet.staging'
+            versionCode 202
+            versionName "1.1.1"
+            resValue "string", "app_name", "Ashigaru Staging"
+            resValue "string", "version_name", "1.1.1"
+        }
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+    buildFeatures {
+        viewBinding true
+        compose true
+        buildConfig true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_version
+    }
+    namespace 'com.samourai.wallet'
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}
+
+def getApiKey(key){
+    def Properties props = new Properties()
+    props.load(new FileInputStream(new File('ashigaru.api')))
+    return props[key]
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+dependencies {
+
+    def lifecycle_version = "2.5.0"
+
+    // for tor dependency
+    def vTor = '4.8.6-0'
+    def vKmpTor = '1.4.4'
+
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    implementation('com.google.zxing:core:3.5.0') {
+        transitive = true
+    }
+
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+    implementation "androidx.core:core-ktx:1.8.0"
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation "androidx.webkit:webkit:1.5.0"
+    implementation 'androidx.compose.material3:material3:1.0.0-alpha02'
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
+
+    implementation 'commons-io:commons-io:2.14.0'
+    implementation 'commons-codec:commons-codec:1.17.1'
+    implementation 'org.apache.commons:commons-collections4:4.4'
+    implementation 'com.google.guava:guava:32.1.3-android'
+    implementation 'com.squareup.picasso:picasso:2.8'
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.77'
+    implementation 'org.bouncycastle:bcpg-jdk18on:1.77'
+    implementation 'com.madgag.spongycastle:prov:1.58.0.0'
+    implementation 'com.lambdaworks:scrypt:1.4.0'
+    implementation 'com.google.android.material:material:1.7.0-alpha02'
+    implementation 'org.hibernate:hibernate-validator:5.4.3.Final'
+    implementation 'com.google.code.gson:gson:2.11.0'
+    implementation 'com.github.yuriy-budiyev:code-scanner:2.1.0'
+    implementation (project(':whirlpool-client')) {
+        exclude group:'org.hibernate', module:'hibernate-validator'
+        exclude group:'com.google.code.findbugs', module:'jsr305'
+        exclude group:'com.google.protobuf', module:'protobuf-java'
+        exclude group:'net.jcip', module:'jcip-annotations'
+        exclude group:'com.squareup.okhttp', module:'okhttp'
+        exclude group:'com.google.guava', module:'guava'
+        //
+        exclude group:'org.json', module:'json'
+        exclude group:'io.samourai.code.wallet', module:'extlibj'
+    }
+    implementation (project(':extlibj')) {
+        exclude group:'com.google.code.findbugs', module:'jsr305'
+        exclude group:'com.google.protobuf', module:'protobuf-java'
+        exclude group:'net.jcip', module:'jcip-annotations'
+        exclude group:'com.squareup.okhttp', module:'okhttp'
+        exclude group:'com.google.guava', module:'guava'
+        exclude group:'org.json', module:'json'
+    }
+    implementation project(':soroban-client-java')
+
+    implementation project(':boltzmann-java')
+
+    // temporary fix for building boltzmann-java dependency
+    implementation 'it.unimi.dsi:fastutil:7.2.1'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'com.auth0.android:jwtdecode:1.1.1'
+    implementation 'com.github.clans:fab:1.6.4'
+
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
+
+    testImplementation 'junit:junit:4.13.2'
+
+    // tor dependency
+    implementation "io.matthewnelson.kotlin-components:kmp-tor:$vTor-$vKmpTor"
+
+    implementation 'com.sparrowwallet:hummingbird:1.6.6'
+    implementation project(':hummingbird-android:lib')
+
+    implementation 'ch.qos.logback:logback-classic:1.2.10'
+
+    //JetpackCompose
+    // Integration with activities
+    implementation 'androidx.activity:activity-compose:1.5.0'
+    // Compose Material Design
+    implementation 'androidx.compose.material:material:1.1.1'
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    // Animations
+    implementation 'androidx.compose.animation:animation:1.1.1'
+    // Tooling support (Previews, etc.)
+    implementation 'androidx.compose.ui:ui-tooling:1.1.1'
+    // Integration with ViewModels
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "com.google.accompanist:accompanist-insets:0.24.9-beta"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+}
+
+repositories {
+    mavenCentral()
+}

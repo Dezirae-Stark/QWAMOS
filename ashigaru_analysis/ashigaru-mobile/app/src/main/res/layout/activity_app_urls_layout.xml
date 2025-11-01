@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/networking">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/toolbar"
+            android:background="@color/toolbar">
+
+            <ImageView
+                android:id="@+id/toolbar_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:padding="8dp"
+                android:layout_marginEnd="14dp"
+                android:src="@drawable/ic_tooltip_plus_outline" />
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="4dp"
+        app:cardBackgroundColor="@color/crazy_gray"
+        android:elevation="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_information_box"
+                android:layout_gravity="center"
+                android:layout_marginRight="15dp"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/these_urls_are_updated_automatically_over_tor_with_pgp_verification_to_ensure_continuous_in_app_functionality"
+                android:textColor="@color/networking"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/text_pgpversion"
+                android:text="PGP Signed Message Version"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/pgp_version"
+                android:text="0011"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/roboto_mono"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dividerColor="@color/separator"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:text="PayNym URL"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/paynym_url"
+                android:text="paynym...yafkha.onion"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/roboto_mono"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:text="Version"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/paynym_version"
+                android:text="0006"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/roboto_mono"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dividerColor="@color/separator"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:text="Soroban URL"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/soroban_url"
+                android:text="paynym...yafkha.onion"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/roboto_mono"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:text="Version"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/soroban_version"
+                android:text="0006"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/roboto_mono"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dividerColor="@color/separator"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:text="Website URL"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/website_url"
+                android:text="paynym...yafkha.onion"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/roboto_mono"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:text="Version"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/website_version"
+                android:text="0006"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/roboto_mono"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dividerColor="@color/separator"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:text="@string/active_and_offline_pgp_signed_messsage_urls"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:ellipsize="end"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/copy_url_json"
+                android:text="COPY JSON"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:textColor="@color/blue_settings"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

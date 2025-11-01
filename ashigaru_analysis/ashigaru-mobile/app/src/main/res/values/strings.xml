@@ -1,0 +1,1162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="alpha_create_wallet">Write these words down and keep them safe. Do not lose these words or forget your passphrase.</string>
+    <string name="alpha_create_confirm_backup">I\'ve written down my words</string>
+
+    <string name="creating_wallet">Creating wallet. Please wait…</string>
+    <string name="restoring_wallet">Restoring wallet. Please wait…</string>
+    <string name="decrypting_bip38">Decrypting BIP38 password. Please wait…</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_support">Support</string>
+    <string name="action_sweep">Sweep private key</string>
+    <string name="action_bip47">PayNyms</string>
+    <string name="action_unarchive">Activate all archived payment codes</string>
+    <string name="action_sync_all">Sync all payment codes</string>
+    <string name="action_whirlpool">Whirlpool</string>
+
+    <string name="about_us">About Ashigaru</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="check_passphrase_independentyly">Check BIP39 Passphrase independently</string>
+
+    <string name="options_cat_prefs">Block explorer</string>
+    <string name="options_cat_stealth">Stealth</string>
+    <string name="options_cat_remote">Remote</string>
+    <string name="options_cat_wallet">Wallet</string>
+    <string name="options_cat_networking">Networking</string>
+    <string name="options_cat_other">About</string>
+
+    <string name="options_mnemonic">Show mnemonic</string>
+    <string name="options_mnemonic2">Show 12-word seed for this wallet.</string>
+    <string name="options_xpub">Show BIP44 XPUB</string>
+    <string name="options_xpub2">Show extended public key for BIP44 account.</string>
+    <string name="options_xpub49">Show Segwit YPUB</string>
+    <string name="options_xpub49_2">Show extended public key for BIP49 Segwit account (P2SH-wrapped).</string>
+    <string name="options_xpub84">Show Segwit ZPUB</string>
+    <string name="options_xpub84_2">Show extended public key for BIP84 Segwit account (Bech32).</string>
+    <string name="options_xpub84_premix">Show Whirlpool pre-mix ZPUB</string>
+    <string name="options_xpub84_premix2">Show extended public key for BIP84 Segwit account (Bech32) Whirlpool pre-mix.</string>
+    <string name="options_xpub84_postmix">Show Whirlpool post-mix ZPUB</string>
+    <string name="options_xpub84_postmix2">Show extended public key for BIP84 Segwit account (Bech32) Whirlpool post-mix.</string>
+    <string name="options_xpub44_postmix">Show Whirlpool post-mix change XPUB</string>
+    <string name="options_xpub44_postmix2">Show extended public key for BIP44 Whirlpool post-mix change account.</string>
+    <string name="options_xpub49_postmix">Show Whirlpool post-mix change YPUB</string>
+    <string name="options_xpub49_postmix2">Show extended public key for BIP49 Segwit account (P2SH-wrapped) Whirlpool post-mix change account.</string>
+    <string name="options_xpub84_badbank">Show Whirlpool bad bank ZPUB</string>
+    <string name="options_xpub84_badbank2">Show extended public key for BIP84 Segwit account (Bech32) Whirlpool bad bank.</string>
+    <string name="options_xpub84_swapsmain">Show Swaps main account ZPUB</string>
+    <string name="options_xpub84_swapsmain2">Show extended public key for BIP84 Segwit account (Bech32) XMR-BTC Swaps main account.</string>
+    <string name="options_xpub84_swapsrefund">Show Swaps refund account ZPUB</string>
+    <string name="options_xpub84_swapsrefund2">Show extended public key for BIP84 Segwit account (Bech32) XMR-BTC Swaps refund account.</string>
+    <string name="options_xpub84_swapsasbmain">Show Swaps ASB main account ZPUB</string>
+    <string name="options_xpub84_swapsasbmain2">Show extended public key for BIP84 Segwit account (Bech32) XMR-BTC Swaps ASB main account.</string>
+    <string name="options_wipe">Secure erase wallet</string>
+    <string name="options_wipe2">Delete all associated wallet data from device\n(excluding encrypted wallet backup file)</string>
+    <string name="options_stealth_display">Stealth launcher</string>
+    <string name="options_stealth_display2">Remove Samourai from the launcher and home screen. You must dial **YOUR_PIN_CODE# from the phone dialer to launch Samourai.</string>
+    <string name="options_remote_commands">Enable remote commands</string>
+    <string name="options_remote_commands2">Allow remote commands via SMS.</string>
+    <string name="options_blockexplorer">Block explorer</string>
+    <string name="options_blockexplorer2">The block explorer used to view transaction details.</string>
+    <string name="options_sim_switch">SIM switch defense</string>
+    <string name="options_sim_switch2">Send SMS to a trusted mobile number when the SIM card is changed.</string>
+    <string name="options_use_telno">Use trusted mobile number for remote</string>
+    <string name="options_use_telno2">Only allow remote commands sent from your trusted mobile phone number.</string>
+    <string name="options_alert_telno">Trusted number</string>
+    <string name="options_alert_telno2">A trusted mobile number that you can restrict remote access to (use int\'l format without spaces ex.: +447385555555).</string>
+    <string name="options_export">Export wallet backup</string>
+    <string name="options_export2">Copy or share a snapshot of your encrypted wallet backup</string>
+    <string name="options_haptic_feedback">Haptic feedback</string>
+    <string name="options_haptic_feedback2">Vibrate device when pin digit is tapped</string>
+    <string name="options_change_pin">Change PIN</string>
+    <string name="options_pin_entry">PIN entry</string>
+    <string name="show_mnemonic">Show mnemonic</string>
+    <string name="show_mnemonic2">Display the secret words for this wallet</string>
+
+    <string name="check_bip39">Check BIP39 Passphrase</string>
+    <string name="check_bip392">Verify wallet recovery access by entering\nand testing your BIP39 Passphrase</string>
+    <string name="view_extended_pubkeys">View extended public keys</string>
+    <string name="view_extended_pubkeys2">Display the wallet\'s associated x/y/zPUBs</string>
+    <string name="copy_or_share_wallet_info">Wallet info for troubleshooting</string>
+    <string name="copy_or_share_wallet_info2">JSON dump containing information about your wallet. Contains; wallet\'s extended public keys, PayNym connections, Dojo connection, etc. Does not contain private keys</string>
+
+    <string name="show_logs">Show logs</string>
+    <string name="show_logs2">Display wallet error logs for troubleshooting</string>
+
+
+    <string name="options_pin_entry2">Change and customize PIN for unlocking app</string>
+    <string name="options_change_pin2">Define a new PIN to unlock app</string>
+    <string name="options_remote_pin">Stealth launch and remote PIN</string>
+    <string name="options_remote_pin2">Define alternative PIN for stealth launch and remote functions.</string>
+    <string name="options_autosave_backup">Autosave backup to device storage</string>
+    <string name="options_autosave_backup2">Periodically save passphrase encrypted backup to device storage.</string>
+    <string name="options_version">App version</string>
+    <string name="options_txs">Transactions</string>
+    <string name="options_security">Security</string>
+    <string name="options_boltzmann">STONEWALL spend</string>
+    <string name="options_boltzmann_2">Spends will use STONEWALL algorithm for increased obfuscation.</string>
+    <string name="options_utxo">Show unspent outputs</string>
+    <string name="options_rbf0">Spend using RBF</string>
+    <string name="options_rbf0_2">Turn ON to allow boosting a transaction miner fee after a transaction has already been broadcasted to the Bitcoin network. Toggle must first be ON prior to broadcasting transaction to be able to use RBF functionality</string>
+    <string name="options_troubleshoot">Troubleshoot</string>
+    <string name="options_backups">Backups</string>
+    <string name="options_passphrase_test">Passphrase/backup test</string>
+    <string name="options_passphrase_test2">Verify wallet access and backup support.</string>
+    <string name="options_send_backup_to_support">Copy/share wallet info for troubleshooting</string>
+    <string name="options_send_backup_to_support2">JSON dump containing information about your wallet. Contains public keys. Does not contain private keys</string>
+    <string name="options_fee_provider">Fee Estimation Source</string>
+    <string name="options_fee_provider2">Select your preferred transaction fee estimation provider.</string>
+    <string name="broadcast_transactions">Broadcast transaction</string>
+    <string name="sign_transactions">Sign transaction</string>
+    <string name="options_broadcast_on2">Turning OFF prevents transactions being broadcast to the Bitcoin network, and a signed transaction HEX can instead be copied to clipboard for broadcasting elsewhere or at a later time</string>
+    <string name="test_wallet_file">Test encrypted wallet backup file</string>
+    <string name="test_wallet_file2">Verify the encrypted backup file\'s integrity and availability</string>
+    <string name="autosave_file">Autosave backup to device storage</string>
+    <string name="autosave_file2">Encrypted wallet backup file updated and saved upon app exit, encrypted by BIP39 Passphrase</string>
+    <string name="export_file2">Copy to clipboard or share a snapshot of your encrypted wallet backup file</string>
+    <string name="export_file">Export encrypted wallet backup file</string>
+    <string name="options_strictoutputs">Strict mode</string>
+    <string name="options_strictoutputs2">Prevent broadcast and display alert if internal wallet address reuse if detected when attempting to send a transaction</string>
+    <string name="options_segwit">Receive to segwit addresses</string>
+    <string name="options_segwit_2">Generate segwit addresses for incoming transactions.</string>
+    <string name="options_broadcast_hex">Broadcast transaction hex</string>
+    <string name="options_broadcast_hex2">Broadcast any signed transaction supplied in hex format</string>
+    <string name="options_sign_PSBT">Sign a partially signed bitcoin transaction (PSBT) ready for broadcasting</string>
+    <string name="options_like_typed_change">Receive change to like-typed outputs</string>
+    <string name="options_like_typed_change2">Default to receiving transaction change to the same type of address as the spend output. Turn OFF to receive only to Native Segwit addresses starting \"bc1q\"</string>
+    <string name="options_haptic">Haptic PIN entry</string>
+    <string name="options_haptic_2">Vibrate each digit on PIN code entry.</string>
+    <string name="options_prune">Prune encrypted wallet backup file</string>
+    <string name="wallet_mnemonic">Wallet mnemonic</string>
+    <string name="options_prune2">Remove stale data from encrypted wallet backup file</string>
+    <string name="options_address_calc">Address calculator</string>
+    <string name="options_address_calc2">Calculate addresses derived from your wallet seed.</string>
+    <string name="options_paynym_calc">PayNym address calculator</string>
+    <string name="options_paynym_calc2">Calculate sending and receiving addresses with other PayNyms</string>
+    <string name="options_indexes">Wallet indexes</string>
+    <string name="options_indexes2">Current index values for this wallet.</string>
+    <string name="options_whirlpool_state">Whirlpool info</string>
+    <string name="options_whirlpool_state2">Show technical mixing data.</string>
+    <string name="options_whirlpool_gui">Pair to Whirlpool GUI</string>
+    <string name="options_whirlpool_gui2">Pair to Whirlpool GUI for continuous mixing.</string>
+    <string name="options_swaps_gui">Pair to Swaps GUI</string>
+    <string name="options_swaps_gui2">Pair to Swaps GUI for P2P trading.</string>
+    <string name="options_postmix">Spend from post-mix Whirlpool</string>
+    <string name="options_ricochet_sync">Sync Ricochet</string>
+    <string name="options_ricochet_sync2">Synchronize Ricochet index.</string>
+    <string name="unsuccessful_verification_check">Unsuccessful verification check</string>
+    <string name="successful_verification_check">Successful verification check</string>
+
+    <string name="prompt_send_backup_to_support">Copy/share wallet info for troubleshooting? Does not include any private key, seed, or passphrase info.</string>
+
+    <string name="timeline_today">Today</string>
+    <string name="timeline_older">Older</string>
+
+    <string name="tx_sent">Transaction sent</string>
+    <string name="tx_failed">Error sending transaction</string>
+    <string name="you_received">Received</string>
+    <string name="you_sent">Sent</string>
+    <string name="send">Send</string>
+    <string name="receive">Receive</string>
+    <string name="cannot_select_utxo">Cannot select unspent outputs</string>
+    <string name="error_bip126_output">Error determining output address</string>
+    <string name="error_change_output">Error determining change address</string>
+
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="send_payment_code">Send payment code</string>
+
+    <string name="ask_you_sure_exit">Are you sure you want to exit Ashigaru?</string>
+    <string name="yes">Yes</string>
+    <string name="try_again">Try again</string>
+    <string name="no">No</string>
+    <string name="close">Close</string>
+
+    <string name="sim_warning">Your Ashigaru device now has a different SIM card corresponding to incoming number of this text message.</string>
+
+    <string name="pin_5_8">Create a PIN code between 5 and 8 characters.</string>
+    <string name="pin_5_8_confirm">Confirm PIN code</string>
+    <string name="pin_error">Pin code error</string>
+    <string name="no_internet">No Internet connectivity. Please try again.</string>
+    <string name="bip38_pw">BIP38 password</string>
+    <string name="bip38_pw_error">BIP38 password error</string>
+    <string name="bip39_safe">Please create a passphrase and keep it secret. You will need this passphrase if you lose access to your wallet.</string>
+    <string name="bip39_safe2">Please confirm your passphrase. Keep it secret. You will need this passphrase if you lose access to your wallet.</string>
+    <string name="bip39_restore">Enter your mnemonic (or hex entropy) and, if necessary, your BIP39 passphrase. If you do not use a BIP39 passphrase, leave it blank.</string>
+    <string name="bip39_must">Your wallet must use a passphrase. Please try again.</string>
+    <string name="bip39_unmatch">Passphrase does not match. Please try again.</string>
+    <string name="bip39_invalid">Do not use any space characters in your passphrase. Please try again.</string>
+    <string name="bip39_empty">You must define a passphrase.</string>
+    <string name="please_select">Please select…</string>
+    <string name="create_wallet">Create wallet</string>
+    <string name="restore_wallet">Restore wallet</string>
+    <string name="wallet_passphrase">Enter your wallet passphrase</string>
+    <string name="bip39_passphrase">BIP39 passphrase</string>
+    <string name="bip39_match">BIP39 passphrase verified OK.</string>
+    <string name="bip39_decrypt_test">Wallet passphrase verified OK. Would you like to test decryption of the latest auto backup?</string>
+    <string name="backup_read_ok">Backup file OK.</string>
+    <string name="backup_read_error">Error reading backup file.</string>
+    <string name="mnemonic_hex">Mnemonic or hex entropy</string>
+    <string name="pin_enter">Enter PIN code</string>
+    <string name="please_wait">Please wait…</string>
+    <string name="random_key_error">Random key error</string>
+    <string name="login_error">Login failed</string>
+    <string name="invalid_pin_entered">Invalid PIN entered</string>
+    <string name="wallet_created_ok">Wallet created OK.</string>
+    <string name="wallet_created_ko">Error creating wallet.</string>
+    <string name="wallet_restored_ok">Wallet restored OK.</string>
+    <string name="wallet_restored_ko">Error restoring wallet.</string>
+
+    <string name="address_used_previously">You have used this address before! Reusing addresses may result in a loss of privacy.</string>
+
+    <string name="scan">Scan</string>
+    <string name="scan_error">Scan error</string>
+    <string name="enter_privkey">Enter private key</string>
+
+    <string name="to">To</string>
+    <string name="destination">Address or payment channel</string>
+
+    <string name="insufficient_funds">Insufficient funds</string>
+    <string name="joinbot_not_possible_with_current_utxo">Joinbot not possible with current UTXO set</string>
+    <string name="insufficient_funds_expect_postmix_account">Only transaction using postmix account is possible</string>
+    <string name="joinbot_max_amount_reached">max amount reached for Joinbot (1.25 BTC)</string>
+    <string name="tx_length_error">Samourai does not handle transactions over 100KB in size. Please try splitting your transaction.</string>
+    <string name="invalid_amount">Invalid amount</string>
+    <string name="invalid_address">Invalid address</string>
+    <string name="amount">Amount</string>
+
+    <string name="receive_address_to_clipboard">Copy this address to the clipboard? If copied, it may be visible to other applications.</string>
+    <string name="wallet_backup_clipboard">Copy encrypted wallet backup file to the clipboard? If copied, it may be visible to other applications.</string>
+    <string name="receive_payload_export">Copy wallet backup to clipboard? If copied, it may be visible to other applications.</string>
+    <string name="receive_dojo_pairing_to_clipboard">Copy Dojo pairing credentials to clipboard? If copied, it may be visible to other applications.</string>
+    <string name="pairing_payload_to_clipboard">Copy this pairing payload to the clipboard? If copied, it may be visible to other applications.</string>
+    <string name="txid_to_clipboard">Copy this transaction id  to the clipboard? If copied, it may be visible to other applications.</string>
+    <string name="receive_address_to_share">Share this receive address? If shared, it may be read to other applications.</string>
+    <string name="sure_to_erase">Are you sure you want to erase all wallet data?</string>
+    <string name="sure_to_prune">Are you sure you want to remove stale data from\nyour encrypted wallet backup file?</string>
+    <string name="words_kept_secret">These words should be kept secret</string>
+    <string name="this_will_not_erase_the_encrypted">Note: this will not erase the encrypted wallet backup\nfile saved in your device\'s storage</string>
+    <string name="encrypted_wallet_location">Encrypted wallet backup file location:</string>
+    <string name="type_bip_passphrase">Type BIP39 Passphrase</string>
+    <string name="share_file_troubleshooting_note">Note: while private keys are not contained within\nthis file, it does contain sensitive information\npertaining to your wallet. If shared with a third-party\nyour privacy could be degraded</string>
+    <string name="verification_error_message">BIP39 Passphrase entered may be incorrect,\nor encrypted wallet backup file may be corrupted</string>
+    <string name="passphrase_error_message">The BIP39 Passphrase entered is incorrect</string>
+    <string name="wallet_erased">Wallet erased from device.</string>
+    <string name="copy_warning_generic">Are you sure you want to copy? If copied, content might be visible to other applications.</string>
+
+    <string name="send_privacy_warning">Privacy warning: be aware that you have already sent funds to this address.</string>
+
+    <string name="securely_wiping_wait">Securely wiping wallet. Please wait.</string>
+
+    <string name="ssl_pinning_invalid">SSL certificate pinning has failed. This might indicate malicious activity. Please verify your network connection and device before continuing.</string>
+    <string name="ssl_no_connection">We are unable to connect to the host to verify the SSL certificate. Please verify your network connection and device before continuing.</string>
+    <string name="retry">Retry</string>
+    <string name="exit">Exit</string>
+
+    <string name="create_pin">Create PIN code</string>
+    <string name="confirm_pin">Confirm PIN code</string>
+
+    <string name="auto_fee">NORMAL FEE</string>
+    <string name="priority_fee">PRIORITY FEE</string>
+    <string name="low_fee">LOW FEE</string>
+    <string name="custom_fee">Custom</string>
+    <string name="sat_b">sat/vB</string>
+
+    <string name="account_Samourai">Wallet</string>
+    <string name="account_shuffling">Shifted</string>
+
+    <string name="max_available">Max. available:</string>
+
+    <string name="select_account">Select account</string>
+    <string name="account">Account</string>
+    <string name="received_bitcoin">Received bitcoin</string>
+    <string name="received">Received</string>
+    <string name="sent">Transaction sent</string>
+    <string name="total">Total</string>
+    <string name="export_to_clipboard">Copy to clipboard</string>
+    <string name="export_to_email">Export to email</string>
+    <string name="encryption_error">There was an error while encrypting your wallet backup. Please try again.</string>
+    <string name="import_backup">From backup</string>
+    <string name="import_mnemonic">Mnemonic/seed</string>
+    <string name="encrypted_backup">Encrypted wallet data</string>
+    <string name="decryption_error">There was an error while decrypting your wallet backup. Please try again.</string>
+    <string name="restore_wallet_from_backup">Restore wallet from backup</string>
+    <string name="restore_wallet_from_existing_backup">Backup found on device. To restore from existing backup, tap \'OK\', otherwise copy/paste different backup and tap \'OK\'.</string>
+
+    <string name="choose_email_client">Choose an Email client:</string>
+
+    <string name="cannot_launch_app">Ashigaru cannot be run on this device</string>
+    <string name="confirm_change_pin">Are you sure you want to change your PIN?</string>
+    <string name="success_change_pin">PIN changed</string>
+    <string name="alternative_pin_create">Are you sure you want to create an alternative PIN to be used for stealth launch and remote commands?</string>
+    <string name="alternative_pin_deleted">You are not using any alternative PIN code for stealth and remote functions.</string>
+    <string name="alternative_pin_wait">Wait for stealth launch mode to fully activate before defining an alternative PIN code.</string>
+
+    <string name="invalid_payment_code">Invalid payment code</string>
+    <string name="error_payment_code">Error generating payment code</string>
+
+    <string name="bip47_setup1_title">Your PayNym</string>
+    <string name="bip47_setup4_title">Add PayNym contact</string>
+    <string name="bip47_setup4_text1">Adding this PayNym to your contacts requires a one-time transaction fee for creating the record on the blockchain.</string>
+    <string name="bip47_setup4_text2">will be deducted from your wallet balance.</string>
+
+    <string name="bip47_add1_title">New contact</string>
+    <string name="bip47_add1_text">Scan or paste a payment code to create a new payment channel.</string>
+
+    <string name="paste">Paste</string>
+    <string name="label">Label</string>
+    <string name="next">Next</string>
+    <string name="confirm">Confirm</string>
+    <string name="payment_code">Payment code</string>
+    <string name="payment_channel_init">Notification transaction sent. Your payment channel is being created.</string>
+
+    <string name="bip47_no_label_error">You must supply a label for this payment code</string>
+
+    <string name="bip47_status_tbe">Not yet established</string>
+    <string name="bip47_status_pending">Pending - 0/1 Confirmations</string>
+    <string name="bip47_status_active">Ready to send</string>
+    <string name="bip47_status_incoming">Ready to receive</string>
+    <string name="bip47_cannot_scan_own_pcode">Cannot scan your own payment code</string>
+    <string name="bip47_spend_to_pcode">Send through this payment channel?</string>
+    <string name="sign_message">Sign message</string>
+    <string name="verify_message">Verify message</string>
+    <string name="verify_message_desc">Verify that a signed message contains a valid signature</string>
+    <string name="bip47_sign_text1">Sign message using BIP47 notification address private key?</string>
+    <string name="bip47_sign_text2">Signed using my BIP47 notification address.</string>
+    <string name="bip47_wait_for_confirmation_or_retry">This payment channel is waiting for 1 confirmation before sending is activated. Would you like to discard the previous attempt and resend a notification?</string>
+
+    <string name="rbf_incoming">The incoming transaction is replace-by-fee. View in block explorer?</string>
+
+    <string name="invalid_passphrase">Invalid passphrase</string>
+    <string name="passphrase">Passphrase</string>
+    <string name="password">Password</string>
+    <string name="passphrase_needed_for_backup">Your wallet is not protected by a passphrase. Wallet backups are encrypted using your wallet passphrase. If you would like to use encrypted wallet backups and other Ashigaru features create your wallet using Ashigaru and transfer your funds.</string>
+    <string name="passphrase_required">A passphrase is required to use this function. Please consider creating a new wallet which will automatically include a passphrase.</string>
+
+    <string name="cannot_reach_api">Samourai APIs cannot be reached. Please verify connection and try again or try later.</string>
+    <string name="api_error">Samourai APIs are returning an error. Please try again or try later.</string>
+    <string name="api_key_error">Invalid API key.</string>
+    <string name="api_token_error">Invalid API token.</string>
+
+    <string name="cannot_recognize_privkey">Cannot recognize private key</string>
+    <string name="cannot_sweep_privkey">Error sweeping private key</string>
+    <string name="please_wait_sending">Sending transaction, please wait.</string>
+    <string name="please_wait_ricochet">Processing Ricochet queue. Keep screen open until process completes.</string>
+
+    <string name="change_is_dust">The change from this transaction is a dust amount. Try again and either modify the spend amount or spend the entire balance.</string>
+    <string name="insufficient_amount_for_fee">insufficient balance for selected fee. Try again and either modify the spend amount or spend the entire balance.</string>
+
+    <string name="tor_routing_on">Samourai is routing via Tor.</string>
+    <string name="tor_routing_off">Samourai is not routing via Tor. Tap to activate.</string>
+
+    <string name="premium_addons">Premium Addons</string>
+
+    <string name="ricochet_hop">Ricochet Hop</string>
+    <string name="ricochet_hopping">Ricocheted to</string>
+    <string name="ricochet_spend1">Ricochet spend to</string>
+    <string name="ricochet_spend2">for a total amount of</string>
+    <string name="ricochet_spend3">(includes 0.001 BTC fee to Samourai and miners\' fees)?</string>
+
+    <string name="action_ricochet">Replay Ricochet</string>
+    <string name="action_empty_ricochet">Empty Ricochet queue</string>
+    <string name="empty_ricochet_queue">Ricochet queue is empty!</string>
+    <string name="ricochet">Ricochet - send with 4 extra hops</string>
+    <string name="action_ricochet_script">Display Ricochet script</string>
+    <string name="action_ricochet_replay">Resend Ricochet</string>
+    <string name="ricochet_replay">Do you want to rebroadcast this Ricochet spend?</string>
+    <string name="ricochet_not_broadcast_replay">There was a problem broadcasting your Ricochet. Do you want to rebroadcast this Ricochet spend?</string>
+    <string name="no_ricochet_replay">There is no Ricochet to be resent.</string>
+    <string name="no_ricochet_display">There is no Ricochet script to display.</string>
+    <string name="ricochet_broadcast">Your Ricochet has been broadcast.</string>
+
+    <string name="bip47_cannot_identify_outpoint">Unable to mask outgoing payment code</string>
+    <string name="bip47_cannot_compose_notif_tx">Unable to compose notification Tx</string>
+
+    <string name="pushtx_returns_null">Spend failed. Server returned null value.</string>
+
+
+    <string name="refresh_tx_pre">Retrieving transactions and balance.</string>
+    <string name="refresh_tx">Retrieved transactions and balance.</string>
+    <string name="refresh_incoming_notif_tx">Retrieved incoming BIP47 notification transactions.</string>
+    <string name="refresh_outgoing_notif_tx">Updated outgoing BIP47 notification transactions.</string>
+
+    <string name="options_unconfirmed_tx">This transaction is awaiting confirmation. Please select an option:</string>
+    <string name="options_block_explorer">View transaction</string>
+    <string name="options_bump_fee">Increase tx fee</string>
+
+    <string name="cpfp_cannot_retrieve_tx">Cannot retrieve transaction information. Please try again.</string>
+    <string name="fee_bump_not_necessary">Be advised that bumping the fee may not be necessary for this transaction.</string>
+    <string name="bump_fee">Would you like to increase the miner fee of this transaction for quicker confirmation?\n\nAdditional Miner Fee:</string>
+
+    <string name="options_sign">Sign message</string>
+    <string name="options_soroban_collab">Soroban receive/collaborate</string>
+    <string name="options_paste_cahoots">Paste Cahoots payload</string>
+
+
+    <string name="options_fees">Show current miners\' fees</string>
+    <string name="current_fee_selection">Your fee selection is set to:</string>
+    <string name="current_hi_fee_value">Current high fee:</string>
+    <string name="current_mid_fee_value">Current normal fee:</string>
+    <string name="current_lo_fee_value">Current low fee:</string>
+    <string name="slash_sat">sat/vB</string>
+    <string name="set_sat">Set your custom fee in sat/vB.</string>
+    <string name="custom_fee_too_low">Custom fee is set too low.</string>
+    <string name="custom_fee_too_high">Custom fee is set too high.</string>
+
+    <string name="cpfp_spent">CPFP transaction sent.</string>
+    <string name="rbf_spent">RBF transaction sent.</string>
+    <string name="cannot_output_dust">Cannot make transaction with dust output.</string>
+    <string name="cannot_create_change_output">Cannot create change output.</string>
+    <string name="cannot_create_cpfp">Cannot create CPFP transaction.</string>
+
+    <string name="error_reading_payload">Error reading payload. Please try again.</string>
+
+    <string name="utxo_sign">Sign message</string>
+    <string name="utxo_sign_text1">Sign message using this private key?</string>
+    <string name="utxo_sign_text2">Signed using UTXO.</string>
+    <string name="utxo_sign_text3">Signed using UTXO.</string>
+
+    <string name="recovery_checkup">Recovery Checkup</string>
+    <string name="recovery_checkup_message">Your wallet recovery words and passphrase will be displayed. Do not allow anyone to view your screen. This will NOT be displayed again.</string>
+    <string name="mnemonic">Mnemonic</string>
+    <string name="recovery_checkup_finish">I\'VE SECURED MY RECOVERY INFO</string>
+    <string name="pin_reminder">As a reminder, your PIN code is:</string>
+
+    <string name="select_app">Select application</string>
+
+    <string name="show_qr">Show QR</string>
+    <string name="share_qr">Share QR</string>
+    <string name="send_tx">Send raw transaction</string>
+    <string name="tx_too_large_qr">Raw transaction too large to display in QR code.</string>
+
+    <string name="select_network">Select network…</string>
+    <string name="MainNet">MainNet</string>
+    <string name="TestNet">TestNet</string>
+
+    <string name="segwit_address">Segwit Address</string>
+    <string name="segwit_switch_prompt">Funds deposited in Segwit addresses are more efficient to transact with. Offering reduced miner fees when sending bitcoin from your wallet.</string>
+
+    <string name="privkey_clipboard">A private key has been identified in your clipboard. Delete the clipboard contents?</string>
+
+    <string name="tx_hex">Transaction hex</string>
+    <string name="enter_tx_hex">Enter transaction in hex format</string>
+    <string name="broadcast">Broadcast transaction</string>
+    <string name="sign_psbt">Sign transaction</string>
+
+    <string name="dusting_tx">DUST TRANSACTION</string>
+    <string name="dusting_attempt">An unexpected dust transaction into your wallet can indicate an attempt to track your wallet addresses and spending.\n\nMark this dust as unspendable to mitigate against 3rd party tracking attempts.</string>
+    <string name="dusting_attempt_amount">Amount:</string>
+    <string name="dusting_attempt_id">Hash-Index:</string>
+    <string name="dusting_attempt_ignore">Ignore</string>
+    <string name="dusting_attempt_mark_unspendable">Mark unspendable</string>
+    <string name="paycode">PAYNYM</string>
+    <string name="dust">DUST</string>
+    <string name="do_not_spend">Do Not Spend</string>
+    <string name="dusting_tx_unblock">This dust transaction is currently blocked from spending. Unblock this unspent entry for possible spending?</string>
+    <string name="mark_spend">Mark spendable</string>
+    <string name="mark_do_not_spend">Mark do-not-spend</string>
+    <string name="mark_utxo_spend">Make this unspent output spendable?</string>
+    <string name="mark_utxo_do_not_spend">Make this unspent output unspendable?</string>
+
+    <string name="options_sign_a_message">Sign a message</string>
+    <string name="options_display_redeem_script">Display redeem script</string>
+    <string name="options_view_tx">View transaction</string>
+    <string name="options_display_privkey">Display private key</string>
+    <string name="options_batch">Batch spend</string>
+
+    <string name="do_not_repeat_sent_to">Check box to not warn about repeat sends to this address.</string>
+
+    <string name="mark_inputs_as_unspendable">Mark the unspent outputs that compose the inputs to this transaction as unspendable?</string>
+
+    <string name="copy_to_clipboard">Copy to clipboard</string>
+
+    <string name="no_bitpay">Error: This is not a valid bitcoin request. Samourai only supports sending to valid bitcoin addresses.</string>
+    <string name="learn_more">Learn More</string>
+
+    <string name="paynym">PayNym</string>
+    <string name="paynyms">PayNyms</string>
+    <string name="claim_paynym">Claim your PayNym</string>
+    <string name="claim_paynym_title1">Claim your free PayNymID</string>
+    <string name="claim_paynym_text1">Allow your friends &amp; contacts to find and connect to your PayNym directly through compatible bitcoin wallets.</string>
+    <string name="claim_paynym_title2">Benefits of a PayNymID</string>
+    <string name="claim_paynym_text2a">Unique name and image generated with a hash of your PayNym code. No two will ever be the same!</string>
+    <string name="claim_paynym_text2b">No identity checks! Your name and image are based on your PayNym code, not any national ID card.</string>
+    <string name="claim_paynym_text2c">Be found easily! Compatible wallets can search for new contacts and send private secure payments without leaving a trace.</string>
+    <string name="claim_paynym_id">Claim my PayNymID</string>
+    <string name="claim_paynym_id_refused">Not interested. Don\'t ask me again.</string>
+
+    <string name="claim_paynym_prompt">Claim my PayNymID and add my public PayNym code to paynym.rs?</string>
+
+    <string name="bip47_notif_tx_insufficient_funds_1">It is not possible to connect to this PayNym as it requires you have a spendable balance in your wallet.\nWhen connecting to a PayNym this automatically broadcasts a one-time transaction to create a record on the blockchain. This is known as the "notification transaction" and costs 0.00000546 BTC + miner fee.\nFirst deposit bitcoin into your wallet then try connecting to this PayNym again.</string>
+    <string name="bip47_notif_tx_insufficient_funds_2">into your wallet and try again.</string>
+    <string name="help">Help</string>
+
+    <string name="passphrase_disclaimer">I have written down my Passphrase, and I understand this Passphrase is critical to being able to restore my bitcoin wallet in the future. I understand that no third-party has knowledge of this Passphrase and I must keep it secure.</string>
+    <string name="confirm_pin_code">Confirm pin code</string>
+    <string name="re_enter_your_pin_code">Re-enter your PIN code</string>
+    <string name="re_enter_a_passphrase">Re-enter a passphrase</string>
+    <string name="create_a_passphrase">Create a passphrase</string>
+    <string name="create_a_secure_passphrase_for_your_wallet">Create a secure passphrase for your wallet</string>
+    <string name="set_pin_code">Set Pin code</string>
+    <string name="enter_pin_code">Enter PIN code</string>
+    <string name="enter_your_current_pin_code">Enter your current PIN code</string>
+    <string name="accept_disclaimer_error">You need to accept disclaimer</string>
+    <string name="import_external_wallet">Import external wallet</string>
+    <string name="import_samourai_wallet">Import encrypted backup</string>
+    <string name="backup_file">Backup file</string>
+    <string name="import_an_encrypted_samourai_wallet">import an encrypted backup to restore a wallet with all meta-data intact</string>
+    <string name="back">BACK</string>
+    <string name="finish">finish</string>
+    <string name="choose_file">choose file</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_bip39_passphrase">Add bip39 passphrase</string>
+    <string name="close_bip39_passphrase">Close bip39 passphrase</string>
+    <string name="add_bip39_password">Add bip39 passphrase</string>
+    <string name="close_bip39_password">Close bip39 passphrase</string>
+    <string name="enter_your_mnemonic_seed_to_import_a_wallet">Enter your mnemonic seed to import a wallet from another provider.</string>
+    <string name="last_updated">Last updated</string>
+    <string name="get_help">Get help</string>
+    <string name="offline_mode">Offline mode</string>
+    <string name="import_samourai_backup">Import encrypted backup</string>
+    <string name="samourai_bitcoin_wallet">Samourai Bitcoin Wallet</string>
+    <string name="enter_your_wallet_passphrase">Enter your wallet passphrase</string>
+    <string name="start_new_wallet">Start new wallet</string>
+    <string name="get_help_create">Create wallet: Get help</string>
+    <string name="get_help_restore">Restore wallet: Get help</string>
+
+    <string name="fee">Miner fee</string>
+    <string name="fee_low_priority">Low priority: estimated 24</string>
+    <string name="fee_mid_priority">Normal priority: estimated 6</string>
+    <string name="fee_high_priority">High priority: estimated 2</string>
+    <string name="fee_custom_priority">Custom fee: estimated</string>
+    <string name="blocks_to_cf">blocks before confirmation</string>
+
+    <string name="invalid_mnemonic_word">Invalid BIP39 mnemonic word</string>
+    <string name="invalid_mnemonic">Invalid BIP39 mnemonic</string>
+    <string name="enter_your_code_here">Enter your code here</string>
+
+    <string name="disclaimer_recovery_words">I confirm that I have written the above words down and have stored them in a safe and secure location. I understand that anyone who has access to both my passphrase and my recovery words will be able to access my wallet and all my funds.</string>
+    <string name="return_to_wallet">Return to wallet</string>
+    <string name="caution_message_recovery_words">It is not safe to keep these words backed up on your computer or in the cloud. Write these words down on a piece of paper and keep it secret and secure.</string>
+    <string name="these_words_are">These words are a backup of all the secret keys in your wallet.</string>
+    <string name="recovery_words">RECOVERY WORDS</string>
+
+    <string name="permission_alert_dialog_title_sms">Requesting SMS and Phone state permission</string>
+    <string name="permission_dialog_message_sms">Your wallet needs access to SMS send and receive so it can use remote alert features.</string>
+    <string name="permission_alert_dialog_title_outgoing">Requesting process outgoing call permission</string>
+    <string name="permission_dialog_message_outgoing">Your wallet needs access to outgoing calls so it can use the stealth launch feature.</string>
+
+    <string name="permission_alert_dialog_title_external">Requesting read/write permission</string>
+    <string name="permission_dialog_message_external">Your wallet needs access to file storage so it can automatically save an encrypted backup of your wallet to your device.</string>
+    <string name="permission_alert_dialog_title_camera">Requesting camera permission</string>
+    <string name="permission_dialog_message_camera">Your wallet needs access to the camera so it can scan QR codes.</string>
+
+    <string name="use_bech32">Use bech32 address</string>
+
+    <string name="boltzmann_cannot">A STONEWALL spend could not be composed with your current set of unspents. If you require a STONEWALL spend tap \'NO\' and try again with a modified set of unspents.</string>
+    <string name="boltzmann_like_typed">Be advised that \'Receive change to like-typed outputs\' is OFF and can result in a less optimal transaction structure for your STONEWALL spend.</string>
+    <string name="title_activity_main3">Main3Activity</string>
+    <string name="_0_00">0.00</string>
+    <string name="advanced">Advanced</string>
+    <string name="broadcast_with_txtenna">Broadcast with TxTenna</string>
+    <string name="show_qr_code">Show QR Code</string>
+    <string name="tx_connectivity_failure_msg">Cannot broadcast transaction without a data connection. How would you like to proceed?</string>
+
+    <string name="insufficient_fee">Insufficient fee</string>
+    <string name="action_utxo_amounts">View amounts by address type</string>
+    <string name="remix_note_tag">"Remix"</string>
+
+    <string name="total_p2pkh">Total legacy (p2pkh):</string>
+    <string name="total_p2sh_p2wpkh">Total segwit (p2sh):</string>
+    <string name="total_p2wpkh">Total segwit (bech32):</string>
+    <string name="total_blocked">Total blocked:</string>
+
+
+    <string name="tx_creating_ok">Creating transaction…</string>
+    <string name="tx_creating_ko">Cannot create transaction</string>
+    <string name="tx_signing_ok">Signing transaction…</string>
+    <string name="tx_signing_ko">Cannot sign transaction</string>
+    <string name="tx_broadcast_ok">Broadcasting transaction…</string>
+    <string name="tx_broadcast_ko">Cannot broadcast transaction</string>
+    <string name="tx_sent_ok">Transaction sent</string>
+    <string name="tx_sent_ko">Transaction not sent</string>
+
+    <string name="prune_backup">Prune payload and backup files?</string>
+
+    <string name="in_offline_mode">Ashigaru is in offline mode.</string>
+
+    <string name="broadcast_off2">Enable “Broadcast transaction” in your settings to initiate a Cahoots transaction</string>
+    <string name="broadcast_off">Ashigaru is in Offline Mode</string>
+    <string name="tx_standby">Transaction in stand-by</string>
+    <string name="show_hex">Display Hex Code</string>
+    <string name="tx_tenna_coming_soon">TxTenna on Android coming soon</string>
+    <string name="enter_paynym">PayNym</string>
+    <string name="enter_index">Index</string>
+    <string name="receive_addresses">Receive addresses</string>
+
+    <string name="send_addresses">Send addresses</string>
+    <string name="display_receive_redeem">Receive redeem script</string>
+    <string name="display_receive_privkey">Receive private key</string>
+    <string name="invalid_index">Invalid index</string>
+    <string name="type_address">Type of address</string>
+
+    <string name="chain_id">Address chain</string>
+
+    <string name="receive_address">Receive address</string>
+
+    <string name="change_chain">Change address</string>
+    <string name="whirlpool_postmix">Whirlpool Segwit post-mix</string>
+    <string name="encrypted_backup_detected">Encrypted backup detected</string>
+    <string name="restore">RESTORE</string>
+    <string name="request_amount">Request Amount</string>
+    <string name="address_type">Address Type</string>
+    <string name="path">Path</string>
+    <string name="title_activity_send_new_ui">SendNewUIActivity</string>
+    <string name="ricochet_hops_msg">Additional hops between your wallet and the final destination for increased fungibility</string>
+    <string name="joinbot_msg">Amount will be sent as a coinjoin output</string>
+    <string name="joinbot_spend_limit">Max spend amount: 1.25 BTC</string>
+
+    <string name="review_transaction">REVIEW TRANSACTION</string>
+    <string name="stonewall_increases_deniability">STONEWALL increases deniability and reduces linkability of this transaction.</string>
+    <string name="title_activity_empty_whirl_pool">" "</string>
+    <string name="cycling_bitcoin">Cycling bitcoin through the \n whirlpool will cover the tracks your \n transactions leave behind</string>
+    <string name="metadata_cleaner">metadata cleaner</string>
+    <string name="end_to_end_trustless">end-to-end trustlessness</string>
+    <string name="your_private_keys">Your private keys never leave the\n device at any point during the\n Whirlpool cycle</string>
+    <string name="different_cycles_for">different cycles for different needs</string>
+    <string name="complete_a_slow_cycle">Pay a small fee for a fast cycle or \n earn a small BTC reward when you\n complete a slow cycle</string>
+    <string name="supercharge_whirlpool_desc">Your coins will be added to the top of the queue for immediate processing</string>
+    <string name="title_activity_whirl_pool_main">WhirlPoolMain</string>
+    <string name="title_activity_whirlpool_main">WhirlpoolMain</string>
+    <string name="title_activity_cycle">CycleActivity</string>
+    <string name="standard_whirlpool_desc">Your coins will be added to the bottom of the queue but will earn a small BTC reward when the cycle completes</string>
+    <string name="standard">Standard</string>
+    <string name="_48_hours">48 hours +</string>
+    <string name="free">FREE</string>
+    <string name="_1_50">1.50%</string>
+    <string name="_0_5_mins">0–5 mins</string>
+    <string name="select_a_cycle_type">Select a cycle type</string>
+    <string name="supercharge">SuperCharge</string>
+    <string name="transaction_broadcast">Transaction Broadcast</string>
+    <string name="pending">Pending</string>
+    <string name="transaction_id">Transaction ID</string>
+    <string name="completed">Completed</string>
+    <string name="title_activity_received_tx">" "</string>
+    <string name="pay_again">Pay again</string>
+    <string name="miner_fee_rate">Miner fee rate</string>
+    <string name="status">Status</string>
+    <string name="title_activity_tx_privacy_details">TxPrivacyDetails</string>
+    <string name="number_of_deterministic_combinations">Number of deterministic \ncombinations</string>
+    <string name="transaction_entropy">Transaction Entropy</string>
+    <string name="efficiency_score">Efficiency score</string>
+    <string name="hide_log">HIDE LOG</string>
+    <string name="copy">Copy</string>
+    <string name="show_log">Show Log</string>
+    <string name="unconfirmed">Unconfirmed</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="total_available_amount">Total available amount</string>
+    <string name="you_do_not_yet_have_any_paynym_contacts">You do not yet have any PayNym contacts</string>
+    <string name="experimental">Experimental</string>
+    <string name="cahoots">Cahoots</string>
+
+    <string name="options_cahoots2">Make every spend a CoinJoin.</string>
+    <string name="PSBT">PSBT</string>
+    <string name="options_psbt2">Partially Signed Bitcoin Transaction.</string>
+    <string name="import_cahoots">Scan or paste a Cahoots.</string>
+    <string name="import_psbt">Scan or paste a PSBT.</string>
+    <string name="enter_cahoots">Enter Cahoots text</string>
+    <string name="enter_psbt">Enter PSBT hex text</string>
+    <string name="create_cahoots">Create Cahoots spend</string>
+    <string name="stowaway">Stowaway</string>
+    <string name="stonewall">Stonewall</string>
+    <string name="urgent">Urgent</string>
+    <string name="normal">Normal</string>
+    <string name="low">Low</string>
+    <string name="ricochet_nlocktime_ok">Your staggered Ricochet has been forwarded for broadcast. Please wait until the block height permits the broadcasting of all the transactions in the series.</string>
+    <string name="ricochet_nlocktime_ko">Your staggered Ricochet could not be forwarded for broadcast. Please try again.</string>
+
+    <string name="tag_utxo">Label UTXO</string>
+    <string name="boost_transaction_fee">Boost transaction fee</string>
+    <string name="refund">Refund</string>
+    <string name="not_cahoots">Invalid Cahoots</string>
+    <string name="not_valid_json">JSON parsing error</string>
+
+    <string name="unrecognized_cahoots">Unrecognized Cahoots</string>
+    <string name="cannot_compose_cahoots">Cannot compose Cahoots</string>
+    <string name="start_stowaway">Begin Stowaway as spender</string>
+    <string name="start_stonewall">Begin STONEWALL as spender</string>
+    <string name="amount_sats">Enter amount in sats</string>
+    <string name="zero_bits">0 bits</string>
+    <string name="not_available">N/A</string>
+    <string name="show_tx">Display transaction</string>
+    <string name="unrecognized_step">Unrecognized Cahoots step</string>
+    <string name="cannot_process_stowaway">Cannot process Stowaway</string>
+    <string name="cannot_process_stonewall">Cannot process STONEWALL</string>
+    <string name="cannot_process_cahoots">Cannot process Cahoots</string>
+    <string name="title_activity_network_dashboard">Networking</string>
+    <string name="powering_samourai_wallet_">Powering Ashigaru with your own personal node offers the best level of privacy and independence when interacting with the bitcoin network. Dojo makes running a full node easy and simple.</string>
+    <string name="plug_and_play_full_bitcoin_node_automatically">- Plug and Play full bitcoin node\n\n -Automatically configured Tor hidden service\n\n -Independence from default Samourai servers</string>
+    <string name="dojo_connect_instruction">If you already have a Dojo Full Node or are \nrunning the free and open source Dojo Software\non your own hardware, scan the pairing QR code\nlocated on the Dojo Maintenance control panel</string>
+    <string name="dojo_headline">Power Samourai with your  own personal DOJO full node</string>
+    <string name="connect_to_existing_dojo">Connect to existing Dojo</string>
+    <string name="create_to_existing_dojo">Create wallet and pair to Dojo</string>
+    <string name="preorder">preorder</string>
+    <string name="add_new">Add New</string>
+    <string name="paynym_follow_message_2">to participate in Cahoots CoinJoin transactions with them. No need to connect to use Cahoots!</string>
+    <string name="paynym_connect_message">to generate unique private addresses for sending bitcoin to this contact</string>
+    <string name="follow">Follow</string>
+    <string name="wallet_locked">Wallet Locked</string>
+    <string name="address">Address</string>
+    <string name="is_offline">Ashigaru is offline</string>
+    <string name="history_will_be_updated">Balance and transaction history will not be updated until a working data connection is established</string>
+    <string name="dojo_not_reachable">Dojo not reachable. Wallet balance will not update, may be inaccurate, and app functionality wil be impacted.</string>
+
+    <string name="private_codes_dont_share">These codes are private and should not be shared publicly.</string>
+
+    <string name="you_received_s">You received</string>
+    <string name="paynym_follow_message">This fee covers the cost of creating a one-time transaction to create a record on the blockchain.  This keeps PayNyms decentralized</string>
+    <string name="paynym_follow_fee_message">A one time connection fee of  will be charged to connect to this PayNym</string>
+    <string name="initializing_tor">Initializing Tor…</string>
+    <string name="cannot_pair_whirlpool_gui">Cannot prepare pair to Whirlpool GUI.</string>
+    <string name="message_copied">message copied</string>
+
+    <string name="scan_code">Scan Code</string>
+    <string name="follows_you">Follows you</string>
+    <string name="edit_paynym">Edit PayNym</string>
+    <string name="sycing_pcodes">Syncing payment codes</string>
+    <string name="sync_complete">Payment code sync complete</string>
+    <string name="options_paynym_indexes">Show PayNym indexes</string>
+    <string name="begin_cycle">BEGIN CYCLE</string>
+    <string name="pool_fee">POOL FEE</string>
+    <string name="total_fees">TOTAL FEES</string>
+    <string name="miner_fee">MINER FEE</string>
+    <string name="total_whirlpool_balance">Total Whirlpool Balance</string>
+    <string name="review_cycle_details">REVIEW CYCLE DETAILS</string>
+    <string name="cycled_transactions">Cycled Transactions</string>
+    <string name="initial_transaction">Initial Transaction</string>
+    <string name="progress">Progress</string>
+    <string name="waiting_for_blockchain_confirmation">Waiting for blockchain confirmation</string>
+    <string name="create_password">Create password</string>
+    <string name="confirm_password">Confirm password</string>
+
+    <string name="pairing_password">Define pairing password: (6–255 characters)</string>
+    <string name="backup_password">Define backup password: (6–255 characters)</string>
+    <string name="password_error">Error creating password</string>
+    <string name="password_invalid">Invalid password</string>
+    <string name="review_whirlpool">Review Whirlpool Details</string>
+    <string name="total_selected">Total selected</string>
+
+    <string name="cycle">Cycle</string>
+    <string name="postmix_without_boltzmann">Please note that spending from your post-mix account without using STONEWALL will result in a loss of the privacy gained through Whirlpool.</string>
+    <string name="estimated_entropy">Estimated Entropy</string>
+    <string name="share_this_qr_code_with_your_participant">Share this QR code with your participant</string>
+    <string name="review_tx_before_braodcast">Review the transaction before broadcasting</string>
+    <string name="select_participant">Select participant</string>
+    <string name="select_cahoots_type">Select Cahoots type</string>
+    <string name="cannot_disable_tor_dojo">Tor cannot be stopped since wallet is connected to a Dojo node.</string>
+    <string name="temporary_dojo_disable">Uninstall Ashigaru to unpair from your Dojo node. \'DISABLE\' will be fully activated in a later update.</string>
+
+    <string name="renew">RENEW</string>
+    <string name="continue_exchanging_qr_codes">Continue exchanging QR codes\n until the transaction is broadcast!</string>
+    <string name="confirm_that_you_wish_to_broadcast_this_transaction">Confirm that you wish to broadcast this transaction.</string>
+    <string name="begin_stowaway">Begin Stowaway</string>
+    <string name="begin_stonewallx2">Begin STONEWALLx2</string>
+    <string name="start_joinbot_transaction">start Joinbot transaction</string>
+    <string name="total_miner_fee">Total Miner Fee :</string>
+    <string name="launch_qr_scanner">LAUNCH QR Scanner</string>
+    <string name="next_step">Next Step…</string>
+    <string name="scan_the_qr_code_that_your_collaborator_provides_you">Scan the QR CODE that your collaborator provides you.</string>
+    <string name="you_will_contribute">You will contribute</string>
+    <string name="create_an_on_demand_coinjoin_transaction_for_enhanced_privacy_and_surveillance_protection">Create an on demand CoinJoin transaction for enhanced privacy and surveillance protection</string>
+    <string name="refresh">Refresh</string>
+    <string name="unspent_outputs">Unspent Outputs</string>
+    <string name="unspent_outputs_post_mix">Unspent Outputs - Post mix</string>
+    <string name="paste_cahoots_payload">Paste Cahoots payload</string>
+    <string name="clipboard_empty">Clipboard empty</string>
+    <string name="premix_balance">Premix balance</string>
+    <string name="post_mix_balance">Post mix balance</string>
+    <string name="spendable">Spendable</string>
+    <string name="reveal_the_redeem_script_for_this_address">Reveal the redeem script for this address</string>
+    <string name="coming_soon">Coming soon</string>
+    <string name="active">Active</string>
+    <string name="change_from_postmix">Change from postmix spend</string>
+    <string name="selection_contains_blocked_utxo">Your selection contains blocked UTXOs. Please remove and try again.</string>
+    <string name="utxo_is_blocked_please_try_again">UTXO is Blocked. Please remove and try again.</string>
+    <string name="only_single_utxo_may_selected">Only a single UTXO may be selected for direct spend from post-mix.</string>
+    <string name="only_a_single_utxo_may">Only a single UTXO may be selected for direct Whirlpooling from post-mix.</string>
+    <string name="only_change_utxos_allowed">Only change UTXO\'s allowed</string>
+    <string name="utxo_is_marked_as_blocked">UTXO is marked as blocked</string>
+    <string-array name="address_types">
+        <item>Segwit native (bech32)</item>
+        <item>Segwit compatibility (P2SH)</item>
+        <item>Legacy (P2PKH)</item>
+    </string-array>
+
+    <string-array name="account_types">
+        <item>Deposit: Legacy</item>
+        <item>Deposit: Segwit Compatibility</item>
+        <item>Deposit: Native Segwit</item>
+        <item>Premix: Native Segwit</item>
+        <item>Postmix: Native Segwit</item>
+        <item>Postmix: Legacy change</item>
+        <item>Postmix: Segwit Compatibility change</item>
+        <item>Bad Bank: Native Segwit</item>
+        <item>Swaps Deposit: Native Segwit</item>
+        <item>Swaps Refunds: Native Segwit</item>
+        <item>Swaps ASB: Native Segwit</item>
+        <item>Ricochet: Native Segwit</item>
+    </string-array>
+
+    <string name="mixing"><em>%1$s</em> : %2$s</string>
+    <string name="mixing_title">Mixing</string>
+
+    <string name="doxxic_change_warning">Doxxic Change</string>
+    <string name="block_tx0_change">The change output from this Tx0 will be tagged. Block it to make it unspendable? If so, the amount will not be reflected in the total balance but will be visible within the wallet by consulting the list of unspents.</string>
+    <string name="total_pre_mix_balance">Total Pre-mix Balance</string>
+    <string name="total_post_mix_balance">Total Post-mix Balance</string>
+    <string name="post_mix_transactions">Post-mix transactions</string>
+    <string name="scode">Whirlpool SCODE</string>
+    <string name="enter_scode">Enter your Whirlpool SCODE. If confirmed by pressing \'OK\' the Whirlpool service will close. Re-enter Whirlpool to activate the SCODE.</string>
+    <string name="this_utxo_is_marked_as_spendable">This UTXO is marked as Spendable</string>
+    <string name="this_utxo_is_marked_as_blocked">This UTXO is marked as Blocked</string>
+
+    <string name="psbt_sign_tx">Sign transaction</string>
+    <string name="display_psbt">Display PSBT</string>
+    <string name="psbt_error">Error parsing PSBT</string>
+    <string name="psbt_sign_error">Error signing transaction via PSBT</string>
+
+    <string name="strict_mode_address">Strict mode has detected possible address reuse for this transaction. Reformulate the transaction or broadcast as-is?</string>
+    <string name="strict_reformulate">Reformulate transaction</string>
+
+    <string name="sweep_no_amount">No UTXOs found for this private key.</string>
+    <string name="note_privacy_addons_are_not_available_for_selected_utxo_s">NOTE: Privacy addons are not available for selected utxo\'s</string>
+    <string name="note_some_privacy_addons_are_not_available_for_selected_utxo_s">NOTE: Some privacy addons are not available for selected utxo\'s</string>
+    <string name="note_you_are_making_a_post_mix_spend_if_cahoots_nis_not_selected_samourai_will">NOTE: You are making a post-mix spend. If #Cahoots\nis not selected Samourai will attempt to make a STONEWALL spend.</string>
+    <string name="off">Off</string>
+    <string name="privacy_addons">Privacy Addons</string>
+    <string name="joinbot">Joinbot</string>
+    <string name="ricochet_">Ricochet</string>
+    <string name="staggered_delivery">Staggered delivery</string>
+    <string name="for_extra_privacy_message">For extra privacy and analysis resistance, each hop will appear in mempool 1 block apart.  Designed to be slow. Do not enable for urgent sends.</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="no_cahoots_detected">No cahoots detected. Refresh to search again</string>
+    <string name="waiting_for_cahoots_request">Waiting for Cahoots request…</string>
+    <string name="follow_paynym_fee_free">Fee : Free</string>
+    <string name="connect_paynym_fee">Fee : 546 sats + miner fee</string>
+    <string name="connect">Connect</string>
+    <string name="blockchain_connect_with">Connect with</string>
+    <string name="following">Following</string>
+    <string name="based_on_cryptography_and">Based on cryptography and math, not your personal information</string>
+    <string name="find_and_follow_your_friends">Find and follow your friends and contacts without harming your privacy</string>
+    <string name="unlocks_advanced">Unlocks advanced privacy functionality in your wallet</string>
+    <string name="share_and_reuse">Share and reuse without revealing your other transactions and balances</string>
+    <string name="enter_backup_password">Enter backup password</string>
+    <string name="restore_backup">Restore backup</string>
+    <string name="whirlpool_pairing">Whirlpool Pairing</string>
+    <string name="swaps_pairing">XMR-BTC Swaps Pairing</string>
+    <string name="enter_pairing_password">Enter pairing password</string>
+    <string name="add_to_batch">Add to batch</string>
+    <string name="update_to_batch">Update batch</string>
+    <string name="current_batch">Current Batch</string>
+    <string name="have_your_mixing_partner">Have your mixing partner scan the QR to start.</string>
+    <string name="broadcast_transaction">Broadcast Transaction</string>
+    <string name="broadcasting_transaction">Broadcasting Transaction</string>
+    <string name="recipients">Recipients</string>
+    <string name="clear_batch_list">Clear batch list</string>
+    <string name="confirm_batch_list_clear">Are you sure want to clear batch list?</string>
+    <string name="confirm_import_batch_list">Import will overwrite existing batch entries, would you like to continue?</string>
+    <string name="break_free">Break free of third party custody. Remain in complete control of your wallet at all times.</string>
+    <string name="perfect_toolbox">The perfect toolbox for managing your bitcoin experience privately</string>
+    <string name="offline_mode_allows">Offline mode allows you to interact with your bitcoin even without data</string>
+    <string name="connect_your_wallet_to_your_own">Connect your wallet to your own full bitcoin node with a single QR scan</string>
+    <string name="get_started">Get Started</string>
+    <string name="restore_an_existing_wallet">Restore an existing wallet</string>
+    <string name="create_a_new_wallet">Create a new wallet</string>
+    <string name="scan_qr">Scan QR</string>
+    <string name="tor_initializing">Tor initializing</string>
+    <string name="connected">Connected</string>
+    <string name="not_configured">Not configured</string>
+    <string name="connecting">Connecting…</string>
+    <string name="invalid_api_endpoint">Invalid API endpoint</string>
+    <string name="invalid_api_key">Invalid Api key</string>
+    <string name="do_you_want_to_unpair">Do you want to unpair dojo ?</string>
+    <string name="dojo_connection_error">Unable to connect Dojo. Please check the api key or Dojo status</string>
+    <string name="invalid_dojo_payload">Invalid dojo payload</string>
+    <string name="your_passphrase">Your passphrase</string>
+    <string name="your_passphrase_will_not_be_shown_to_you_again">Your passphrase will not be shown to you again.</string>
+    <string name="your_passphrase_is_a_required_part_of_your_noffline">Your passphrase is a required part of your\noffline paper backup. Without it you\ncannot restore your wallet</string>
+    <string name="write_down_words_down_and_keep_them">Write these words down and keep them\nsecret. Together with your passphrase\nthey allow access to your wallet</string>
+    <string name="create_your_offline_paper_backup">Create your offline paper backup</string>
+    <string name="without_a_backup_your_bitcoin">Without a backup your bitcoin wallet is at\nrisk of unrecoverable loss.\n\nDownload and print the PDF template to\nmake the backup as easy as possible.</string>
+    <string name="download_pdf_template">Download PDF Template</string>
+    <string name="i_have_an_external_wallet">I have an external wallet</string>
+    <string name="_12_15_18_24_mnemonic_words">12/15/18/21/24 Mnemonic words</string>
+    <string name="restoring_a_wallet_no_problem_let_s_figure">Restoring a wallet? No problem, let\'s figure out what kind of restore to perform.</string>
+    <string name="i_have_a_samourai_backup_file">I have an Ashigaru or Samourai backup file</string>
+    <string name="encrypted_backup_file_passphrase">Encrypted backup file + passphrase</string>
+    <string name="before_anything_else_lets_take_ncare_of">Before anything else, let\'s take\ncare of some network\nhousekeeping.</string>
+    <string name="dojo_status">Dojo status:</string>
+    <string name="api_key">API Key</string>
+    <string name="dojo_onion_address">Dojo onion address</string>
+    <string name="would_you_like_to_enable_tor">Would you like to enable Tor?</string>
+    <string name="would_you_like_to_connect_to">Would you like to connect to your\nown Dojo server?</string>
+    <string name="passphrase_is_required_for_samourai">Passphrase is required</string>
+    <string name="send_cahoots">Send Cahoots</string>
+    <string name="api_key_blank_error">This field cannot be left blank!</string>
+    <string name="choose">Choose</string>
+    <string name="permission_dialog_scoped">Your wallet needs access to file storage so it can automatically save an encrypted backup of your wallet to your device. Please choose a directory.</string>
+    <string name="permission_alert_dialog_title_external_scoped">Choose backup directory</string>
+    <string name="please_try_again_in">Please try again in </string>
+    <string name="wallet_locking_in">Wallet will be locked in </string>
+    <string name="seconds">seconds</string>
+    <string name="title_activity_whilrpool_main">WhilrpoolMain</string>
+    <string name="title_activity_whirlpool_home">WhirlpoolHome</string>
+    <string name="transactions">Transactions</string>
+    <string name="remixing">Remixing</string>
+    <string name="whirlpool_completely_breaks_the">Whirlpool completely breaks the past links of your bitcoin from their future activity to help protect your privacy when using Bitcoin.</string>
+    <string name="whirlpool_is_entirely">Whirlpool is entirely non custodial. This means you keep full control of your bitcoin private keys at all steps of the process</string>
+    <string name="coins_that_are_currently">Coins that are currently waiting to complete their first Whirlpool mix will be listed and managed here.</string>
+    <string name="your_coins_will_be_split">Your coins will be split into identical size amounts automatically. Each of these identical amount coins will be mixed individually.\n\nYour wallet can only mix while it is online and unlocked.</string>
+    <string name="coins_that_have_been_mixed">Coins that have been mixed at least once will automatically be queued and randomly selected for free remixing.</string>
+    <string name="whirlpool_offers_absolutely">Whirlpool offers absolutely free remixing for previously mixed coins. These transactions are without any miner fee or coordinator fees.\n\nRemixing increases your privacy gains and increases the privacy of the entire mixing pool.</string>
+    <string name="your_mixed_coins_have_been">Your mixed coins have been automatically queued for remixing.\n\nAdd some more unmixed coins to Whirlpool at any time.</string>
+    <string name="once_you_spend_a_mixed">Once you spend a mixed coin it is no longer eligible for free Remixing.\n\nAdd some more unmixed coins to Whirlpool at any time.</string>
+    <string name="your_coins_have_been_mixed">Your coins have been mixed!</string>
+    <string name="you_dont_have_any">You don\'t have any remixable coins</string>
+    <string name="loading">Loading…</string>
+    <string name="start_new_tx0">Start new Tx0</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="initializing_whirlpool">initializing whirlpool</string>
+    <string name="connecting_to_service">Connecting to service</string>
+    <string name="mix_details">Mix Details</string>
+    <string name="mix_amount">Mix Amount</string>
+    <string name="mixes_completed">Mixes completed</string>
+    <string name="pool">Pool</string>
+    <string name="mix_message">Mix Message</string>
+    <string name="toxic_change">Toxic change</string>
+    <string name="mix_error">Mix Error</string>
+    <string name="mix_utxos">Mix UTXOs</string>
+    <string name="mixes_complete">Mixes complete</string>
+    <string name="mixed">Mixed</string>
+    <string name="postmix_spend">Postmix spend</string>
+    <string name="you_cannot_follow_your_own_paynym">You cannot follow your own PayNym</string>
+    <string name="transfer_to_whirlpool">Transfer to Whirlpool</string>
+    <string name="total_balance">Total Balance</string>
+    <string name="total_in_progress_balance">Total in Progress Balance</string>
+    <string name="total_remixable_balance">Total Remixable Balance </string>
+    <string name="tx0_is_not_possible_with">Tx0 is not possible with selected UTXO.</string>
+    <string name="tor_status">Tor status</string>
+    <string name="open_in_browser">Open in browser</string>
+    <string name="copy_tx_id">Copy TxID</string>
+    <string name="copy_url">Copy URL</string>
+    <string name="title_activity_tools_main_acitivty">ToolsMainAcitivty</string>
+    <string name="preview_sweep">Preview sweep</string>
+    <string name="cost_of_sweep">Cost of sweep transaction</string>
+    <string name="balance_of_unspent">Balance of unspent output</string>
+    <string name="sweep">Sweep</string>
+    <string name="samourai_wallet_controlled_servers_will_act">Ashigaru controlled servers will act as a participant to create this CoinJoin. This is the easiest and quickest option.</string>
+    <string name="manually_compose_this_transaction">Manually compose this transaction with another participant who is using Ashigaru. Perfect for face-to-face interaction.</string>
+    <string name="compose_this_transaction_online_with">Compose this transaction online with another participant who is using Ashigaru over Tor.</string>
+    <string name="pin_length_error">Pin must be between 5 and 8 digits long</string>
+    <string name="pins_not_match">Pins do not match, try again.</string>
+    <string name="auth_challenge">Auth Challenge</string>
+    <string name="auth_with_paynym">Authenticate with PayNym</string>
+    <string name="enter_challenge">Paste or scan Challenge</string>
+    <string name="auth_success">Authentication success</string>
+    <string name="is_requesting_your_auth">is requesting your authentication.</string>
+    <string name="auth_using_paynym">Authenticate using PayNym</string>
+    <string name="authenticate">Authenticate</string>
+    <string name="estimated_wait_time">Estimated wait time</string>
+    <string name="estimated_confirmation_time">Est confirmation time</string>
+    <string name="enter_a_private_key_and">Enter a private key and sweep any funds to\nyour next bitcoin address</string>
+    <string name="sign_messages_using_your">Sign messages using your wallet private key</string>
+    <string name="wallet_address_calc">Wallet address calculator</string>
+    <string name="calculate_any_address_derived">Calculate all past and future addresses in your wallet</string>
+    <string name="simple_and_secure_auth_with">Simple and secure password-free authentication using your unique PayNym code</string>
+    <string name="address_details">Address details</string>
+    <string name="address_index">Address Index</string>
+    <string name="receive_address_external">Receive address (external)</string>
+    <string name="change_address_internal">Change address (internal)</string>
+    <string name="private_key">Private key</string>
+    <string name="redeem_script">Redeem Script</string>
+    <string name="select_collaborator">Select Collaborator</string>
+    <string name="select_paynym">Select Paynym</string>
+    <string name="sweep_dust_warning">Unable to compose transaction, output value will be dust</string>
+    <string name="sweep_invalid_fee_warning">Unable to compose transaction invalid fees.</string>
+    <string name="do_you_want_to_enable_stealth_mode">Do you want to enable stealth mode ?</string>
+    <string name="do_you_want_to_disable_stealth_mode">Do you want to disable stealth mode ?</string>
+    <string name="calculator">Calculator</string>
+    <string name="stealth_vpn_name">Edge VPN</string>
+    <string name="stealth_mode">Stealth mode</string>
+    <string name="enable_stealth_mode_to_protect">Disguise app icon on device home screen</string>
+    <string name="options_scramble_pin2">Randomly mix keypad digits</string>
+    <string name="options_scramble_pin">Scramble PIN screen</string>
+
+    <string name="show_deposit_pubs">Deposit</string>
+    <string name="show_whirlpool_pubs">Whirlpool</string>
+    <string name="show_badbank_pubs">Bad Bank</string>
+    <string name="show_swaps_pubs">Swaps</string>
+    <string name="show_ricochet_pub">Ricochet</string>
+    <string name="show_wallet_account_tech_info">Show wallet account technical info</string>
+
+    <string name="set_stealth_pin">Set stealth CODE</string>
+    <string name="enable_stealth_mode_on_or_off">Off / On</string>
+    <string name="choose_stealth_app">Choose Stealth App</string>
+    <string name="stealth_pin_warning">Cannot use wallet pin for stealth mode. please choose a different code</string>
+    <string name="stealth_qr_scannerapp_title">QR Scanner</string>
+    <string name="stealth_notepad_title">Notepad</string>
+    <string name="confirm_testnet_message">You are about to create a TESTNET wallet. TESTNET is used for experimenting and development testing.\n\nAll wallet tools are available, but will only function with TESTNET bitcoin.\n\nDo you wish to proceed?</string>
+    <string name="upon_exiting_samourai_wallet_stealth_mode">Upon exiting Ashigaru, Stealth Mode is enabled automatically</string>
+    <string name="enable_stealth_mode">Enable stealth mode</string>
+    <string name="disable_stealth_mode">Disable stealth mode</string>
+    <string name="instructions">Instructions</string>
+
+    <string name="tx_option_section_change">Change</string>
+    <string name="tx_option_change_do_not_spend">Mark Do Not Spend</string>
+    <string name="tx_option_change_spendable">Mark Spendable</string>
+    <string name="tx_status_not_sent">Transaction not sent</string>
+    <string name="tx_status_details_not_sent_offline_mode">Ashigaru is in Offline Mode</string>
+    <string name="tx_option_section_broadcast">Broadcast</string>
+    <string name="tx_option_broadcast_manually">Broadcast manually</string>
+    <string name="tx_status_broadcast_error">Broadcast Error</string>
+    <string name="tx_status_details_try_rebroadcating">Please try rebroadcasting</string>
+    <string name="tx_option_section_troubleshoot">Troubleshoot</string>
+    <string name="tx_option_attempt_broadcast">Attempt rebroadcast</string>
+    <string name="tx_option_contact_support">Contact support</string>
+    <string name="tx_toast_change_utxo_locked">Change UTXO/s marked Do Not Spend</string>
+    <string name="tx_toast_change_utxo_unlocked">Change UTXO/s marked Spendable</string>
+    <string name="tx_toast_no_change_utxo_found">No change UTXO found</string>
+    <string name="tx_toast_lock_change_utxo_issue">Issue when trying to lock change UTXO</string>
+    <string name="tx_toast_offline_read_broadcast">Ready to broadcast</string>
+    <string name="tx_toast_offline_mark_outputs_do_not_spend">Mark related outputs as do not spend</string>
+    <string name="options_import_batch">Paste batch spend</string>
+
+    <string name="options_import_batch_parsing_error">Error while parsing batch spend</string>
+    <string name="options_import_batch_payment_count">%d Batch Entries Added</string>
+    <string name="options_import_batch_payment_count_invalid_addr">%d item(s) with invalid address skipped</string>
+    <string name="options_import_batch_payment_count_invalid_amount">ignore %d item(s) with invalid amount skipped</string>
+    <string name="options_import_batch_pcode_connection_request">Some PayNyms or payment codes are not connected. Do you want to connect in before to create batch spend ?</string>
+    <string name="options_import_batch_input_hint">Batch spend in json format...</string>
+
+    <string name="featured_paynym">Featured PayNym</string>
+    <string name="scan_qr_code">Scan QR code</string>
+    <string name="paste_payment_code">Paste payment code</string>
+    <string name="samourai_wallet_dev_fund">Ashigaru Open Source Project</string>
+    <string name="samourai_wallet_dev_fund_sentence">Donate to help fund the development of \nAshigaru</string>
+
+    <string name="clipboard_unable_access">Unable to access Clipboard</string>
+    <string name="clipboard_item_inconsistent">Inconsistent item found in clipboard</string>
+    <string name="Amount">Amount</string>
+    <string name="batch_item_details">Batch Item Details</string>
+
+    <string name="select_spending_account">Select spending account</string>
+    <string name="deposit_account">Deposit account</string>
+    <string name="postmix_account">Postmix account</string>
+
+    <string name="wallet_loading_wait">Wallet loading, please wait</string>
+
+    <string name="no_messaging_app_installed">No messaging app is installed</string>
+    <string name="copy_content">Copy content</string>
+    <string name="email_content_copied">Email content copied to clipboard</string>
+
+    <string name="tx_alert_title">Transaction alerts</string>
+
+    <string name="tx_alert_title_reused_sending_address_local">Reused sending address</string>
+    <string name="tx_alert_desc_reused_sending_address_local">You have sent bitcoin to this address before. Try to avoid sending to addresses that have already been used to help protect your privacy.</string>
+
+    <string name="tx_alert_title_reused_sending_address_global">Address seen on blockchain</string>
+    <string name="tx_alert_desc_reused_sending_address_global">This address has already been used to receive bitcoin before. Try to avoid sending to addresses that have already been used to help protect your privacy.</string>
+
+    <string name="tx_alert_title_unnecessary_input">Unnecessary inputs</string>
+    <string name="tx_alert_desc_unnecessary_input">This transaction includes more inputs than is needed to compose the transaction which is inefficient and may reveal more information than needed on the blockchain.</string>
+
+    <string name="tx_alert_title_rounded_sending_amount">Rounded sending amount heuristic</string>
+    <string name="tx_alert_desc_rounded_sending_amount">This transaction includes a round amount. This heuristic is reliably used by blockchain surveillance firms to determine the send location and change output. Consider sending a less obvious amount to avoid this heuristic.</string>
+
+    <string name="tx_alert_title_scrypt_type_heuristic">Script type heuristic</string>
+    <string name="tx_alert_desc_scrypt_type_heuristic">This transaction spends to a script type that will make it obvious to blockchain surveillance observers what the send destination is and what the change output is. Your Ashigaru can solve this privacy issue by enabling the Like Type Change Outputs feature.</string>
+
+    <string name="tx_alert_title_spend_dust_output">Spending dust outputs</string>
+    <string name="tx_alert_desc_spend_dust_output">This transaction includes one or more inputs that are considered "dust". Unless you specifically meant for this transaction to include these small outputs it may indicate a serious privacy issue. Your Ashigaru can solve this privacy by marking these dust outputs as unspendable.</string>
+
+    <string name="tx_alert_title_spend_from_postmix_to_deposit">Spending from Postmix to Deposit account</string>
+    <string name="tx_alert_desc_spend_from_postmix_to_deposit">You are attempting to spend from your Postmix to Deposit account. Consideration should be given for future transactions made from your Deposit account as merging these funds with other unspent outputs could degrade your privacy.</string>
+
+    <string name="tx_alert_title_send_to_donation_address">Sending to a known donation address</string>
+    <string name="tx_alert_desc_send_to_donation_address">You are attempting to send to a known donation address, this could result in a downgrade of your privacy</string>
+
+    <string name="tx_alert_title_consolidation">Consolidation heuristic</string>
+    <string name="tx_alert_desc_consolidation">This transaction has no change output. This heuristic is reliably used by blockchain surveillance firms to assume all transaction inputs belong to a common owner which may be degrading to your privacy.</string>
+
+    <string name="tx_alert_title_wallet_sweep">Consolidation heuristic / Wallet sweep</string>
+    <string name="tx_alert_desc_wallet_sweep">This transaction has no change output. This heuristic is reliably used by blockchain surveillance firms to assume all transaction inputs belong to a common owner which may be degrading to your privacy.</string>
+
+    <string name="stonewall_inputs_refreshed">STONEWALL inputs refreshed</string>
+    <string name="this_app_does_not_have">This app does not have internet connection.\n\nIn offline mode you can configure your wallet\nwith or without Dojo credentials.\n\nIf you later bring your wallet online, the saved\nDojo credentials will be used to update your\nbalance / UTXO set with the latest Bitcoin\nnetwork state.</string>
+    <string name="dojo_connectivity">Dojo connectivity</string>
+    <string name="network_connectivity">Network connectivity</string>
+    <string name="status_dojo_details">Status</string>
+    <string name="data_connection">Data Connection</string>
+    <string name="my_dojo_placeholder">My Dojo</string>
+    <string name="block_height">Block Height</string>
+    <string name="download_the_latest_ashigaru_apk">Download the latest Ashigaru APK file from <b><font color="#F5f7f5ff">ashigaru.rs/download</font></b> to update your app</string>
+    <string name="formatted_text">how are you doing <b><font color="#FF5722">this is bold text</font></b> this is not</string>
+    <string name="includes_public_and_private_keys_for_use">Includes public and private keys. For use with Whirlpool CLI, Whirlpool Desktop and Swaps App</string>
+    <string name="show_pairing_credentials">Show pairing credentials</string>
+    <string name="erase_wallet_data">Erase wallet data</string>
+    <string name="certain_erase_data">Are you certain you wish to erase wallet data?</string>
+    <string name="share">Share</string>
+    <string name="wallet_info_for_troubleshooting">Wallet info for troubleshooting</string>
+    <string name="receive_index_blockchain_count">Receive index blockchain count:</string>
+    <string name="receive_index_internal_count">Receive index internal count</string>
+    <string name="change_index_blockchain_count">Change index blockchain count</string>
+    <string name="change_index_internal_count">Change index internal count</string>
+
+    <string name="postmix_shared_indexes">Postmix shared indexes:</string>
+
+    <string name="deriving_legacy_mainnet">Used for deriving Legacy addresses starting with \"1\" (P2PK2)</string>
+    <string name="deriving_legacy_testnet">Used for deriving Legacy addresses starting with \"m\" or \"n\" (P2PKH)</string>
+
+    <string name="deriving_compat_mainnet">Used for deriving Segwit Compatibility addresses starting with \"3\" (P2SH-P2PKH)</string>
+    <string name="deriving_compat_testnet">Used for deriving Segwit Compatibility addresses starting with \"2\" (P2SH-P2PKH)</string>
+
+    <string name="deriving_segwit_mainnet">Used for deriving Native Segwit addresses starting with \"bc1q\" (P2WPKH)</string>
+    <string name="deriving_segwit_testnet">Used for deriving Native Segwit addresses starting with \"tb1q\" (P2WPKH)</string>
+
+    <string name="deriving_liketype_legacy_mainnet">Used for deriving Legacy addresses starting with \"1\" (P2PKH) for like-type change</string>
+    <string name="deriving_liketype_legacy_testnet">Used for deriving Legacy addresses starting with \"m\" or \"n\" (P2PKH) for like-type change</string>
+
+    <string name="deriving_liketype_compat_mainnet">Used for deriving Segwit Compatibility addresses starting with \"3\" (P2SH-P2PKH) for like-type change</string>
+    <string name="deriving_liketype_compat_testnet">Used for deriving Segwit Compatibility addresses starting with \"2\" (P2SH-P2PKH) for like-type change</string>
+    <string name="active_and_offline_pgp_signed_messsage_urls">Active and offline PGP signed\nmesssage URLs</string>
+    <string name="these_urls_are_updated_automatically_over_tor_with_pgp_verification_to_ensure_continuous_in_app_functionality">These URLs are updated automatically over Tor with PGP verification to ensure continuous in-app functionality.</string>
+    <string name="if_you_do_not_use_ashigaru_mobile_for_a_long_period_of_time_it_is_possible">If you do not use Ashigaru mobile for a long period of time\nit is possible:\n\n\t1. Your \"app functionality URLs\" may not be up to date,\n\t\t are unable to automatically update themselves, and\n\t\t functionality for these features may be degraded.\n\n\t2. You will not receive in-app notifications when an app\n\t\t update is available.</string>
+    <string name="if_this_occurs_first_try_rectifying_the_issue_by_updating_your_app">If this occurs, first try rectifying the issue by updating\nyour app to the lastest version, after which full\nfunctionality shall be restored.</string>
+    <string name="alternatively_you_may_manually_paste_the">Alternatively you may manually paste the \"Ashigaru\nMobile Latest Text File\" contents below, which contains\na PGP signed message from Ashigaru Dev. The signed\nmessage will be automatically verified in-app, and if it\ncontains a higher \"PGP Signed Message Version\" your\napp functionality URLs will be updated.</string>
+    <string name="paste_ashigaru_mobile_latest_text_file_pgp_signed_message">Paste Ashigaru Mobile Latest Text File (PGP signed message)</string>
+    <string name="fix_orphaned_urls">Fix orphaned URLs</string>
+    <string name="the_text_provided_does_not_contain">The text provided does not contain a valid Ashigaru Mobile Latest Text File signed by Ashigaru Dev\'s PGP</string>
+    <string name="app_same_version">Your app is currently on the same \"PGP Signed Message Version\" as compared to the contents of the Ashigaru Mobile Latest Text File provided</string>
+    <string name="app_higher_version">Your app is currently on a higher \"PGP Signed Message Version\" as compared to the contents of the Ashigaru Mobile Latest Text File provided</string>
+
+    <string name="over_tor_with_pgp_verification">These URLs are updated automatically over Tor with PGP verification.</string>
+    <string name="copy_and_paste_a_url_into_the_tor">Copy and paste a URL into the Tor browser to download a copy of the Ashigaru mobile source code in zip format.\n\nNote: some URLs may currently be offline.</string>
+    <string name="pgp_message_verification_failed">PGP message verification failed</string>
+
+</resources>

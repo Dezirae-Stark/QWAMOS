@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/show_deposit_pubs"
+        android:key="showDepositPubs"
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="true"
+        app:allowDividerAbove="true"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        />
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/show_whirlpool_pubs"
+        android:key="showWhirlpoolPubs"
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="true"
+        app:allowDividerAbove="true"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        />
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/show_badbank_pubs"
+        android:key="showBadBankPubs"
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="true"
+        app:allowDividerAbove="true"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        />
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/show_swaps_pubs"
+        android:key="showSwapsPubs"
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="true"
+        app:allowDividerAbove="true"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        />
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/show_ricochet_pub"
+        android:key="showRicochetPub"
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="true"
+        app:allowDividerAbove="true"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        />
+
+    <com.samourai.wallet.settings.CustomPreference
+        android:title="@string/show_wallet_account_tech_info"
+        android:key="showTechInfo"
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="true"
+        app:allowDividerAbove="true"
+        android:icon="@drawable/ic_chevron_right_white_24dp"
+        />
+</PreferenceScreen>

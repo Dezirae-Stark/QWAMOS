@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/networking">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:id="@+id/toolbar"
+            android:layout_height="wrap_content"
+            android:background="@color/toolbar" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/version"
+                android:text="@string/options_version"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/actual_version"
+                android:text="1.0.0"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/roboto_mono"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dividerColor="@color/separator"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/license"
+                android:text="Software license"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/actual_license"
+                android:text="GNU GPL v3"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/roboto_mono"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dividerColor="@color/separator"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/website"
+                android:text="Ashigaru Tor website"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/copy_website_txt"
+                android:text="COPY URL"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:textColor="@color/blue_settings"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dividerColor="@color/separator"/>
+
+    <LinearLayout
+        android:id="@+id/app_urls_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/see_urls"
+                android:text="App functionality URLs"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/icon_urls"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:paddingStart="8dp"
+                app:srcCompat="@drawable/ic_chevron_right_white_24dp"
+                android:paddingEnd="8dp"
+                app:tint="@color/grey_transparent" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dividerColor="@color/separator"/>
+
+    <LinearLayout
+        android:id="@+id/download_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/source_code_urls"
+                android:text="Download source code"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/icon_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:paddingStart="8dp"
+                app:srcCompat="@drawable/ic_chevron_right_white_24dp"
+                app:tint="@color/grey_transparent"
+                android:paddingEnd="8dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

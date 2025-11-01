@@ -1,0 +1,110 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        google()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:${androidplugin}"
+    }
+}
+
+android {
+
+    namespace "com.ashigaru"
+
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 16
+        versionCode 1
+        versionName "0.0.15-samourai"
+        consumerProguardFiles 'proguard-rules.pro'
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+tasks.register('sourceJar', Jar) {
+    archiveClassifier.set('source')
+    from android.sourceSets.main.java.srcDirs
+}
+
+publishing {
+    publications {
+        android(MavenPublication) {
+            groupId 'com.msopentech.thali.toronionproxy.android'
+            artifactId 'android'
+            version '0.0.3'
+            artifact(sourceJar)
+            artifact("$buildDir/outputs/aar/android-release.aar")
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+                //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
+                configurations.compile.allDependencies.each {
+                    if(it.group != null && (it.name != null || "unspecified".equals(it.name)) && it.version != null)
+                    {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                    }
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation project(':universal')
+    implementation 'io.samourai.code.whirlpool:jtorctl:0.2.3-samourai'
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation 'org.slf4j:slf4j-android:1.7.25'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation project(':android_tor_installer')
+    androidTestImplementation 'org.torproject:tor-android-binary:0.3.5.8-rc-v2'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    google()
+    maven { url "https://raw.githubusercontent.com/guardianproject/gpmaven/master" }
+}
+
+/**
+ * Rename the native libraries to have 'so' extension so that the build will automatically package it in aar
+ */
+tasks.register('copyPluggableTransports', Copy) {
+    from "../external/pluto/bin"
+    into "src/main/jniLibs"
+    rename { filename ->
+        filename.replace 'obfs4proxy', 'libObfs4proxy.so'
+    }
+}
+
+gradle.projectsEvaluated {
+    preBuild.dependsOn(copyPluggableTransports)
+}
+
+tasks.register('sourcesJar', Jar) {
+    from android.sourceSets.main.java.srcDirs
+    archiveClassifier.set('sources')
+}
+
+artifacts {
+    archives sourcesJar
+}
