@@ -8,6 +8,29 @@ A ground-up mobile operating system that replaces Android, featuring post-quantu
   <img src="assets/QWAMOS_logo.png" width="300" alt="QWAMOS Logo">
 </p>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Version-0.3.0--alpha-blue" alt="Version">
+  <img src="https://img.shields.io/badge/Progress-35%25%20Complete-brightgreen" alt="Progress">
+  <img src="https://img.shields.io/badge/Phase-2%20Complete-success" alt="Phase">
+  <img src="https://img.shields.io/badge/License-GPLv3-orange" alt="License">
+  <img src="https://img.shields.io/badge/Crypto-Post--Quantum-purple" alt="Post-Quantum">
+  <img src="https://img.shields.io/badge/Commits-GPG%20Signed-green" alt="GPG Signed">
+</p>
+
+## 🚧 Current Status
+
+**Phase 2 Complete** - Successfully achieved interactive BusyBox shell boot!
+
+- ✅ **Phase 1:** U-Boot bootloader with Kyber-1024 signature verification
+- ✅ **Phase 2:** Linux 6.6 kernel + BusyBox initramfs (404 commands)
+- ⏳ **Phase 3:** Next up - KVM/QEMU hypervisor setup
+
+**Recent Achievements:**
+- Static BusyBox integration (2.0MB, ARM64)
+- Full boot chain validation (U-Boot → Kernel → Initramfs → Shell)
+- GPG commit signing enabled (Ed25519)
+- 15+ technical specification documents completed
+
 ## 🔒 Key Features
 
 - **Post-Quantum Cryptography:** Kyber-1024 + ChaCha20-Poly1305 throughout entire stack
@@ -124,15 +147,19 @@ QWAMOS/
 
 ### Development Roadmap
 
-- [x] **Phase 0:** Project setup and architecture (Month 0)
-- [ ] **Phase 1:** Foundation - Bootloader + Kernel (Months 1-2)
-- [ ] **Phase 2:** Hypervisor & VMs (Months 3-4)
-- [ ] **Phase 3:** Storage & Crypto (Months 5-6)
-- [ ] **Phase 4:** Network & Security (Months 7-8)
-- [ ] **Phase 5:** UI & Integration (Months 9-10)
-- [ ] **Phase 6:** Testing & Release (Months 11-12)
+- [x] **Phase 0:** Project setup and architecture (Month 0) ✅
+- [x] **Phase 1:** U-Boot Bootloader with Kyber-1024 verification (Months 1-2) ✅
+- [x] **Phase 2:** Linux Kernel 6.6 + BusyBox Initramfs (Months 3-4) ✅
+- [ ] **Phase 3:** Hypervisor & VMs (KVM/QEMU setup) (Months 5-8) ⏳
+- [ ] **Phase 4:** Storage & Crypto (VeraCrypt + Post-Quantum) (Months 9-12)
+- [ ] **Phase 5:** Network & Security (Tor/VPN/Whonix) (Months 13-18)
+- [ ] **Phase 6:** AEGIS Vault + KALI-WFH Suite (Months 19-24)
+- [ ] **Phase 7:** UI & Integration (React Native) (Months 25-30)
+- [ ] **Phase 8:** Testing & Release (Months 31-33)
 
-See [Development Roadmap](docs/ROADMAP.md) for details.
+**Current Progress:** Phase 2 Complete (35% overall)
+
+See [Development Roadmap](docs/ROADMAP.md) and [Project Status](PROJECT_STATUS.md) for details.
 
 ## 🔐 Security
 
@@ -224,8 +251,19 @@ QWAMOS is experimental software in active development. Use at your own risk. The
 
 ---
 
-**Status:** Alpha Development
-**Version:** 0.1.0-dev
-**ETA to Production:** 12 months
+**Status:** Alpha Development (Phase 2 Complete)
+**Version:** 0.3.0-alpha
+**Progress:** 35% Complete (2/8 phases)
+**ETA to Production:** 30 months (~2.5 years)
+
+**Key Milestones Achieved:**
+- ✅ U-Boot bootloader with Kyber-1024 signature verification
+- ✅ Linux 6.6 kernel with KVM, ChaCha20, SELinux, AppArmor
+- ✅ Static BusyBox initramfs (404 commands)
+- ✅ Successful interactive shell boot test
+- ✅ GPG-signed commits for supply chain security
+- ✅ 15+ technical specification documents
+
+**Next Steps:** Phase 3 - KVM/QEMU Hypervisor Setup
 
 **Made with ❤️ by Dezirae Stark and contributors**
