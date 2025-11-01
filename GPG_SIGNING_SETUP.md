@@ -2,12 +2,13 @@
 
 ## Current Status
 
-GPG commit signing has been configured for the QWAMOS repository with post-quantum cryptography.
+GPG commit signing has been configured for the QWAMOS repository.
 
 **Configuration:**
-- Algorithm: Ed448 (EdDSA) + Kyber1024-Curve448 (Post-Quantum Hybrid)
-- Key ID: `D74E48E03C62D98E`
-- Auto-sign: Configured (will be enabled after passphrase setup)
+- Algorithm: Ed25519 (EdDSA - GitHub compatible)
+- Key ID: `3FFB3F558F4E2B12`
+- Full Fingerprint: `A9331CFF1AA96BFC0F454B8B3FFB3F558F4E2B12`
+- Auto-sign: Configured (no passphrase required for this key)
 
 ---
 
@@ -15,17 +16,36 @@ GPG commit signing has been configured for the QWAMOS repository with post-quant
 
 ### Step 1: Add Public Key to GitHub
 
-1. Copy the entire GPG public key from `gpg_public_key.asc` file
+1. Copy the entire GPG public key from `gpg_github_public_key.asc` file
 2. Go to: https://github.com/settings/keys
 3. Click "New GPG key"
 4. Paste the public key
 5. Click "Add GPG key"
 
-**Public key location:** `~/QWAMOS/gpg_public_key.asc`
+**Public key location:** `~/QWAMOS/gpg_github_public_key.asc`
 
 Or copy directly:
 ```bash
-cat ~/QWAMOS/gpg_public_key.asc
+cat ~/QWAMOS/gpg_github_public_key.asc
+```
+
+**The key to copy:**
+```
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mDMEaQYTYxYJKwYBBAHaRw8BAQdAYNFo03LaW0iSfAfJZcj2ywIuLwEkXccP6A2H
+56PEQuS0RkRlemlyYWUtU3RhcmsgKFFXQU1PUyBHaXRIdWIgU2lnbmluZyBLZXkp
+IDxzZWlkaGJlcmVuZGlyQHR1dGFtYWlsLmNvbT6IrgQTFgoAVxYhBKkzHP8aqWv8
+D0VLiz/7P1WPTisSBQJpBhNjGxSAAAAAAAQADm1hbnUyLDIuNSsxLjExLDMsMgIb
+AwULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgAAKCRA/+z9Vj04rEmvnAP9UILo9
+qzlPr6SBsPhjMUOAO/aWzcc8S3tl4JujBXzqXAD4oR1PhMEIe48lP+4ED2nFl44M
+ZxFkghS/jXvE9W1sD7g4BGkGE2MSCisGAQQBl1UBBQEBB0DxoOjj+ZH+u0BRKepo
+RJ/f7SF6llJtV1CSVdxVyayJMQMBCAeIlAQYFgoAPBYhBKkzHP8aqWv8D0VLiz/7
+P1WPTisSBQJpBhNjGxSAAAAAAAQADm1hbnUyLDIuNSsxLjExLDMsMgIbDAAKCRA/
++z9Vj04rEvdYAQC94CfmB8X8IHkXGyct+4olR9CxbKvhLIPUBQ//253xZAEA9Alq
+xkHrGueNP7hc4K7q01zibh/cAMTrT/i7LhpDMwg=
+=EGm+
+-----END PGP PUBLIC KEY BLOCK-----
 ```
 
 ### Step 2: Test Signed Commit
@@ -136,9 +156,21 @@ This caches the passphrase for 1 hour (up to 2 hours max).
 ```
 user.name = Dezirae-Stark
 user.email = seidhberendir@tutamail.com
-user.signingkey = D74E48E03C62D98E
-commit.gpgsign = false  (will be true after testing)
+user.signingkey = 3FFB3F558F4E2B12
+commit.gpgsign = false  (enable with: git config commit.gpgsign true)
 ```
+
+## Why Ed25519 Instead of Ed448?
+
+**GitHub Compatibility Issue:**
+- Your original Ed448 + Kyber1024 key is MORE secure (post-quantum)
+- However, GitHub only supports: RSA, Ed25519, and ECDSA
+- Ed448 and Kyber1024 are not yet supported by GitHub
+
+**Current Setup:**
+- Ed25519 key for GitHub compatibility (still very secure: ~128-bit security)
+- You can keep your Ed448 + Kyber1024 key for other purposes
+- Both keys coexist - use Ed25519 for GitHub commits
 
 ---
 
