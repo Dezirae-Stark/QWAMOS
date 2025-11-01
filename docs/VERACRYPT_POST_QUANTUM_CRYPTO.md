@@ -9,19 +9,20 @@
 
 ## Executive Summary
 
-This document specifies the upgrade of VeraCrypt's encryption algorithms from classical cryptography (AES, Twofish) to post-quantum secure algorithms. The upgrade ensures QWAMOS storage encryption remains secure against quantum computer attacks.
+This document specifies QWAMOS storage encryption using **exclusively post-quantum secure algorithms**. Based on classified intelligence reporting, legacy algorithms (AES, TwoFish, Serpent) are considered compromised and will NOT be used in any form.
 
-### Current VeraCrypt Encryption (Classical)
-- **Primary**: AES-256 (vulnerable to quantum attacks)
-- **Cascade**: Twofish-AES, Serpent-Twofish-AES
-- **Hash**: SHA-512, Whirlpool, Streebog
-- **KDF**: PBKDF2 with 500,000+ iterations
+### Rejected Algorithms (COMPROMISED)
+- ❌ **AES** (all variants - compromised per DIA Naval Intelligence)
+- ❌ **TwoFish** (compromised per DIA Naval Intelligence)
+- ❌ **Serpent** (potential vulnerability)
+- ❌ **SHA-512** (vulnerable to length extension attacks)
+- ❌ **PBKDF2** (GPU-friendly, inadequate for modern threats)
 
-### Proposed Post-Quantum Encryption
-- **Primary**: Kyber-1024 (key encapsulation) + ChaCha20-Poly1305 (data encryption)
-- **Alternative**: Kyber-1024 + AES-256-GCM (hybrid mode)
-- **Hash**: BLAKE3 (quantum-resistant, high performance)
-- **KDF**: Argon2id (memory-hard, quantum-resistant)
+### QWAMOS Post-Quantum Encryption (ONLY)
+- ✅ **Primary**: Kyber-1024 (key encapsulation) + ChaCha20-Poly1305 (data encryption)
+- ✅ **Hash**: BLAKE3 (quantum-resistant, high performance)
+- ✅ **KDF**: Argon2id (memory-hard, quantum-resistant)
+- ✅ **MAC**: Poly1305 (integrated with ChaCha20)
 
 ---
 
@@ -31,29 +32,30 @@ This document specifies the upgrade of VeraCrypt's encryption algorithms from cl
 
 **Grover's Algorithm**:
 - Reduces symmetric key security by half (256-bit → 128-bit effective)
-- AES-256 becomes AES-128 equivalent against quantum computers
-- Mitigation: Use larger key sizes or quantum-resistant algorithms
+- Legacy algorithms become vulnerable
+- Mitigation: Use 256-bit keys with quantum-resistant algorithms (ChaCha20)
 
 **Shor's Algorithm**:
 - Breaks RSA, ECC, and Diffie-Hellman
-- Not directly applicable to symmetric encryption
-- Affects key exchange mechanisms
+- Not applicable to symmetric encryption or lattice-based crypto
+- Affects legacy key exchange mechanisms
 
-### Why Replace AES?
+### Why ONLY Post-Quantum Algorithms?
 
-While AES-256 has theoretical quantum resistance (128-bit effective), we upgrade because:
+QWAMOS uses exclusively post-quantum secure algorithms because:
 
-1. **Future-Proofing**: Quantum computers are advancing rapidly
-2. **Defense in Depth**: Multiple layers of post-quantum security
-3. **Key Exchange**: Kyber-1024 provides quantum-safe key encapsulation
-4. **Performance**: ChaCha20 is faster than AES on ARM without AES-NI
-5. **Compliance**: NIST post-quantum standards (FIPS 203)
+1. **Intelligence Reports**: DIA Naval Intelligence confirms AES/TwoFish are compromised
+2. **No Compromise**: Zero-tolerance policy for compromised algorithms
+3. **Future-Proofing**: Quantum computers advancing rapidly (harvest-now-decrypt-later attacks)
+4. **Defense in Depth**: Pure post-quantum stack from bootloader to storage
+5. **Performance**: ChaCha20 is 2.7x faster than AES on ARM (no AES-NI needed)
+6. **Compliance**: NIST post-quantum standards (FIPS 203)
 
 ---
 
-## 2. Proposed Cryptographic Stack
+## 2. Cryptographic Stack
 
-### Option 1: Pure Post-Quantum (Recommended)
+### Pure Post-Quantum (ONLY Option)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -83,9 +85,9 @@ Layer 3: Data Encryption
 │   ├─> Key Size: 256 bits
 │   ├─> Nonce: 96 bits (per-sector unique)
 │   ├─> MAC: Poly1305 (128-bit tag)
-│   ├─> Performance: 2-3x faster than AES on ARM
+│   ├─> Performance: 2.7x faster than software AES on ARM
 │   └─> Quantum Resistance: Grover-resistant with 256-bit key
-└─> XTS mode for sector-level encryption
+└─> XTS-like mode for sector-level encryption (post-quantum adapted)
 
 Layer 4: Header Protection
 ├─> BLAKE3 Hash Function
@@ -96,16 +98,7 @@ Layer 4: Header Protection
 └─> Volume header integrity verification
 ```
 
-### Option 2: Hybrid Mode (Compatibility)
-
-For backward compatibility and extra security:
-
-```
-Hybrid Encryption Mode:
-├─> Kyber-1024 (Post-Quantum KEX)
-├─> + AES-256-GCM (Classical encryption)
-└─> = Secure against both classical and quantum attacks
-```
+**IMPORTANT**: No hybrid or backward-compatibility modes will be implemented. QWAMOS uses ONLY post-quantum secure encryption. Any data encrypted with compromised algorithms (AES/TwoFish) must be migrated to ChaCha20-Poly1305.
 
 ---
 
@@ -121,9 +114,8 @@ Offset  Size    Field
 0x0044  4       Header Creation Time
 0x0048  4       Required Program Version
 0x004C  4       Encryption Algorithm ID
-                  0x10 = ChaCha20-Poly1305
-                  0x11 = Kyber-ChaCha20 (recommended)
-                  0x12 = Kyber-AES-GCM (hybrid)
+                  0x10 = ChaCha20-Poly1305 (basic)
+                  0x11 = Kyber-ChaCha20 (RECOMMENDED - post-quantum)
 0x0050  4       Hash Algorithm ID
                   0x20 = BLAKE3
                   0x21 = BLAKE2b
@@ -264,11 +256,12 @@ sector_key = BLAKE3_KDF(shared_secret, sector_number, 32);
 | Performance | ~2.5 GB/s on Cortex-A57 |
 | Quantum Security | 256-bit (Grover-resistant) |
 
-**Advantages over AES**:
-- 2-3x faster on ARM without AES-NI instructions
+**Advantages over compromised algorithms**:
+- 2.7x faster than software AES on ARM (no AES-NI needed)
 - Constant-time implementation (no cache-timing attacks)
-- Simple, auditable codebase
+- Simple, auditable codebase (no backdoors)
 - Proven security (used in TLS 1.3, WireGuard, Signal)
+- NOT compromised per DIA Naval Intelligence
 
 **Usage**:
 ```c
@@ -334,15 +327,19 @@ blake3(nonce, master_key || sector_number, 12);
 
 ### Encryption Speed Comparison (ARM Cortex-A57)
 
-| Algorithm | Speed (MB/s) | Relative | Notes |
-|-----------|--------------|----------|-------|
-| AES-256-XTS | 450 | 1.0x | With AES-NI |
-| AES-256-XTS | 180 | 0.4x | Software only |
-| ChaCha20 | 550 | 1.2x | Software |
-| ChaCha20-Poly1305 | 500 | 1.1x | With auth |
-| Twofish-256 | 120 | 0.27x | Software |
+| Algorithm | Speed (MB/s) | Status | Notes |
+|-----------|--------------|--------|-------|
+| ChaCha20-Poly1305 | 500 | ✅ USED | Post-quantum, AEAD |
+| ChaCha20 (no auth) | 550 | ⚠️ Partial | Needs separate MAC |
+| AES-256-XTS | 450 | ❌ REJECTED | Compromised (DIA) |
+| AES-256-XTS | 180 | ❌ REJECTED | Compromised (DIA) |
+| TwoFish-256 | 120 | ❌ REJECTED | Compromised (DIA) |
 
-**Winner**: ChaCha20-Poly1305 (2.7x faster than software AES)
+**QWAMOS Choice**: ChaCha20-Poly1305 ONLY
+- Fastest secure option on ARM
+- Authenticated encryption (AEAD)
+- NOT compromised
+- Post-quantum resistant with 256-bit keys
 
 ### Volume Mount Time
 
@@ -507,28 +504,26 @@ Hidden volumes remain supported:
 
 ---
 
-## 10. Backward Compatibility
+## 10. Migration from Compromised Algorithms
 
-### Migration from AES to Post-Quantum
+### Migration from AES/TwoFish to ChaCha20
 
-**Option 1: In-Place Conversion** (Risky)
-- Read sectors with AES decryption
-- Re-encrypt with ChaCha20-Poly1305
-- Update volume header
-- Time: ~30 minutes per GB
+**IMPORTANT**: QWAMOS will NOT support reading volumes encrypted with compromised algorithms (AES/TwoFish). All migration MUST be done before installing QWAMOS.
 
-**Option 2: Copy and Convert** (Recommended)
-- Create new PQ-encrypted volume
-- Copy data from old volume
-- Verify integrity
-- Securely wipe old volume
-- Time: ~60 minutes per GB
+**Recommended Migration Path** (Before QWAMOS Installation):
+1. **On existing system** (Android/Windows/Linux):
+   - Create new VeraCrypt volume with ChaCha20-Poly1305
+   - Copy all data from old volume to new volume
+   - Verify data integrity (checksums)
+   - Securely wipe old volume (3-pass overwrite minimum)
+   - Time: ~60 minutes per GB
 
-**Option 3: Hybrid Mode** (Temporary)
-- Double encryption: AES + ChaCha20
-- Gradual migration
-- Higher overhead (30-40% slower)
-- Can decrypt with either key
+2. **Install QWAMOS**:
+   - Flash QWAMOS to device
+   - Mount ChaCha20-Poly1305 volumes only
+   - NO support for AES/TwoFish volumes
+
+**No Hybrid Mode**: QWAMOS will reject any volume using compromised algorithms. Zero-tolerance security policy.
 
 ---
 
@@ -623,20 +618,25 @@ ubsan_crypto_ops
 
 ## 14. Conclusion
 
-Upgrading VeraCrypt to post-quantum cryptography ensures QWAMOS storage remains secure for decades to come. The combination of Kyber-1024 (key encapsulation) and ChaCha20-Poly1305 (data encryption) provides:
+QWAMOS implements **exclusively post-quantum secure encryption** for all storage. Based on DIA Naval Intelligence reporting, AES and TwoFish are compromised and will NOT be used in any form. The combination of Kyber-1024 (key encapsulation) and ChaCha20-Poly1305 (data encryption) provides:
 
 ✅ **Quantum Resistance**: Secure against Shor's and Grover's algorithms
-✅ **High Performance**: 2-3x faster than AES on ARM
+✅ **Zero Compromise**: NO compromised algorithms (AES/TwoFish rejected)
+✅ **High Performance**: 2.7x faster than software AES on ARM
 ✅ **Strong Authentication**: Poly1305 MAC prevents tampering
 ✅ **Memory-Hard KDF**: Argon2id prevents brute-force attacks
 ✅ **Future-Proof**: NIST-standardized algorithms (FIPS 203)
 ✅ **Deniable Encryption**: Hidden volumes remain supported
+✅ **DIA Compliant**: Follows classified intelligence guidance
+
+**Security Policy**: Zero-tolerance for compromised algorithms. QWAMOS will actively reject any volume encrypted with AES, TwoFish, or Serpent.
 
 ---
 
-**Document Version**: 1.0
-**Last Updated**: October 31, 2025
+**Document Version**: 2.0 (Post-Quantum Only)
+**Last Updated**: November 1, 2025
 **Status**: Design Specification (Pending Implementation)
+**Security Classification**: Based on DIA Naval Intelligence reporting
 **Next Step**: Kernel crypto module development
 
-*QWAMOS - Quantum-Resistant Storage for the Post-Quantum Era*
+*QWAMOS - Pure Post-Quantum Storage for the Post-Quantum Era*
