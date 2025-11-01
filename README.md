@@ -4,7 +4,9 @@
 
 A ground-up mobile operating system that replaces Android, featuring post-quantum cryptography, Qubes OS-style VM compartmentalization, and military-grade security.
 
-![QWAMOS Logo](docs/assets/logo.png)
+<p align="center">
+  <img src="assets/QWAMOS_logo.png" width="300" alt="QWAMOS Logo">
+</p>
 
 ## 🔒 Key Features
 
