@@ -1,6 +1,6 @@
 # QWAMOS
 
-**Qubes Whonix Advanced Mobile Operating System**
+**Qubes+Whonix Advanced Mobile Operating System**
 
 A ground-up mobile operating system that replaces Android, featuring post-quantum cryptography, Qubes OS-style VM compartmentalization, and military-grade security.
 
