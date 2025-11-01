@@ -40,7 +40,20 @@ See [Technical Architecture](docs/TECHNICAL_ARCHITECTURE.md) for complete detail
 
 ## 📱 Screenshots
 
-<img src="docs/screenshots/dashboard.png" width="250"> <img src="docs/screenshots/aegis_vault.png" width="250"> <img src="docs/screenshots/kali_wfh.png" width="250">
+<p align="center">
+  <img src="assets/screenshots/screenshot1.png" width="300">
+  <br><em>QWAMOS Core Interface</em>
+</p>
+
+<p align="center">
+  <img src="assets/screenshots/screenshot2.png" width="300">
+  <br><em>Hypervisor Layer View</em>
+</p>
+
+<p align="center">
+  <img src="assets/screenshots/screenshot3.png" width="300">
+  <br><em>Network Gateway Isolation</em>
+</p>
 
 ## 🚀 Quick Start
 
