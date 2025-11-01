@@ -50,11 +50,6 @@ See [Technical Architecture](docs/TECHNICAL_ARCHITECTURE.md) for complete detail
   <br><em>Hypervisor Layer View</em>
 </p>
 
-<p align="center">
-  <img src="assets/screenshots/screenshot3.png" width="300">
-  <br><em>Network Gateway Isolation</em>
-</p>
-
 ## 🚀 Quick Start
 
 ### Prerequisites
