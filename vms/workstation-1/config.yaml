@@ -1,0 +1,16 @@
+network:
+  bridge: qwamos-br0
+  mode: bridge
+resources:
+  cpus: 2
+  disk: 4G
+  ram: 512M
+storage:
+  disk_image: /data/data/com.termux/files/home/QWAMOS/vms/workstation-1/disk.qcow2
+  encrypted: true
+  persistent: true
+  rootfs: /data/data/com.termux/files/home/QWAMOS/vms/workstation-1/rootfs
+vm:
+  description: Lightweight Debian for general tasks
+  name: workstation-1
+  type: minimal

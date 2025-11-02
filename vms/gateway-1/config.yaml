@@ -1,0 +1,16 @@
+network:
+  bridge: qwamos-br0
+  mode: bridge
+resources:
+  cpus: 2
+  disk: 8G
+  ram: 1G
+storage:
+  disk_image: /data/data/com.termux/files/home/QWAMOS/vms/gateway-1/disk.qcow2
+  encrypted: true
+  persistent: true
+  rootfs: /data/data/com.termux/files/home/QWAMOS/vms/gateway-1/rootfs
+vm:
+  description: Tor gateway for anonymous networking
+  name: gateway-1
+  type: whonix-gateway
