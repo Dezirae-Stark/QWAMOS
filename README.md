@@ -116,8 +116,6 @@ Power On → U-Boot (Kyber-1024 verify) → Linux 6.6 LTS → KVM Hypervisor
 ### Security Toggles Dashboard
 ![Screenshot 2](assets/screenshots/screenshot2.png)
 
-### Network Isolation Monitor
-![Screenshot 3](assets/screenshots/screenshot3.png)
 
 </div>
 
