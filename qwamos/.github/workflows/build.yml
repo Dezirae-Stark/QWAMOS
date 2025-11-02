@@ -14,11 +14,15 @@ jobs:
       - name: Validate Python syntax
         run: python3 -m py_compile $(find . -name '*.py') || true
       - name: Install dependencies
-        run: pip install jsonschema pynacl flask
+        run: pip install jsonschema pynacl flask pytest
       - name: Validate policy schema
         run: |
-          cd qwamos/dom0/policy
+          cd dom0/policy
           python3 validate_policy.py policy.conf.example || true
+      - name: Run unit tests
+        run: |
+          cd dom0/tests
+          pytest test_bus.py -v || true
       - name: Build placeholder
         run: echo "Build completed successfully." > build.log
       - uses: actions/upload-artifact@v4

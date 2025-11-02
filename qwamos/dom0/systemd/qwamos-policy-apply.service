@@ -1,0 +1,23 @@
+[Unit]
+Description=QWAMOS Boot-Time Policy Application
+Documentation=https://github.com/Dezirae-Stark/QWAMOS
+DefaultDependencies=no
+After=local-fs.target
+Before=sysinit.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/qwamos/dom0/policy/apply_pending.sh
+StandardOutput=journal
+StandardError=journal
+RemainAfterExit=yes
+
+# Ensure directories exist
+ExecStartPre=/bin/mkdir -p /etc/qwamos /var/lib/qwamos/backups
+
+# Security
+User=root
+Group=root
+
+[Install]
+WantedBy=sysinit.target
