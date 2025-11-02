@@ -1,0 +1,87 @@
+{
+  "RADIO_ISOLATION": {
+    "type": "enum",
+    "values": ["on", "off"],
+    "default": "on",
+    "description": "Isolate cellular radio in Gateway VM",
+    "apply_method": "runtime"
+  },
+  "RADIO_HARDENING.level": {
+    "type": "enum",
+    "values": ["basic", "strict"],
+    "default": "basic",
+    "description": "Radio hardening mode (basic=Tor+DNS, strict=Tor-only+IMS-block)",
+    "apply_method": "runtime"
+  },
+  "RADIO_IDLE_TIMEOUT_MIN": {
+    "type": "int",
+    "min": 0,
+    "max": 999,
+    "default": 10,
+    "description": "Auto power-down radio after N minutes idle",
+    "apply_method": "runtime"
+  },
+  "TRUSTED_OVERLAY": {
+    "type": "enum",
+    "values": ["on", "off"],
+    "default": "on",
+    "description": "Enable Trusted UI VM call overlays",
+    "apply_method": "runtime"
+  },
+  "VERIFIED_BOOT_ENFORCE": {
+    "type": "enum",
+    "values": ["warn", "enforce"],
+    "default": "warn",
+    "description": "Verified boot enforcement mode",
+    "apply_method": "reboot"
+  },
+  "REMOTE_ATTESTATION": {
+    "type": "enum",
+    "values": ["off", "warn", "enforce"],
+    "default": "warn",
+    "description": "Remote attestation policy",
+    "apply_method": "runtime"
+  },
+  "PANIC_GESTURE": {
+    "type": "enum",
+    "values": ["on", "off"],
+    "default": "on",
+    "description": "Enable panic gesture (Power+VolUp+FP)",
+    "apply_method": "runtime"
+  },
+  "DURESS_PROFILE": {
+    "type": "enum",
+    "values": ["on", "off"],
+    "default": "off",
+    "description": "Create decoy user profile",
+    "apply_method": "runtime"
+  },
+  "KERNEL_HARDENING": {
+    "type": "enum",
+    "values": ["default", "strict"],
+    "default": "strict",
+    "description": "Kernel hardening level",
+    "apply_method": "reboot"
+  },
+  "BASEBAND_DRIVER_DISABLE": {
+    "type": "enum",
+    "values": ["on", "off"],
+    "default": "off",
+    "description": "Disable baseband driver (air-gapped mode)",
+    "apply_method": "reboot"
+  },
+  "E2E_TUNNEL_POLICY": {
+    "type": "enum",
+    "values": ["tor-only", "tor+vpn", "custom"],
+    "default": "tor-only",
+    "description": "End-to-end tunnel routing policy",
+    "apply_method": "runtime"
+  },
+  "AUDIT_UPLOAD": {
+    "type": "enum",
+    "values": ["off", "tor-hidden"],
+    "default": "off",
+    "description": "Audit log upload policy",
+    "apply_method": "runtime"
+  }
+}

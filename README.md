@@ -1,269 +1,353 @@
-# QWAMOS
+# QWAMOS - Qubes Whonix Advanced Mobile Operating System
 
-**Qubes+Whonix Advanced Mobile Operating System**
+**Ground-up mobile OS with post-quantum cryptography and VM-based isolation**
 
-A ground-up mobile operating system that replaces Android, featuring post-quantum cryptography, Qubes OS-style VM compartmentalization, and military-grade security.
+**Current Status:** Phase 3 @ 90% Complete (Hypervisor + Security Layer)
+**Last Updated:** 2025-11-02
 
-<p align="center">
-  <img src="assets/QWAMOS_logo.png" width="300" alt="QWAMOS Logo">
-</p>
+---
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Version-0.3.0--alpha-blue" alt="Version">
-  <img src="https://img.shields.io/badge/Progress-35%25%20Complete-brightgreen" alt="Progress">
-  <img src="https://img.shields.io/badge/Phase-2%20Complete-success" alt="Phase">
-  <img src="https://img.shields.io/badge/License-GPLv3-orange" alt="License">
-  <img src="https://img.shields.io/badge/Crypto-Post--Quantum-purple" alt="Post-Quantum">
-  <img src="https://img.shields.io/badge/Commits-GPG%20Signed-green" alt="GPG Signed">
-</p>
+## 🎯 Project Overview
 
-## 🚧 Current Status
+QWAMOS is a security-focused mobile operating system built from scratch with:
 
-**Phase 2 Complete** - Successfully achieved interactive BusyBox shell boot!
+- **Post-Quantum Cryptography:** Kyber-1024 + ChaCha20-Poly1305
+- **VM-Based Isolation:** 4-domain architecture (Dom0, Gateway, Workstation, Trusted UI)
+- **Mandatory Tor/I2P:** All network traffic anonymized
+- **Verified Boot:** Boot integrity attestation with StrongBox signing
+- **Baseband Isolation:** Untrusted cellular radio in dedicated VM
+- **Panic Protection:** Emergency wipe gesture + duress profiles
 
-- ✅ **Phase 1:** U-Boot bootloader with Kyber-1024 signature verification
-- ✅ **Phase 2:** Linux 6.6 kernel + BusyBox initramfs (404 commands)
-- ⏳ **Phase 3:** Next up - KVM/QEMU hypervisor setup
+**Target Hardware:** Motorola Edge 2025 (Snapdragon 8 Gen 3)
+**Development Environment:** Termux on Android ARM64
 
-**Recent Achievements:**
-- Static BusyBox integration (2.0MB, ARM64)
-- Full boot chain validation (U-Boot → Kernel → Initramfs → Shell)
-- GPG commit signing enabled (Ed25519)
-- 15+ technical specification documents completed
+---
 
-## 🔒 Key Features
+## 📊 Build Progress
 
-- **Post-Quantum Cryptography:** Kyber-1024 + ChaCha20-Poly1305 throughout entire stack
-- **VM-Based Isolation:** Android runs as a guest VM alongside Whonix, Kali, and AEGIS Vault
-- **Verified Boot:** Secure boot chain from bootloader to kernel with Kyber signatures
-- **Network Anonymity:** Whonix Gateway with Tor routing and Chimera decoy traffic
-- **AEGIS Vault:** Airgapped cold storage for cryptocurrency wallets
-- **KALI-WFH Suite:** Full penetration testing toolkit integrated
-- **Ghost Self-Destruct:** Emergency destruction triggers with configurable policies
-- **Custom UI:** Beautiful React Native interface with cyberpunk aesthetic
+### Phase 1: Bootloader (100% ✅)
+- ✅ U-Boot ARM64 configuration
+- ✅ Kyber-1024 signature verification spec
+- ✅ Secure boot chain design
+
+### Phase 2: Kernel (60% ⚙️)
+- ✅ Linux 6.6 LTS configuration (200+ options)
+- ✅ KVM hypervisor support enabled
+- ✅ Post-quantum crypto modules configured
+- ⏳ Custom kernel build (blocked by Android toolchain)
+- ✅ Prebuilt kernel available for testing
+
+### Phase 3: Hypervisor (90% ✅)
+- ✅ VM configuration system (5 VMs)
+- ✅ Whonix Gateway (Tor routing)
+- ✅ Storage encryption (ChaCha20-Poly1305)
+- ✅ VM creation automation (vm_creator.py)
+- ✅ Production VMs: gateway-1, workstation-1, kali-1
+- ✅ Integration testing (boot, encryption, network)
+- ✅ **BONUS: Complete Security Mitigation Layer**
+  - Dom0 Policy Manager with 12 toggles
+  - Runtime vs reboot-required logic
+  - Signed control bus
+  - 2,639+ lines of code
+- ⏳ Android VM (AOSP compilation pending)
+
+### Phase 4: System Services (0% ⏳)
+- Scheduled after Phase 3 completion
+
+### Phase 5: UI Layer (0% ⏳)
+- React Native framework planned
+
+---
 
 ## 🏗️ Architecture
 
-QWAMOS is a complete mobile OS built from the ground up:
+### Current: 4-VM Security Architecture
 
 ```
-Hardware
-    └─> U-Boot Bootloader (Kyber-verified)
-        └─> Linux Kernel 6.6 LTS (Hardened, KVM-enabled)
-            └─> systemd Init
-                └─> KVM/QEMU Hypervisor
-                    ├─> android-vm (Android 14 AOSP)
-                    ├─> whonix-vm (Tor Gateway)
-                    ├─> kali-vm (Penetration Testing)
-                    ├─> vault-vm (AEGIS Airgap)
-                    └─> disposable-vm (Ephemeral)
+┌───────────────────────────────────────────────────────┐
+│                   Dom0 (Control VM)                   │
+│  • Policy Manager (qwamosd)                           │
+│  • Offline - NO NETWORK                               │
+│  • Signs all configs                                  │
+└───────────────────────────────────────────────────────┘
+        │ Control Bus (Ed25519 signed messages)
+        ├──────────────┬────────────┬──────────────┐
+        ▼              ▼            ▼              ▼
+┌──────────────┐ ┌───────────┐ ┌──────────┐ ┌──────────┐
+│  Gateway VM  │ │Workstation│ │Trusted UI│ │Attestation│
+│  (Radio)     │ │   (Apps)  │ │    VM    │ │  Service │
+├──────────────┤ ├───────────┤ ├──────────┤ ├──────────┤
+│• Baseband    │ │• User Apps│ │• Overlays│ │• StrongBox│
+│• Tor/I2P     │ │• No NIC   │ │• Call UI │ │• Boot PCRs│
+│• Firewall    │ │• Isolated │ │• Badges  │ │• Verifier│
+└──────────────┘ └───────────┘ └──────────┘ └──────────┘
 ```
 
-See [Technical Architecture](docs/TECHNICAL_ARCHITECTURE.md) for complete details.
+### Boot Chain
 
-## 📱 Screenshots
+```
+Power On → U-Boot (Kyber-1024 verify) → Linux 6.6 LTS → KVM Hypervisor
+                                                  ↓
+                                           [4 VMs start]
+                                                  ↓
+                                          React Native UI
+```
 
-<p align="center">
-  <img src="assets/screenshots/screenshot1.png" width="300">
-  <br><em>QWAMOS Core Interface</em>
-</p>
+---
 
-<p align="center">
-  <img src="assets/screenshots/screenshot2.png" width="300">
-  <br><em>Hypervisor Layer View</em>
-</p>
+## 🔒 Security Features
+
+### Implemented ✅
+
+1. **Post-Quantum Cryptography**
+   - Kyber-1024 key encapsulation
+   - ChaCha20-Poly1305 AEAD encryption
+   - BLAKE3 integrity verification
+   - scrypt key derivation
+
+2. **VM Isolation**
+   - 4-domain architecture
+   - Dom0 offline control
+   - Gateway for radio isolation
+   - Workstation for user apps
+   - Trusted UI for secure overlays
+
+3. **Network Privacy**
+   - Mandatory Tor/I2P egress
+   - Firewall with DEFAULT DROP
+   - IMS/VoLTE blocking (strict mode)
+   - DNS over Tor
+
+4. **Verified Boot**
+   - Boot hash measurement
+   - StrongBox/Keymaster signing
+   - Remote attestation
+   - Tamper detection
+
+5. **Emergency Protection**
+   - Panic gesture (Power+VolUp+FP)
+   - Session key wipe
+   - Radio kill switch
+   - Duress profiles (decoy users)
+
+6. **Policy Management**
+   - 12 security toggles
+   - Runtime vs reboot-required logic
+   - Signed policy distribution
+   - Declarative configuration
+
+### Planned ⏳
+
+- Full Android VM integration
+- React Native UI
+- InviZible Pro integration
+- Kali GPT (on-device AI pentesting)
+- AEGIS Vault (airgapped crypto wallet)
+
+---
+
+## 📁 Repository Structure
+
+```
+QWAMOS/
+├── bootloader/              # U-Boot + Kyber verification
+├── kernel/                  # Linux 6.6 LTS + KVM
+│   ├── config/             # Kernel configuration
+│   ├── Image               # Prebuilt kernel (32MB)
+│   └── qwamos_config.sh    # Automated config script
+├── hypervisor/              # KVM + QEMU + VM management
+│   ├── scripts/            # VM creation + testing
+│   └── qemu/               # QEMU configuration
+├── vms/                     # Production VMs
+│   ├── gateway-1/          # Whonix Gateway (Tor)
+│   ├── workstation-1/      # Debian workstation
+│   └── kali-1/             # Penetration testing
+├── storage/                 # Encryption + volume management
+│   ├── scripts/            # volume_manager.py, encrypt_vm_disk.py
+│   └── volumes/            # Encrypted volumes
+├── security/                # Security Mitigation Layer ⭐
+│   ├── README_QWAMOS_SecurityLayer.md  # 60+ page architecture doc
+│   ├── QUICK_START.md                  # 3-min quick reference
+│   ├── Makefile                        # Build system
+│   ├── deploy-to-device.sh             # Automated deployment
+│   ├── dom0/                           # Policy manager
+│   │   ├── qwamosd/qwamosd.py         # 450-line policy daemon
+│   │   └── policy/                     # Configs + schema
+│   └── gateway_vm/                     # Security services
+│       ├── firewall/                   # Basic + strict modes
+│       ├── radio/                      # Radio controller
+│       └── policy/                     # Policy listener
+├── crypto/                  # Post-quantum crypto libs
+├── docs/                    # Specifications
+├── SESSION_*.md             # Development session logs
+└── PHASE*_AUDIT_REPORT.md  # Phase completion audits
+```
+
+---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- ARM64 device (Snapdragon/MediaTek/Exynos)
-- Unlocked bootloader
-- TWRP or custom recovery
-- 6GB+ RAM, 128GB+ storage
-- Linux build environment
+```bash
+# On Termux (Android)
+pkg install python tor iptables git signify
 
-### Building QWAMOS
+# Or on Debian/Ubuntu
+apt-get install python3 python3-pip tor iptables git signify-openbsd
+```
+
+### Deploy Security Layer
 
 ```bash
-# Clone repository
-git clone https://github.com/Dezirae-Stark/QWAMOS.git
-cd QWAMOS
+cd ~/QWAMOS/security
 
-# Set up toolchain
-./build/scripts/setup_toolchain.sh
+# Install dependencies
+make install-deps
 
-# Build everything (takes 2-4 hours)
-./build/scripts/build_all.sh
+# Deploy locally (Termux)
+./deploy-to-device.sh local
 
-# Package flashable image
-./build/scripts/package_flash_image.sh
+# OR start development emulator
+make dev-emu
+
+# Run tests
+make test
 ```
 
-Output: `qwamos-v1.0.0-flashable.zip`
+### Test VMs
 
-### Installing
-
-#### Method 1: TWRP Recovery
 ```bash
-adb reboot recovery
-adb push qwamos-v1.0.0-flashable.zip /sdcard/
-# Install via TWRP UI
+# Test gateway-1 (Whonix Gateway)
+bash ~/QWAMOS/hypervisor/scripts/test_vm_boot.sh gateway-1
+
+# Test workstation-1
+bash ~/QWAMOS/hypervisor/scripts/test_vm_boot.sh workstation-1
 ```
 
-#### Method 2: Fastboot
+### Apply Firewall
+
 ```bash
-adb reboot bootloader
-fastboot flash boot boot.img
-fastboot flash system system.img
-fastboot flash vendor vendor.img
-fastboot -w
-fastboot reboot
+# Basic mode (allows IMS/VoLTE for calls)
+bash ~/QWAMOS/security/gateway_vm/firewall/rules-basic.sh
+
+# Strict mode (Tor-only, maximum privacy)
+bash ~/QWAMOS/security/gateway_vm/firewall/rules-strict.sh
 ```
-
-See [Installation Guide](docs/INSTALLATION.md) for detailed instructions.
-
-## 🛠️ Development
-
-### Project Structure
-
-```
-QWAMOS/
-├── bootloader/          # U-Boot with Kyber verification
-├── kernel/              # Linux 6.6 LTS with crypto modules
-├── init/                # systemd init system
-├── hypervisor/          # KVM/QEMU management
-├── crypto/              # Kyber + ChaCha20 implementations
-├── vms/                 # VM images and configs
-├── network/             # Tor, VPN, firewall
-├── storage/             # VeraCrypt integration
-├── security/            # AEGIS, Ghost, Chimera
-├── frontend/            # React Native UI
-├── tools/               # KALI-WFH suite
-├── build/               # Build system and scripts
-├── device/              # Device-specific configs
-└── docs/                # Documentation
-```
-
-### Development Roadmap
-
-- [x] **Phase 0:** Project setup and architecture (Month 0) ✅
-- [x] **Phase 1:** U-Boot Bootloader with Kyber-1024 verification (Months 1-2) ✅
-- [x] **Phase 2:** Linux Kernel 6.6 + BusyBox Initramfs (Months 3-4) ✅
-- [ ] **Phase 3:** Hypervisor & VMs (KVM/QEMU setup) (Months 5-8) ⏳
-- [ ] **Phase 4:** Storage & Crypto (VeraCrypt + Post-Quantum) (Months 9-12)
-- [ ] **Phase 5:** Network & Security (Tor/VPN/Whonix) (Months 13-18)
-- [ ] **Phase 6:** AEGIS Vault + KALI-WFH Suite (Months 19-24)
-- [ ] **Phase 7:** UI & Integration (React Native) (Months 25-30)
-- [ ] **Phase 8:** Testing & Release (Months 31-33)
-
-**Current Progress:** Phase 2 Complete (35% overall)
-
-See [Development Roadmap](docs/ROADMAP.md) and [Project Status](PROJECT_STATUS.md) for details.
-
-## 🔐 Security
-
-### Threat Model
-
-QWAMOS is designed to protect against:
-
-- Nation-state adversaries (NSA/GCHQ level)
-- Post-quantum attacks (Shor's algorithm)
-- Network surveillance
-- Device seizure
-- Cold boot attacks
-- Side-channel attacks
-- VM escape attempts
-
-### Cryptographic Guarantees
-
-- **Kyber-1024:** NIST Level 5 post-quantum security
-- **ChaCha20-Poly1305:** 256-bit authenticated encryption
-- **Argon2id:** Memory-hard key derivation
-- **Constant-time:** All implementations resistant to timing attacks
-
-See [Security Model](docs/SECURITY.md) for complete threat analysis.
-
-## 🤝 Contributing
-
-QWAMOS is open source (GPLv3). Contributions are welcome!
-
-### How to Contribute
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-Please read [CONTRIBUTING.md](docs/CONTRIBUTING.md) for coding standards.
-
-## 📄 License
-
-QWAMOS is licensed under **GNU General Public License v3.0 (GPLv3)**
-
-Key components:
-- Linux Kernel: GPL-2.0
-- U-Boot: GPL-2.0
-- QEMU/KVM: GPL-2.0
-- liboqs (Kyber): MIT
-- libsodium (ChaCha20): ISC
-- React Native: MIT
-- Tor: BSD-3-Clause
-- VeraCrypt: Apache 2.0
-
-See [LICENSE](LICENSE) for full text.
-
-## 🙏 Acknowledgments
-
-QWAMOS builds upon the excellent work of:
-
-- **Qubes OS Team** - VM isolation architecture
-- **Whonix Project** - Tor anonymity framework
-- **Open Quantum Safe (liboqs)** - Post-quantum cryptography
-- **Android Open Source Project (AOSP)** - Android base
-- **Kali Linux Team** - Penetration testing tools
-- **VeraCrypt Team** - Disk encryption
-- **WireGuard Team** - VPN implementation
-
-## 📞 Support & Contact
-
-- **Issues:** [GitHub Issues](https://github.com/Dezirae-Stark/QWAMOS/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/Dezirae-Stark/QWAMOS/discussions)
-- **Matrix:** #qwamos:matrix.org
-- **Email:** dev@qwamos.org (coming soon)
-
-## ⚠️ Disclaimer
-
-QWAMOS is experimental software in active development. Use at your own risk. The authors are not responsible for any data loss, device damage, or security breaches.
-
-**This software is intended for:**
-- Security researchers
-- Privacy enthusiasts
-- Penetration testers
-- Cryptocurrency users
-- Advanced users comfortable with custom ROMs
-
-**NOT recommended for:**
-- Daily driver (yet - wait for v1.0 stable)
-- Critical production systems
-- Users unfamiliar with Android flashing
 
 ---
 
-**Status:** Alpha Development (Phase 2 Complete)
-**Version:** 0.3.0-alpha
-**Progress:** 35% Complete (2/8 phases)
-**ETA to Production:** 30 months (~2.5 years)
+## 📚 Documentation
 
-**Key Milestones Achieved:**
-- ✅ U-Boot bootloader with Kyber-1024 signature verification
-- ✅ Linux 6.6 kernel with KVM, ChaCha20, SELinux, AppArmor
-- ✅ Static BusyBox initramfs (404 commands)
-- ✅ Successful interactive shell boot test
-- ✅ GPG-signed commits for supply chain security
-- ✅ 15+ technical specification documents
+### Core Documentation
+- **[README_QWAMOS_SecurityLayer.md](security/README_QWAMOS_SecurityLayer.md)** - Complete security architecture (60+ pages)
+- **[QUICK_START.md](security/QUICK_START.md)** - 3-minute quick reference
+- **[PHASE3_AUDIT_REPORT.md](PHASE3_AUDIT_REPORT.md)** - Phase 3 completion audit
 
-**Next Steps:** Phase 3 - KVM/QEMU Hypervisor Setup
+### Session Logs
+- **[SESSION_8_VM_INTEGRATION_TESTING.md](SESSION_8_VM_INTEGRATION_TESTING.md)** - VM testing (complete)
+- **[SESSION_7_WHONIX_SPLIT_ARCHITECTURE.md](SESSION_7_WHONIX_SPLIT_ARCHITECTURE.md)** - VM creation
+- **[SESSION_3_KERNEL_CONFIG_COMPLETE.md](SESSION_3_KERNEL_CONFIG_COMPLETE.md)** - Kernel configuration
 
-**Made with ❤️ by Dezirae Stark and contributors**
+### Technical Specs
+- **[docs/PHASE3_HYPERVISOR_SPEC.md](docs/PHASE3_HYPERVISOR_SPEC.md)** - Hypervisor architecture
+- **[docs/STORAGE_ENCRYPTION.md](docs/STORAGE_ENCRYPTION.md)** - Encryption system
+- **[docs/WHONIX_GATEWAY_SETUP.md](docs/WHONIX_GATEWAY_SETUP.md)** - Whonix configuration
+
+---
+
+## 🎯 Current Milestones
+
+### Completed ✅
+- [x] Phase 1: Bootloader architecture (100%)
+- [x] Phase 2: Kernel configuration (60%)
+- [x] Phase 3: Core hypervisor (90%)
+  - [x] VM configuration system
+  - [x] Whonix Gateway
+  - [x] Storage encryption
+  - [x] VM creation automation
+  - [x] Integration testing
+  - [x] **Security Mitigation Layer** (2,639+ lines)
+
+### In Progress ⚙️
+- [ ] Phase 3: Android VM (0%)
+- [ ] Phase 2: Custom kernel build (blocked)
+
+### Next Steps
+1. Finalize Phase 3 (Android VM)
+2. Begin Phase 4 (System Services)
+3. Begin Phase 5 (React Native UI)
+4. Hardware deployment testing
+
+---
+
+## 🔐 Security Guarantees
+
+### Protects Against ✅
+- Baseband RCE (radio isolated in VM)
+- IMSI catchers (Tor-only in strict mode)
+- Zero-day exploits (SELinux + minimal surface)
+- Evil maid attacks (verified boot + attestation)
+- $5-wrench attacks (duress profiles + panic gesture)
+- Network surveillance (mandatory Tor/I2P)
+- Forensic imaging (FBE + TEE-wrapped keys)
+- Supply chain tampering (measured boot)
+
+### Does NOT Protect Against ❌
+- Physical TEE extraction (requires expensive lab)
+- Snapdragon TrustZone 0-days
+- Tor network-level deanonymization
+- RF side-channels (TEMPEST-level threats)
+- Continuous coercion with monitoring
+
+---
+
+## 📈 Project Statistics
+
+- **Total Lines of Code:** 10,000+ (est.)
+- **Documentation:** 100+ pages
+- **Security Layer:** 2,639+ lines (implementation + docs)
+- **VMs Created:** 3 (gateway-1, workstation-1, kali-1)
+- **Encrypted Volumes:** Tested and working
+- **Phase Completion:** 90% (Phase 3)
+
+---
+
+## 🤝 Contributing
+
+QWAMOS is an open-source project. Contributions welcome!
+
+**Priority Areas:**
+1. Android VM integration (AOSP compilation)
+2. React Native UI development
+3. Hardware testing on real devices
+4. Security audits
+
+---
+
+## 📄 License
+
+GPL-3.0
+
+---
+
+## 🙏 Acknowledgments
+
+- **Qubes OS** - VM isolation architecture inspiration
+- **Whonix** - Tor Gateway implementation
+- **liboqs** - Post-quantum crypto library
+- **InviZible Pro** - Tor/I2P/DNSCrypt integration
+- **Ashigaru** - Bitcoin wallet components (JTorProx, Mobile)
+
+---
+
+## 📞 Contact
+
+- **GitHub:** https://github.com/Dezirae-Stark/QWAMOS
+- **Issues:** https://github.com/Dezirae-Stark/QWAMOS/issues
+
+---
+
+**QWAMOS - Building a private, secure mobile future**
+
+*"Mobile privacy should not require a PhD in cryptography."*
