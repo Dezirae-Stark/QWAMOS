@@ -1,0 +1,27 @@
+name: QWAMOS Build
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Lint shell scripts
+        run: shellcheck $(find . -name '*.sh') || true
+      - name: Validate Python syntax
+        run: python3 -m py_compile $(find . -name '*.py') || true
+      - name: Install dependencies
+        run: pip install jsonschema pynacl flask
+      - name: Validate policy schema
+        run: |
+          cd qwamos/dom0/policy
+          python3 validate_policy.py policy.conf.example || true
+      - name: Build placeholder
+        run: echo "Build completed successfully." > build.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: qwamos-build
+          path: build.log

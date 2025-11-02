@@ -1,0 +1,11 @@
+[Unit]
+Description=QWAMOS Gateway Policy Daemon
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /opt/qwamos/gateway_vm/policy/gateway-policyd.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,12 @@
+[Unit]
+Description=QWAMOS Policy Daemon
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /opt/qwamos/dom0/qwamosd/qwamosd.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

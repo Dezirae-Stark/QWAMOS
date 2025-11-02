@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "QWAMOS Policy Schema",
+  "type": "object",
+  "properties": {
+    "RADIO_ISOLATION": {"enum": ["on", "off"]},
+    "RADIO_HARDENING.level": {"enum": ["basic", "strict"]},
+    "RADIO_IDLE_TIMEOUT_MIN": {"type": "integer", "minimum": 0},
+    "TRUSTED_OVERLAY": {"enum": ["on", "off"]},
+    "VERIFIED_BOOT_ENFORCE": {"enum": ["warn", "enforce"]},
+    "REMOTE_ATTESTATION": {"enum": ["off", "warn", "enforce"]},
+    "PANIC_GESTURE": {"enum": ["on", "off"]},
+    "DURESS_PROFILE": {"enum": ["on", "off"]},
+    "KERNEL_HARDENING": {"enum": ["default", "strict"]},
+    "BASEBAND_DRIVER_DISABLE": {"enum": ["on", "off"]},
+    "E2E_TUNNEL_POLICY": {"enum": ["tor-only", "tor+vpn", "custom"]},
+    "AUDIT_UPLOAD": {"enum": ["off", "tor-hidden"]}
+  },
+  "required": ["RADIO_ISOLATION", "KERNEL_HARDENING"],
+  "additionalProperties": false
+}
