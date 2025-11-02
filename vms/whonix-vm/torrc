@@ -1,0 +1,84 @@
+# /etc/tor/torrc - Whonix Gateway Tor Configuration
+# QWAMOS Whonix Gateway - Post-Quantum Ready
+
+##############################################
+# SOCKS Proxy (for applications)
+##############################################
+SOCKSPort 10.152.152.10:9050
+
+##############################################
+# Transparent Proxy (for transparent routing)
+##############################################
+TransPort 10.152.152.10:9040
+
+##############################################
+# DNS Port (Tor DNS resolver)
+##############################################
+DNSPort 10.152.152.10:5300
+
+##############################################
+# Control Port (for Tor control)
+##############################################
+ControlPort 10.152.152.10:9051
+CookieAuthentication 1
+
+##############################################
+# Security Settings
+##############################################
+# Disable exit node (Gateway only)
+ExitRelay 0
+
+# Use guard nodes
+UseEntryGuards 1
+
+# Sandbox mode (enhanced security)
+Sandbox 1
+
+##############################################
+# Stream Isolation
+##############################################
+# Isolate streams by destination port
+IsolateDestPort 1
+
+# Isolate streams by destination address
+IsolateDestAddr 1
+
+##############################################
+# Logging
+##############################################
+Log notice file /var/log/tor/notices.log
+Log warn file /var/log/tor/warn.log
+
+##############################################
+# Performance
+##############################################
+# Connection limits
+ConnLimit 1000
+
+# Circuit build timeout
+CircuitBuildTimeout 60
+
+# Max circuits per period
+MaxCircuitDirtiness 600
+
+##############################################
+# Whonix-Specific Settings
+##############################################
+# Disable client circuit building (Gateway mode)
+ClientOnly 0
+
+# Allow client mode
+SocksPolicy accept 10.152.152.0/24
+SocksPolicy reject *
+
+# Virtual address network for transparent proxy
+VirtualAddrNetworkIPv4 10.192.0.0/10
+AutomapHostsOnResolve 1
+
+##############################################
+# CRITICAL: Post-Quantum Crypto (Future)
+##############################################
+# NOTE: Tor does not yet support post-quantum crypto
+# When Tor adds Kyber support, enable here:
+# UseKyber 1
+# KyberKeySize 1024
