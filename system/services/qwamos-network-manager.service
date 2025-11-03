@@ -1,0 +1,42 @@
+[Unit]
+Description=QWAMOS Network Manager (Phase 5 Orchestration)
+Documentation=https://github.com/Dezirae-Stark/QWAMOS
+After=qwamos-dnscrypt.service qwamos-tor.service qwamos-i2p.service network-online.target
+Wants=network-online.target
+Requires=qwamos-dnscrypt.service qwamos-tor.service
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStartPre=/opt/qwamos/network/scripts/network-prestart.sh
+ExecStart=/usr/bin/python3 /opt/qwamos/network/network_manager.py --daemon
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStop=/opt/qwamos/network/scripts/network-stop.sh
+KillSignal=SIGTERM
+TimeoutStopSec=30
+Restart=on-failure
+RestartSec=10
+
+# Environment
+Environment="QWAMOS_CONFIG_DIR=/opt/qwamos/network"
+Environment="QWAMOS_MODE=tor-dnscrypt"
+
+# Security
+NoNewPrivileges=false
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/qwamos/network /var/log/qwamos
+ProtectKernelTunables=false
+ProtectKernelModules=true
+ProtectControlGroups=false
+RestrictNamespaces=false
+LockPersonality=true
+RestrictRealtime=true
+
+# Resource limits
+LimitNOFILE=8192
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=qwamos-network.target

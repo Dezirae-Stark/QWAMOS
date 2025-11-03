@@ -27,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from tor.tor_controller import TorController
 from i2p.i2p_controller import I2PController
 from dnscrypt.dnscrypt_controller import DNSCryptController
+from vpn.vpn_controller import VPNController
 
 
 class NetworkMode(Enum):
@@ -51,7 +52,7 @@ class NetworkManager:
             'tor': TorController(str(self.config_dir / "tor")),
             'i2p': I2PController(str(self.config_dir / "i2p")),
             'dnscrypt': DNSCryptController(str(self.config_dir / "dnscrypt")),
-            # 'vpn': VPNController(str(self.config_dir / "vpn"))  # TODO: Implement VPN controller
+            'vpn': VPNController(str(self.config_dir / "vpn"))
         }
 
     def switch_mode(self, mode: NetworkMode, config: Dict = None):
@@ -86,6 +87,12 @@ class NetworkManager:
 
         # Step 3: Start required services based on mode
         print("\nStep 3: Starting services...")
+
+        # Start VPN if configured
+        if mode_config.get('vpn', {}).get('enabled', False):
+            print("   Starting VPN...")
+            self.services['vpn'].start(mode_config.get('vpn', {}))
+            time.sleep(3)  # Let VPN establish
 
         if mode == NetworkMode.DIRECT:
             print("   Direct mode - no anonymization services")

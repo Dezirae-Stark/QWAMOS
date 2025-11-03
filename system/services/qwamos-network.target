@@ -1,0 +1,9 @@
+[Unit]
+Description=QWAMOS Network Isolation Services (Phase 5)
+Documentation=https://github.com/Dezirae-Stark/QWAMOS
+After=network-online.target
+Wants=network-online.target
+Conflicts=shutdown.target
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,44 @@
+[Unit]
+Description=QWAMOS I2P (Purple I2P) Anonymity Service
+Documentation=https://i2pd.readthedocs.io
+After=network-online.target
+Wants=network-online.target
+Before=qwamos-network-manager.service
+
+[Service]
+Type=forking
+User=i2pd
+Group=i2pd
+ExecStart=/usr/bin/i2pd \
+    --conf=/opt/qwamos/network/i2p/i2pd.conf \
+    --datadir=/var/lib/i2pd \
+    --pidfile=/var/run/i2pd/i2pd.pid \
+    --daemon
+ExecReload=/bin/kill -HUP $MAINPID
+PIDFile=/var/run/i2pd/i2pd.pid
+KillSignal=SIGTERM
+TimeoutStopSec=60
+Restart=on-failure
+RestartSec=15
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/i2pd /var/log/i2pd /var/run/i2pd
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+
+# Resource limits
+LimitNOFILE=8192
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=qwamos-network.target
