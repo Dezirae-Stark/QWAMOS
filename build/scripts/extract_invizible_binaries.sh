@@ -14,7 +14,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 QWAMOS_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 BINARIES_DIR="$QWAMOS_ROOT/network/binaries"
-TEMP_DIR="/tmp/qwamos_invizible_extract"
+TEMP_DIR="$HOME/.cache/qwamos_invizible_extract"
 
 # InviZible Pro APK download URL (F-Droid)
 INVIZIBLE_VERSION="7.4.3"
