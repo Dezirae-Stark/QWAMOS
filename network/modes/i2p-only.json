@@ -1,0 +1,44 @@
+{
+  "mode": "i2p-only",
+  "description": "I2P network only (eepsites and garlic routing)",
+  "tor_enabled": false,
+  "i2p_enabled": true,
+  "dnscrypt_enabled": false,
+  "vpn_enabled": false,
+
+  "i2p": {
+    "http_proxy": "127.0.0.1:4444",
+    "socks_proxy": "127.0.0.1:4447",
+    "console_port": 7070,
+    "tunnel_length": 3,
+    "inbound_tunnels": 3,
+    "outbound_tunnels": 3,
+    "tunnel_variance": 1
+  },
+
+  "routing": {
+    "clearnet_via": "blocked",
+    "i2p_sites_via": "i2p",
+    "dns_via": "i2p"
+  },
+
+  "firewall": {
+    "block_non_i2p": true,
+    "block_ipv6": true,
+    "allow_lan": false,
+    "killswitch_enabled": true,
+    "strict_mode": true
+  },
+
+  "performance": {
+    "expected_speed": "slow",
+    "latency": "high",
+    "anonymity_level": "very-high"
+  },
+
+  "notes": [
+    "Only I2P eepsites are accessible",
+    "No clearnet access in this mode",
+    "Requires I2P addressbook for site resolution"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "mode": "tor-only",
+  "description": "Tor anonymity network (standard)",
+  "tor_enabled": true,
+  "i2p_enabled": false,
+  "dnscrypt_enabled": false,
+  "vpn_enabled": false,
+
+  "tor": {
+    "socks_port": 9050,
+    "control_port": 9051,
+    "use_bridges": false,
+    "bridge_type": "obfs4",
+    "circuit_build_timeout": 60,
+    "circuit_isolation": true,
+    "num_entry_guards": 3
+  },
+
+  "routing": {
+    "clearnet_via": "tor",
+    "dns_via": "tor"
+  },
+
+  "firewall": {
+    "block_non_tor": true,
+    "block_ipv6": true,
+    "allow_lan": false,
+    "killswitch_enabled": true
+  },
+
+  "performance": {
+    "expected_speed": "medium",
+    "latency": "medium",
+    "anonymity_level": "high"
+  }
+}

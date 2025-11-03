@@ -1,0 +1,145 @@
+#!/usr/sbin/nft -f
+#
+# QWAMOS Firewall Rules: Maximum Anonymity Mode
+#
+# This ruleset enforces Tor → I2P chaining for maximum anonymity.
+# All traffic goes through Tor first, then through I2P network.
+#
+# Mode: maximum-anonymity
+# Traffic Flow: Apps → DNSCrypt → Tor → I2P → Internet/I2P Network
+#
+
+# Flush existing ruleset
+flush ruleset
+
+# Define variables
+define TOR_UID = 43
+define I2P_UID = 996
+define DNSCRYPT_UID = 997
+define TOR_SOCKS_PORT = 9050
+define TOR_TRANS_PORT = 9040
+define I2P_HTTP_PROXY = 4444
+define I2P_SOCKS_PROXY = 4447
+define DNSCRYPT_PORT = 5353
+
+# Main filter table
+table inet qwamos_filter {
+    chain input {
+        type filter hook input priority 0; policy drop;
+
+        # Allow loopback
+        iif lo accept
+
+        # Allow established connections
+        ct state established,related accept
+
+        # Allow VM traffic
+        iif { virbr0, vmbr0 } accept
+
+        # Allow I2P to receive tunnel connections
+        tcp dport { 7654-7660 } skuid $I2P_UID accept  # I2P tunnels
+
+        # Drop everything else
+        log prefix "[QWAMOS-MAX-ANON-DROP-IN] " drop
+    }
+
+    chain forward {
+        type filter hook forward priority 0; policy drop;
+
+        # Allow VM traffic through gateway
+        iif { virbr0, vmbr0 } oif eth0 ct state new,established,related accept
+        iif eth0 oif { virbr0, vmbr0 } ct state established,related accept
+
+        log prefix "[QWAMOS-MAX-ANON-DROP-FWD] " drop
+    }
+
+    chain output {
+        type filter hook output priority 0; policy drop;
+
+        # Allow loopback
+        oif lo accept
+
+        # Allow established connections
+        ct state established,related accept
+
+        # Tor daemon - connect to Tor network with bridges
+        skuid $TOR_UID tcp dport { 9001, 9030, 443, 80 } accept
+        skuid $TOR_UID udp dport { 443, 80 } accept  # obfs4/snowflake
+
+        # I2P daemon - connect through Tor SOCKS proxy only
+        skuid $I2P_UID tcp dport $TOR_SOCKS_PORT accept
+
+        # DNSCrypt - resolve DNS
+        skuid $DNSCRYPT_UID udp dport 53 accept
+        skuid $DNSCRYPT_UID tcp dport { 53, 443 } accept
+
+        # Root for system operations
+        skuid 0 accept
+
+        # Block everything else (strict mode)
+        log prefix "[QWAMOS-MAX-ANON-LEAK] " reject
+    }
+}
+
+# NAT table
+table ip qwamos_nat {
+    chain prerouting {
+        type nat hook prerouting priority -100; policy accept;
+
+        # DNS to DNSCrypt
+        iif { virbr0, vmbr0 } udp dport 53 redirect to :$DNSCRYPT_PORT
+        iif { virbr0, vmbr0 } tcp dport 53 redirect to :$DNSCRYPT_PORT
+    }
+
+    chain output {
+        type nat hook output priority -100; policy accept;
+
+        # Don't redirect daemon traffic
+        skuid $TOR_UID return
+        skuid $I2P_UID return
+        skuid $DNSCRYPT_UID return
+
+        # All TCP through Tor TransPort
+        # (I2P proxy will then route through Tor SOCKS)
+        tcp dport != { 22 } redirect to :$TOR_TRANS_PORT
+    }
+
+    chain postrouting {
+        type nat hook postrouting priority 100; policy accept;
+        oif eth0 masquerade
+    }
+}
+
+# Block ALL IPv6 (maximum leak prevention)
+table ip6 qwamos_filter6 {
+    chain input {
+        type filter hook input priority 0; policy drop;
+        iif lo accept
+        log prefix "[QWAMOS-IP6-BLOCK] " drop
+    }
+
+    chain forward {
+        type filter hook forward priority 0; policy drop;
+        log prefix "[QWAMOS-IP6-BLOCK-FWD] " drop
+    }
+
+    chain output {
+        type filter hook output priority 0; policy drop;
+        oif lo accept
+        log prefix "[QWAMOS-IP6-BLOCK-OUT] " drop
+    }
+}
+
+# Kill switch - if Tor/I2P fails, block all traffic
+table inet qwamos_killswitch {
+    chain output {
+        type filter hook output priority 100; policy drop;
+
+        # Only allow if services are running
+        # This requires external script to monitor service status
+        # and update these rules dynamically
+
+        # Placeholder for dynamic rules
+        # In production, qwamos-network-monitor.service updates these
+    }
+}

@@ -1,0 +1,33 @@
+{
+  "mode": "direct",
+  "description": "Direct connection (no anonymization - fastest)",
+  "tor_enabled": false,
+  "i2p_enabled": false,
+  "dnscrypt_enabled": false,
+  "vpn_enabled": false,
+
+  "firewall": {
+    "block_non_tor": false,
+    "block_ipv6": false,
+    "allow_lan": true,
+    "killswitch_enabled": false
+  },
+
+  "routing": {
+    "clearnet_via": "direct",
+    "dns_via": "system"
+  },
+
+  "performance": {
+    "expected_speed": "maximum",
+    "latency": "minimal",
+    "anonymity_level": "none"
+  },
+
+  "warnings": [
+    "No anonymization - ISP can see all traffic",
+    "No DNS encryption - DNS queries visible",
+    "Your real IP is exposed",
+    "Not recommended for sensitive activities"
+  ]
+}

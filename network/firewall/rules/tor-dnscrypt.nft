@@ -1,0 +1,158 @@
+#!/usr/sbin/nft -f
+#
+# QWAMOS Firewall Rules: Tor + DNSCrypt Mode
+#
+# This ruleset enforces that all traffic goes through Tor with encrypted DNS.
+# Prevents DNS leaks and ensures anonymity.
+#
+# Mode: tor-dnscrypt
+# Traffic Flow: Apps → DNSCrypt (DNS) → Tor (Everything) → Internet
+#
+
+# Flush existing ruleset
+flush ruleset
+
+# Define variables
+define TOR_UID = 43  # Tor daemon UID (adjust for your system)
+define TOR_SOCKS_PORT = 9050
+define TOR_TRANS_PORT = 9040
+define TOR_DNS_PORT = 5353  # DNSCrypt listens here
+define DNSCRYPT_UID = 997  # DNSCrypt daemon UID
+
+# Main table
+table inet qwamos_filter {
+    # Input chain - traffic TO the gateway
+    chain input {
+        type filter hook input priority 0; policy drop;
+
+        # Allow loopback
+        iif lo accept
+
+        # Allow established connections
+        ct state established,related accept
+
+        # Allow local connections from VMs
+        iif virbr0 accept
+        iif vmbr0 accept
+
+        # Drop everything else
+        log prefix "[QWAMOS-DROP-IN] " drop
+    }
+
+    # Forward chain - traffic THROUGH the gateway
+    chain forward {
+        type filter hook forward priority 0; policy drop;
+
+        # Allow VM traffic to go through
+        iif { virbr0, vmbr0 } oif eth0 ct state new,established,related accept
+        iif eth0 oif { virbr0, vmbr0 } ct state established,related accept
+
+        # Drop everything else
+        log prefix "[QWAMOS-DROP-FWD] " drop
+    }
+
+    # Output chain - traffic FROM the gateway
+    chain output {
+        type filter hook output priority 0; policy drop;
+
+        # Allow loopback
+        oif lo accept
+
+        # Allow established connections
+        ct state established,related accept
+
+        # Allow Tor daemon to connect to Tor network
+        skuid $TOR_UID tcp dport { 9001, 9030, 443, 80 } accept
+
+        # Allow DNSCrypt daemon to resolve DNS
+        skuid $DNSCRYPT_UID udp dport 53 accept
+        skuid $DNSCRYPT_UID tcp dport 53 accept
+        skuid $DNSCRYPT_UID tcp dport 443 accept  # DoH
+
+        # Allow root for system operations
+        skuid 0 accept
+
+        # Drop everything else (prevents leaks)
+        log prefix "[QWAMOS-DROP-OUT] " drop
+    }
+}
+
+# NAT table for transparent Tor proxy
+table ip qwamos_nat {
+    # DNS redirection to DNSCrypt
+    chain prerouting {
+        type nat hook prerouting priority -100; policy accept;
+
+        # Redirect all DNS queries to DNSCrypt
+        iif { virbr0, vmbr0 } udp dport 53 redirect to :$TOR_DNS_PORT
+        iif { virbr0, vmbr0 } tcp dport 53 redirect to :$TOR_DNS_PORT
+    }
+
+    # Transparent Tor proxy
+    chain output {
+        type nat hook output priority -100; policy accept;
+
+        # Don't redirect Tor's own traffic
+        skuid $TOR_UID return
+        skuid $DNSCRYPT_UID return
+
+        # Redirect all TCP traffic to Tor TransPort
+        tcp dport != { 22 } redirect to :$TOR_TRANS_PORT
+
+        # DNS already handled in prerouting
+    }
+
+    # Postrouting for VMs
+    chain postrouting {
+        type nat hook postrouting priority 100; policy accept;
+
+        # Masquerade VM traffic
+        oif eth0 masquerade
+    }
+}
+
+# Mangle table for marking packets
+table inet qwamos_mangle {
+    chain prerouting {
+        type filter hook prerouting priority -150; policy accept;
+
+        # Mark packets from VMs for policy routing
+        iif { virbr0, vmbr0 } meta mark set 42
+    }
+
+    chain output {
+        type route hook output priority -150; policy accept;
+
+        # Mark Tor daemon traffic
+        skuid $TOR_UID meta mark set 100
+    }
+}
+
+# IPv6 - block completely to prevent leaks
+table ip6 qwamos_filter6 {
+    chain input {
+        type filter hook input priority 0; policy drop;
+        iif lo accept
+        log prefix "[QWAMOS-DROP-IP6] " drop
+    }
+
+    chain forward {
+        type filter hook forward priority 0; policy drop;
+        log prefix "[QWAMOS-DROP-IP6-FWD] " drop
+    }
+
+    chain output {
+        type filter hook output priority 0; policy drop;
+        oif lo accept
+        log prefix "[QWAMOS-DROP-IP6-OUT] " drop
+    }
+}
+
+# Log accepted connections for debugging (optional)
+# Uncomment for troubleshooting
+# table inet qwamos_log {
+#     chain trace {
+#         type filter hook prerouting priority -300; policy accept;
+#         meta nftrace set 1
+#     }
+# }
