@@ -1,0 +1,16 @@
+network:
+  bridge: qwamos-br0
+  mode: bridge
+resources:
+  cpus: 2
+  disk: 16G
+  ram: 2G
+storage:
+  disk_image: /data/data/com.termux/files/home/QWAMOS/vms/kali-1/disk.qcow2
+  encrypted: true
+  persistent: true
+  rootfs: /data/data/com.termux/files/home/QWAMOS/vms/kali-1/rootfs
+vm:
+  description: Full Kali NetHunter tools for security testing
+  name: kali-1
+  type: kali-wfh
