@@ -1,43 +1,158 @@
 # QWAMOS - Git Ignore File
 
-# U-Boot source (cloned from upstream)
-bootloader/u-boot-source/
+# ============================================================
+# CRITICAL: Exclude Large Files (GitHub 100MB limit per file)
+# ============================================================
 
-# Build artifacts
+# Kernel source (cloned from upstream - GIGABYTES)
+kernel/linux-6.6-source/
+kernel/linux-*/
+kernel/*.tar.*
+kernel/Image
+
+# U-Boot source (cloned from upstream - GIGABYTES)
+bootloader/u-boot-source/
+bootloader/u-boot-*/
+bootloader/*.tar.*
+
+# Build toolchains (GIGABYTES)
+build/toolchain/liboqs/
+build/toolchain/android-ndk/
+build/toolchain/android-ndk-r*/
+build/toolchain/gcc-*/
+build/env.sh
+
+# VM root filesystems (GIGABYTES - proot-distro Debian installations)
+vms/*/rootfs/
+vms/gateway-*/
+vms/workstation-*/
+vms/kali-*/
+vms/android-*/
+vms/vault-*/
+vms/disposable-*/
+
+# VM disk images
+vms/*.qcow2
+vms/*.img
+vms/*.raw
+
+# Large binaries and archives
+*.iso
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.zip
+*.7z
+*.deb
+*.rpm
+
+# ============================================================
+# Build Artifacts
+# ============================================================
+
 *.o
 *.a
 *.so
+*.so.*
 *.elf
 *.bin
 *.img
 *.map
 *.sym
 *.srec
+*.ko
 
-# Build directories
-build/toolchain/liboqs/
-build/toolchain/android-ndk-r27/
-build/env.sh
-
+# ============================================================
 # Python
+# ============================================================
+
 __pycache__/
 *.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.pytest_cache/
 
-# Cryptographic keys (NEVER commit private keys!)
+# AI model files (GIGABYTES)
+ai/kali_gpt/models/*.gguf
+ai/kali_gpt/models/*.bin
+ai/*/models/
+
+# ============================================================
+# Cryptographic Material (NEVER commit!)
+# ============================================================
+
 *.priv
 *.key
+*.pem
 keys/
+secrets/
+.env
 
 # Signed images
 *.signed
+*.sig
 *.sig.json
 
-# Temporary files
+# ============================================================
+# Temporary Files
+# ============================================================
+
 *.tmp
 *.log
 *.swp
+*~
+.DS_Store
 
-# IDE
+# ============================================================
+# IDE & Editors
+# ============================================================
+
 .vscode/
 .idea/
-build/toolchain/android-ndk/
+*.sublime-*
+.vs/
+
+# ============================================================
+# Storage Volumes (Encrypted)
+# ============================================================
+
+storage/volumes/*.qvol
+storage/volumes/*.enc
+
+# ============================================================
+# Node/React Native
+# ============================================================
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.expo/
+.expo-shared/
+
+# ============================================================
+# Android Build Artifacts
+# ============================================================
+
+*.apk
+*.aab
+android/app/build/
+android/.gradle/
+
+# ============================================================
+# Documentation Build
+# ============================================================
+
+docs/_build/
+docs/.doctrees/
+
+# ============================================================
+# Test Output
+# ============================================================
+
+test-results/
+coverage/
+htmlcov/
+.coverage
