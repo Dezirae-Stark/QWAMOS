@@ -1,0 +1,26 @@
+# QWAMOS Phase 4 Post-Quantum Cryptography Requirements
+# Python libraries for Kyber-1024, Argon2id, and BLAKE3
+
+# Memory-Hard Key Derivation
+argon2-cffi==25.1.0      # ✅ Argon2id KDF - WORKING
+                         # Tested: 1.29s (medium), 4.98s (high)
+
+# Fast Cryptographic Hashing
+blake3==1.0.8            # ✅ BLAKE3 hash - WORKING
+                         # Tested: 1,005 MB/s on ARM64
+
+# Post-Quantum Key Encapsulation
+kyber-py==1.0.1          # ✅ Kyber-1024/ML-KEM - WORKING
+                         # Fixed: Use class methods (Kyber1024.keygen, .encaps, .decaps)
+                         # Performance: 15ms keygen, 50ms encaps, 35ms decaps
+                         # Total volume unlock overhead: ~35ms + Argon2id (~5s) = ~5.03s
+
+# Already installed (Phase 3)
+# pycryptodome==3.23.0   # ChaCha20-Poly1305
+# pynacl==1.6.0          # Ed25519 (for signed control bus)
+
+# Additional dependencies
+cffi>=2.0.0              # For Argon2 bindings
+
+# Attempted but failed:
+# liboqs-python==0.14.1  # ❌ Requires native liboqs.so (compilation failed on Android)
