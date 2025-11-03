@@ -1,0 +1,53 @@
+{
+  "mode": "maximum-anonymity",
+  "description": "Maximum anonymity: Tor → I2P chain (slowest)",
+  "tor_enabled": true,
+  "i2p_enabled": true,
+  "dnscrypt_enabled": true,
+  "vpn_enabled": false,
+
+  "tor": {
+    "socks_port": 9050,
+    "control_port": 9051,
+    "use_bridges": true,
+    "bridge_type": "obfs4",
+    "circuit_build_timeout": 120,
+    "circuit_isolation": true,
+    "num_entry_guards": 3,
+    "long_circuits": true
+  },
+
+  "i2p": {
+    "http_proxy": "127.0.0.1:4444",
+    "socks_proxy": "127.0.0.1:4447",
+    "tunnel_length": 4,
+    "inbound_tunnels": 4,
+    "outbound_tunnels": 4,
+    "tunnel_variance": 1
+  },
+
+  "dnscrypt": {
+    "listen_address": "127.0.0.1:5353",
+    "server_names": ["cloudflare", "quad9"],
+    "require_dnssec": true,
+    "require_nolog": true,
+    "require_nofilter": true,
+    "block_ipv6": false,
+    "timeout": 10000
+  },
+
+  "routing": {
+    "chain": ["tor", "i2p"],
+    "tor_to_i2p": true,
+    "clearnet_via": "tor_i2p_chain",
+    "dns_via": "dnscrypt"
+  },
+
+  "firewall": {
+    "block_non_tor": true,
+    "block_ipv6": true,
+    "allow_lan": false,
+    "killswitch_enabled": true,
+    "strict_mode": true
+  }
+}
