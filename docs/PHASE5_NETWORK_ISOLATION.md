@@ -1333,6 +1333,57 @@ def test_mode_transition():
 
 ---
 
+## Chimera Decoy Protocol (Optional Layer)
+
+**Status:** Specification Complete | Implementation Pending
+**Priority:** Medium (after core services)
+**Documentation:** See `docs/CHIMERA_DECOY_PROTOCOL.md`
+
+The **Chimera Decoy Protocol** is an optional traffic obfuscation layer that generates realistic decoy traffic to defeat traffic analysis attacks. Named after the multi-headed mythological creature, Chimera generates five types of cover traffic:
+
+### Five Heads of Chimera
+
+1. **HTTP/HTTPS Browsing Simulation** - Synthetic web browsing sessions
+2. **Video Streaming Simulation** - Constant bitrate streams mimicking Netflix/YouTube
+3. **Messaging App Simulation** - Encrypted messaging patterns (Signal/WhatsApp)
+4. **Download/Update Simulation** - Large file transfers and OS updates
+5. **Gaming Traffic Simulation** - Low-latency bidirectional gaming patterns
+
+### Modes
+
+- **Stealth Mode:** 1-2 Mbps constant (~5-10 GB/day)
+- **Balanced Mode:** 5-10 Mbps constant (~20-30 GB/day) *Recommended*
+- **Maximum Anonymity:** 20-50 Mbps constant (~100-200 GB/day)
+
+### Key Features
+
+- **Traffic Analysis Resistance:** Prevents ISP and state-level pattern recognition
+- **Behavioral Obfuscation:** ML-based pattern generation matches real user behavior
+- **Timing Attack Mitigation:** Eliminates timing correlation against Tor/VPN
+- **Volume Normalization:** Maintains constant bandwidth profile
+
+### Integration
+
+Chimera integrates with the NetworkManager and can be enabled per-mode:
+
+```json
+{
+  "mode": "maximum-anonymity",
+  "chimera_enabled": true,
+  "chimera_bandwidth_mbps": 10,
+  "chimera_schedule": {
+    "06:00-23:00": "balanced",
+    "23:00-06:00": "stealth"
+  }
+}
+```
+
+**Implementation Timeline:** 10 weeks (after Phase 5 core completion)
+
+For complete specification, see: `docs/CHIMERA_DECOY_PROTOCOL.md`
+
+---
+
 ## Resources & References
 
 **InviZible Pro:**
@@ -1355,6 +1406,11 @@ def test_mode_transition():
 **WireGuard:**
 - Website: https://www.wireguard.com
 - Post-Quantum: https://eprint.iacr.org/2020/379.pdf
+
+**Traffic Analysis & Cover Traffic:**
+- Website Fingerprinting: https://www.usenix.org/conference/wpes11
+- CS-BuFLO Defense: https://www.usenix.org/conference/wpes14
+- Deep Fingerprinting: https://dl.acm.org/doi/10.1145/3243734.3243768
 
 ---
 
