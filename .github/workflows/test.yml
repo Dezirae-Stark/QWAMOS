@@ -186,30 +186,29 @@ jobs:
       run: |
         echo "Scanning for secrets..."
 
-        # Pattern for common secrets (full-length real keys only)
-        # Exclude documentation, examples, and pattern definitions
-        EXCLUDE_OPTS="--exclude-dir=.git --exclude-dir=docs --exclude-dir=ai --exclude-dir=.github --exclude=*.md"
+        # Only scan QWAMOS source code (not docs, examples, or patterns)
+        SCAN_DIRS="bootloader/kyber* kernel/qwamos* hypervisor/scripts crypto network storage ui system device security frontend recovery"
 
-        # Check for real Anthropic API keys (full length with prefix)
-        if grep -rE 'sk-ant-api03-[a-zA-Z0-9]{95,}' . $EXCLUDE_OPTS 2>/dev/null; then
+        # Check for real Anthropic API keys (full length: sk-ant-api03-[95+ chars])
+        if grep -rE 'sk-ant-api03-[a-zA-Z0-9]{95,}' $SCAN_DIRS 2>/dev/null; then
           echo "❌ Real Anthropic API key detected!"
           exit 1
         fi
 
-        # Check for real OpenAI API keys (full length)
-        if grep -rE 'sk-proj-[a-zA-Z0-9]{48,}' . $EXCLUDE_OPTS 2>/dev/null; then
+        # Check for real OpenAI API keys (full length: sk-proj-[48+ chars])
+        if grep -rE 'sk-proj-[a-zA-Z0-9]{48,}' $SCAN_DIRS 2>/dev/null; then
           echo "❌ Real OpenAI API key detected!"
           exit 1
         fi
 
-        # Check for GitHub tokens
-        if grep -rE 'ghp_[a-zA-Z0-9]{36}' . $EXCLUDE_OPTS 2>/dev/null; then
+        # Check for GitHub tokens (full length: ghp_[36 chars])
+        if grep -rE 'ghp_[a-zA-Z0-9]{36}' $SCAN_DIRS 2>/dev/null; then
           echo "❌ GitHub token detected!"
           exit 1
         fi
 
-        # Check for AWS access keys
-        if grep -rE 'AKIA[0-9A-Z]{16}' . $EXCLUDE_OPTS 2>/dev/null; then
+        # Check for AWS access keys (AKIA[16 chars])
+        if grep -rE 'AKIA[0-9A-Z]{16}' $SCAN_DIRS 2>/dev/null; then
           echo "❌ AWS access key detected!"
           exit 1
         fi

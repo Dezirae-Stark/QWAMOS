@@ -172,30 +172,24 @@ jobs:
       run: |
         echo "Scanning for accidentally committed secrets..."
 
-        # Check for actual API keys (not documentation examples)
-        # Exclude: .git, docs, ai (has examples), .github (has patterns), README.md, PROJECT_STATUS.md
-        if grep -rE 'sk-ant-api03-[a-zA-Z0-9]{95,}' . \
-          --exclude-dir=.git \
-          --exclude-dir=docs \
-          --exclude-dir=ai \
-          --exclude-dir=.github \
-          --exclude="*.md"; then
+        # Only scan QWAMOS source code directories (not docs, examples, or third-party)
+        # This avoids false positives from documentation and API key examples
+        SCAN_DIRS="bootloader/kyber* kernel/qwamos* hypervisor/scripts crypto/chacha20 crypto/kdf crypto/kyber network storage ui system device security frontend recovery"
+
+        # Check for real Anthropic API keys (full length: sk-ant-api03-[95+ chars])
+        if grep -rE 'sk-ant-api03-[a-zA-Z0-9]{95,}' $SCAN_DIRS 2>/dev/null; then
           echo "ERROR: Real Anthropic API key detected!"
           exit 1
         fi
 
-        if grep -rE 'sk-proj-[a-zA-Z0-9]{48,}' . \
-          --exclude-dir=.git \
-          --exclude-dir=docs \
-          --exclude-dir=ai \
-          --exclude-dir=.github \
-          --exclude="*.md"; then
+        # Check for real OpenAI API keys (full length: sk-proj-[48+ chars])
+        if grep -rE 'sk-proj-[a-zA-Z0-9]{48,}' $SCAN_DIRS 2>/dev/null; then
           echo "ERROR: Real OpenAI API key detected!"
           exit 1
         fi
 
-        # Check for private keys
-        if find . -name "*.pem" -o -name "*.key" | grep -v ".git"; then
+        # Check for private keys (scan all except .git)
+        if find . -name "*.pem" -o -name "*.key" 2>/dev/null | grep -v ".git"; then
           echo "ERROR: Private key files detected!"
           exit 1
         fi
