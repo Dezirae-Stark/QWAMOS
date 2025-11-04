@@ -1,0 +1,111 @@
+{
+  "api_endpoint": "https://api.openai.com/v1/chat/completions",
+  "model": "gpt-4-turbo-preview",
+  "max_tokens": 4096,
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "presence_penalty": 0.0,
+  "frequency_penalty": 0.0,
+  "routing": {
+    "method": "tor",
+    "proxy": "socks5h://127.0.0.1:9050",
+    "fallback_proxy": "socks5h://127.0.0.1:4447",
+    "verify_ssl": true,
+    "timeout_seconds": 60,
+    "retry_attempts": 3,
+    "retry_delay_seconds": 2
+  },
+  "privacy": {
+    "sanitize_requests": true,
+    "cache_locally": true,
+    "log_queries": false,
+    "remove_metadata": true,
+    "anonymize_timestamps": true
+  },
+  "features": {
+    "function_calling": true,
+    "vision": true,
+    "code_interpreter": false,
+    "streaming": true,
+    "response_format": "text"
+  },
+  "functions": [
+    {
+      "name": "execute_command",
+      "description": "Execute a shell command in QWAMOS",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string",
+            "description": "The shell command to execute"
+          },
+          "vm": {
+            "type": "string",
+            "enum": ["android", "kali", "workstation"],
+            "description": "Which VM to execute the command in"
+          }
+        },
+        "required": ["command"]
+      }
+    },
+    {
+      "name": "read_file",
+      "description": "Read contents of a file",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "File path to read"
+          }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "analyze_scan",
+      "description": "Analyze nmap or other security scan results",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "scan_file": {
+            "type": "string",
+            "description": "Path to scan results file"
+          },
+          "scan_type": {
+            "type": "string",
+            "enum": ["nmap", "nikto", "sqlmap", "burp"],
+            "description": "Type of scan"
+          }
+        },
+        "required": ["scan_file", "scan_type"]
+      }
+    }
+  ],
+  "cost_limits": {
+    "max_monthly_cost": 50.00,
+    "alert_threshold": 40.00,
+    "daily_limit": 5.00,
+    "per_request_limit": 0.50
+  },
+  "rate_limiting": {
+    "requests_per_minute": 500,
+    "tokens_per_minute": 200000,
+    "concurrent_requests": 10
+  },
+  "system_prompt": "You are a helpful AI assistant integrated into QWAMOS, a privacy-focused mobile operating system. Provide clear, accurate responses and help users with their tasks.",
+  "logging": {
+    "enabled": true,
+    "level": "INFO",
+    "file": "/var/log/qwamos/chatgpt.log",
+    "log_requests": false,
+    "log_responses": false
+  },
+  "cache": {
+    "enabled": true,
+    "ttl_hours": 24,
+    "max_size_mb": 500,
+    "compression": true
+  }
+}

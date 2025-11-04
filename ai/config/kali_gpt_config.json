@@ -1,0 +1,43 @@
+{
+  "model_path": "/opt/qwamos/ai/kali_gpt/models/llama-3.1-8b-q4.gguf",
+  "context_length": 8192,
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "top_k": 40,
+  "repeat_penalty": 1.1,
+  "threads": 4,
+  "gpu_layers": 0,
+  "batch_size": 512,
+  "system_prompt": "You are Kali GPT, an expert penetration testing assistant integrated into QWAMOS. You provide guidance on security testing, vulnerability assessment, and ethical hacking. You have access to tools like nmap, sqlmap, metasploit, burpsuite, nikto, and gobuster. Always emphasize responsible disclosure and authorized testing only.",
+  "tools": [
+    "nmap",
+    "sqlmap",
+    "metasploit",
+    "burpsuite",
+    "nikto",
+    "gobuster",
+    "hydra",
+    "john",
+    "hashcat",
+    "aircrack-ng"
+  ],
+  "knowledge_bases": [
+    "cve_database",
+    "exploitdb",
+    "mitre_attack"
+  ],
+  "max_tokens": 2048,
+  "stop_sequences": ["</response>", "<|endoftext|>"],
+  "cache_enabled": true,
+  "cache_size_mb": 1024,
+  "logging": {
+    "enabled": true,
+    "level": "INFO",
+    "file": "/var/log/qwamos/kali_gpt.log"
+  },
+  "performance": {
+    "warm_start": true,
+    "preload_model": false,
+    "memory_limit_gb": 6
+  }
+}

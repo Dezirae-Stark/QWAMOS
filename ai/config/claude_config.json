@@ -1,0 +1,55 @@
+{
+  "api_endpoint": "https://api.anthropic.com/v1/messages",
+  "model": "claude-3-5-sonnet-20241022",
+  "max_tokens": 4096,
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "top_k": 40,
+  "routing": {
+    "method": "tor",
+    "proxy": "socks5h://127.0.0.1:9050",
+    "fallback_proxy": "socks5h://127.0.0.1:4447",
+    "verify_ssl": true,
+    "timeout_seconds": 60,
+    "retry_attempts": 3,
+    "retry_delay_seconds": 2
+  },
+  "privacy": {
+    "sanitize_requests": true,
+    "cache_locally": true,
+    "log_queries": false,
+    "remove_metadata": true,
+    "anonymize_timestamps": true
+  },
+  "cost_limits": {
+    "max_monthly_cost": 50.00,
+    "alert_threshold": 40.00,
+    "daily_limit": 5.00,
+    "per_request_limit": 0.50
+  },
+  "rate_limiting": {
+    "requests_per_minute": 50,
+    "tokens_per_minute": 100000,
+    "concurrent_requests": 5
+  },
+  "features": {
+    "streaming": true,
+    "vision": false,
+    "tools": true,
+    "system_prompts": true
+  },
+  "system_prompt": "You are a helpful AI assistant integrated into QWAMOS, a privacy-focused mobile operating system. Provide clear, accurate, and security-conscious responses.",
+  "logging": {
+    "enabled": true,
+    "level": "INFO",
+    "file": "/var/log/qwamos/claude.log",
+    "log_requests": false,
+    "log_responses": false
+  },
+  "cache": {
+    "enabled": true,
+    "ttl_hours": 24,
+    "max_size_mb": 500,
+    "compression": true
+  }
+}

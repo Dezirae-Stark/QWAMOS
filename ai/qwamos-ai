@@ -1,0 +1,303 @@
+#!/usr/bin/env python3
+"""
+QWAMOS AI CLI - Command-line interface for AI assistants
+
+Usage:
+    qwamos-ai enable <service> [--api-key KEY]
+    qwamos-ai disable <service>
+    qwamos-ai status
+    qwamos-ai query <service> <prompt>
+    qwamos-ai chat <service>
+    qwamos-ai stats
+    qwamos-ai test <service>
+
+Services: kali-gpt, claude, chatgpt
+"""
+
+import argparse
+import sys
+import json
+import os
+from pathlib import Path
+
+# Add parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent))
+
+from ai_manager import AIManager
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='QWAMOS AI Assistant CLI',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=__doc__
+    )
+
+    subparsers = parser.add_subparsers(dest='command', help='Commands')
+
+    # Enable command
+    enable_parser = subparsers.add_parser('enable', help='Enable an AI service')
+    enable_parser.add_argument('service', choices=['kali-gpt', 'claude', 'chatgpt'])
+    enable_parser.add_argument('--api-key', help='API key for cloud services')
+
+    # Disable command
+    disable_parser = subparsers.add_parser('disable', help='Disable an AI service')
+    disable_parser.add_argument('service', choices=['kali-gpt', 'claude', 'chatgpt'])
+
+    # Status command
+    subparsers.add_parser('status', help='Show status of all AI services')
+
+    # Query command
+    query_parser = subparsers.add_parser('query', help='Query an AI service')
+    query_parser.add_argument('service', choices=['kali-gpt', 'claude', 'chatgpt'])
+    query_parser.add_argument('prompt', help='The prompt to send')
+    query_parser.add_argument('--json', action='store_true', help='Output in JSON format')
+
+    # Chat command
+    chat_parser = subparsers.add_parser('chat', help='Start interactive chat')
+    chat_parser.add_argument('service', choices=['kali-gpt', 'claude', 'chatgpt'])
+
+    # Stats command
+    subparsers.add_parser('stats', help='Show usage statistics')
+
+    # Test command
+    test_parser = subparsers.add_parser('test', help='Test an AI service')
+    test_parser.add_argument('service', choices=['kali-gpt', 'claude', 'chatgpt'])
+
+    args = parser.parse_args()
+
+    if not args.command:
+        parser.print_help()
+        sys.exit(1)
+
+    # Initialize AI Manager
+    ai_manager = AIManager()
+
+    # Execute command
+    if args.command == 'enable':
+        handle_enable(ai_manager, args)
+    elif args.command == 'disable':
+        handle_disable(ai_manager, args)
+    elif args.command == 'status':
+        handle_status(ai_manager)
+    elif args.command == 'query':
+        handle_query(ai_manager, args)
+    elif args.command == 'chat':
+        handle_chat(ai_manager, args)
+    elif args.command == 'stats':
+        handle_stats(ai_manager)
+    elif args.command == 'test':
+        handle_test(ai_manager, args)
+
+
+def handle_enable(manager: AIManager, args):
+    """Enable an AI service"""
+    service = args.service
+
+    try:
+        if service == 'kali-gpt':
+            success = manager.enable_kali_gpt()
+            if success:
+                print(f"✅ {service} enabled successfully")
+                print(f"   Model: Llama 3.1 8B (local)")
+                print(f"   Privacy: 🟢 100% Local")
+            else:
+                print(f"❌ Failed to enable {service}")
+                print(f"   Check that model file exists")
+                sys.exit(1)
+
+        elif service in ['claude', 'chatgpt']:
+            if not args.api_key:
+                print(f"❌ Error: --api-key required for {service}")
+                sys.exit(1)
+
+            if service == 'claude':
+                success = manager.enable_claude(args.api_key)
+            else:
+                success = manager.enable_chatgpt(args.api_key)
+
+            if success:
+                print(f"✅ {service} enabled successfully")
+                print(f"   API key stored securely")
+                print(f"   Routing: Tor (127.0.0.1:9050)")
+                print(f"   Privacy: 🟡 Cloud via Tor")
+            else:
+                print(f"❌ Failed to enable {service}")
+                print(f"   Check API key and network connection")
+                sys.exit(1)
+
+    except Exception as e:
+        print(f"❌ Error enabling {service}: {e}")
+        sys.exit(1)
+
+
+def handle_disable(manager: AIManager, args):
+    """Disable an AI service"""
+    service = args.service
+
+    try:
+        if service == 'kali-gpt':
+            success = manager.disable_kali_gpt()
+        elif service == 'claude':
+            success = manager.disable_claude()
+        else:
+            success = manager.disable_chatgpt()
+
+        if success:
+            print(f"✅ {service} disabled")
+        else:
+            print(f"❌ Failed to disable {service}")
+            sys.exit(1)
+
+    except Exception as e:
+        print(f"❌ Error disabling {service}: {e}")
+        sys.exit(1)
+
+
+def handle_status(manager: AIManager):
+    """Show status of all AI services"""
+    status = manager.get_status()
+
+    print("QWAMOS AI Assistants Status")
+    print("=" * 50)
+
+    for service, info in status.items():
+        enabled = "✅ Enabled" if info['enabled'] else "❌ Disabled"
+
+        if service == 'kali-gpt':
+            privacy = "🟢 100% Local"
+            model = info.get('model', 'Llama 3.1 8B')
+        else:
+            privacy = "🟡 Cloud via Tor"
+            model = info.get('model', 'API')
+
+        print(f"\n{service.upper()}")
+        print(f"  Status:  {enabled}")
+        print(f"  Model:   {model}")
+        print(f"  Privacy: {privacy}")
+
+        if info.get('last_used'):
+            print(f"  Last Used: {info['last_used']}")
+
+
+def handle_query(manager: AIManager, args):
+    """Query an AI service"""
+    service = args.service
+    prompt = args.prompt
+
+    try:
+        print(f"Querying {service}...")
+        response = manager.query(service, prompt)
+
+        if args.json:
+            print(json.dumps({
+                'service': service,
+                'prompt': prompt,
+                'response': response
+            }, indent=2))
+        else:
+            print(f"\n{service.upper()} Response:")
+            print("=" * 50)
+            print(response)
+            print("=" * 50)
+
+    except Exception as e:
+        print(f"❌ Error querying {service}: {e}")
+        sys.exit(1)
+
+
+def handle_chat(manager: AIManager, args):
+    """Start interactive chat session"""
+    service = args.service
+
+    print(f"Starting chat with {service}")
+    print("Type 'exit' or 'quit' to end the session")
+    print("=" * 50)
+
+    conversation_history = []
+
+    while True:
+        try:
+            user_input = input("\nYou: ")
+
+            if user_input.lower() in ['exit', 'quit', 'q']:
+                print("Ending chat session...")
+                break
+
+            if not user_input.strip():
+                continue
+
+            print(f"{service}: ", end='', flush=True)
+
+            response = manager.query(service, user_input,
+                                    context={'history': conversation_history})
+
+            print(response)
+
+            conversation_history.append({
+                'role': 'user',
+                'content': user_input
+            })
+            conversation_history.append({
+                'role': 'assistant',
+                'content': response
+            })
+
+            # Keep last 10 messages
+            if len(conversation_history) > 20:
+                conversation_history = conversation_history[-20:]
+
+        except KeyboardInterrupt:
+            print("\nEnding chat session...")
+            break
+        except Exception as e:
+            print(f"\n❌ Error: {e}")
+
+
+def handle_stats(manager: AIManager):
+    """Show usage statistics"""
+    stats = manager.get_usage_stats()
+
+    print("QWAMOS AI Usage Statistics")
+    print("=" * 50)
+
+    total_queries = sum(s['queries'] for s in stats.values())
+    total_cost = sum(s['cost'] for s in stats.values())
+
+    for service, data in stats.items():
+        print(f"\n{service.upper()}")
+        print(f"  Queries: {data['queries']}")
+        print(f"  Tokens:  {data['tokens']:,}")
+        print(f"  Cost:    ${data['cost']:.2f}")
+
+    print(f"\nTOTAL")
+    print(f"  Queries: {total_queries}")
+    print(f"  Cost:    ${total_cost:.2f}")
+
+
+def handle_test(manager: AIManager, args):
+    """Test an AI service"""
+    service = args.service
+
+    print(f"Testing {service}...")
+
+    test_prompt = "Hello, this is a test message. Please respond with 'OK' if you receive this."
+
+    try:
+        response = manager.query(service, test_prompt)
+
+        print(f"✅ {service} test successful")
+        print(f"   Response: {response[:100]}...")
+
+        if service != 'kali-gpt':
+            print(f"   Routing: Tor")
+            print(f"   Latency: Measured in response time")
+
+    except Exception as e:
+        print(f"❌ {service} test failed")
+        print(f"   Error: {e}")
+        sys.exit(1)
+
+
+if __name__ == '__main__':
+    main()
