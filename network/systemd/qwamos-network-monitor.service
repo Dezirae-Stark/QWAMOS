@@ -1,0 +1,11 @@
+[Unit]
+Description=QWAMOS Network-monitor Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/opt/qwamos/network/network-monitor/network-monitor_controller.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

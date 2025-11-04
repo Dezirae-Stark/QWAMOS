@@ -241,7 +241,7 @@ def test_network_monitor(results):
 # Test 9: Systemd Service Files
 def test_systemd_services(results):
     """Check for systemd service unit files"""
-    systemd_dir = Path('../../systemd')
+    systemd_dir = Path('../systemd')
     if not systemd_dir.exists():
         results.add("Systemd Service Files", False, "systemd/ directory not found")
         return False
