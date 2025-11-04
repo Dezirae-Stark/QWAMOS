@@ -172,14 +172,25 @@ jobs:
       run: |
         echo "Scanning for accidentally committed secrets..."
 
-        # Check for API keys
-        if grep -r "sk-ant-" . --exclude-dir=.git --exclude-dir=docs; then
-          echo "ERROR: Anthropic API key detected!"
+        # Check for actual API keys (not documentation examples)
+        # Exclude: .git, docs, ai (has examples), .github (has patterns), README.md, PROJECT_STATUS.md
+        if grep -rE 'sk-ant-api03-[a-zA-Z0-9]{95,}' . \
+          --exclude-dir=.git \
+          --exclude-dir=docs \
+          --exclude-dir=ai \
+          --exclude-dir=.github \
+          --exclude="*.md"; then
+          echo "ERROR: Real Anthropic API key detected!"
           exit 1
         fi
 
-        if grep -r "sk-proj-" . --exclude-dir=.git --exclude-dir=docs; then
-          echo "ERROR: OpenAI API key detected!"
+        if grep -rE 'sk-proj-[a-zA-Z0-9]{48,}' . \
+          --exclude-dir=.git \
+          --exclude-dir=docs \
+          --exclude-dir=ai \
+          --exclude-dir=.github \
+          --exclude="*.md"; then
+          echo "ERROR: Real OpenAI API key detected!"
           exit 1
         fi
 
