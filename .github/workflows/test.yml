@@ -165,7 +165,7 @@ jobs:
         echo "Checking for outdated code examples..."
 
         # Ensure examples reference actual files
-        if grep -r "```python" docs/ | grep -v "example" | head -5; then
+        if grep -r '```python' docs/ | grep -v "example" | head -5; then
           echo "⚠ Found code examples in docs (verify they're up to date)"
         fi
 
