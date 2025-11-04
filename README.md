@@ -617,6 +617,29 @@ QWAMOS is an open-source project. Contributions welcome!
 
 ---
 
+## 💰 Support QWAMOS
+
+QWAMOS is community-funded open-source software. Your donations help us continue development, security audits, and hardware testing.
+
+### Anonymous Cryptocurrency Donations
+
+[![Donate Bitcoin](https://img.shields.io/badge/Donate-Bitcoin-orange?style=for-the-badge&logo=bitcoin)](https://trocador.app/anonpay?ticker_to=btc&network_to=Mainnet&address=bc1qjm7fnrk23m4esr2nq97aqugvecw2awxvp0rd2s&ref=sqKNYGZbRl&direct=True)
+[![Donate Monero](https://img.shields.io/badge/Donate-Monero-gray?style=for-the-badge&logo=monero)](https://trocador.app/anonpay?ticker_to=xmr&network_to=Mainnet&address=49CjxV4LcAMGyVe46N2hEAJJXJVQhAaSbepzistuJSKcG9ApC9RZmNNUbzpNxsmvmKHZX9N4SKBbTWk2NST7ozzVMAFsme7&ref=sqKNYGZbRl&direct=True&description=QWAMOS+Donations+)
+
+**Why Trocador AnonPay?**
+- ✅ Accept 200+ cryptocurrencies (BTC, ETH, XMR, LTC, and more)
+- ✅ No KYC/registration - completely anonymous
+- ✅ No JavaScript tracking - works with Tor Browser
+- ✅ Non-custodial - funds go directly to our wallet
+
+**Bitcoin Address:** `bc1qjm7fnrk23m4esr2nq97aqugvecw2awxvp0rd2s`
+
+**Monero Address:** `49CjxV4LcAMGyVe46N2hEAJJXJVQhAaSbepzistuJSKcG9ApC9RZmNNUbzpNxsmvmKHZX9N4SKBbTWk2NST7ozzVMAFsme7`
+
+[📖 Full Donation Information →](DONATIONS.md)
+
+---
+
 ## 📄 License
 
 GPL-3.0
