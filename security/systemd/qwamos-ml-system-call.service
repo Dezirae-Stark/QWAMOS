@@ -1,0 +1,51 @@
+[Unit]
+Description=QWAMOS ML System Call Analyzer
+Documentation=https://github.com/Dezirae-Stark/QWAMOS
+After=network.target qwamos-ai-manager.service
+Wants=qwamos-ai-manager.service
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/opt/qwamos/security/ml
+
+# Environment
+Environment="PYTHONUNBUFFERED=1"
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+Environment="TF_CPP_MIN_LOG_LEVEL=2"
+
+# ML System Call Analyzer
+ExecStart=/usr/bin/python3 /opt/qwamos/security/ml/system_call_analyzer.py
+
+# Restart on failure
+Restart=on-failure
+RestartSec=10s
+
+# Resource limits
+MemoryLimit=1.5G
+MemoryHigh=1.2G
+CPUQuota=40%
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/qwamos/security/ml/models /var/log/qwamos
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictRealtime=true
+RestrictNamespaces=true
+
+# Process tracing capabilities (for syscall monitoring)
+CapabilityBoundingSet=CAP_SYS_PTRACE CAP_DAC_READ_SEARCH
+RestrictAddressFamilies=AF_UNIX
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=qwamos-ml-syscall
+
+[Install]
+WantedBy=multi-user.target

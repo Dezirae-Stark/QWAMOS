@@ -1,0 +1,52 @@
+[Unit]
+Description=QWAMOS AI Response Coordinator
+Documentation=https://github.com/Dezirae-Stark/QWAMOS
+After=network.target qwamos-tor.service qwamos-ai-manager.service
+Requires=qwamos-ai-manager.service
+Wants=qwamos-tor.service
+
+[Service]
+Type=simple
+User=qwamos
+Group=qwamos
+WorkingDirectory=/opt/qwamos/security/ai_response
+
+# Environment
+Environment="PYTHONUNBUFFERED=1"
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+Environment="PYTHONPATH=/opt/qwamos/ai:/opt/qwamos/security"
+
+# AI Response Coordinator daemon
+ExecStart=/usr/bin/python3 /opt/qwamos/security/ai_response/ai_response_coordinator.py --daemon
+
+# Restart on failure
+Restart=on-failure
+RestartSec=10s
+
+# Resource limits
+MemoryLimit=2G
+MemoryHigh=1.5G
+CPUQuota=60%
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/qwamos/security/quarantine /opt/qwamos/security/config /var/log/qwamos
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictRealtime=true
+RestrictNamespaces=true
+
+# Network access (for Tor routing to Claude/ChatGPT)
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+IPAddressAllow=127.0.0.1/8 ::1/128
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=qwamos-ai-response
+
+[Install]
+WantedBy=multi-user.target

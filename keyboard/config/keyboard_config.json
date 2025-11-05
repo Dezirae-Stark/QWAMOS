@@ -1,0 +1,118 @@
+{
+  "version": "1.0.0",
+  "keyboard_name": "QWAMOS SecureType",
+  "description": "Hardware-encrypted keyboard with ML anomaly detection",
+
+  "default_settings": {
+    "mode": "STANDARD",
+    "security_level": "HIGH",
+    "layout": "QWERTY",
+    "enable_ml_detection": true,
+    "enable_haptic": true,
+    "enable_decoy_chars": false,
+    "random_layout_interval": 30,
+    "anomaly_threshold": 0.30
+  },
+
+  "security": {
+    "encryption": {
+      "algorithm": "AES-GCM",
+      "key_size": 256,
+      "use_strongbox": true,
+      "use_tee_fallback": true
+    },
+
+    "anti_screenshot": {
+      "enable_flag_secure": true,
+      "auto_activate_password_mode": true
+    },
+
+    "ml_detection": {
+      "model_path": "/opt/qwamos/keyboard/ml/models/typing_model.tflite",
+      "profile_path": "/opt/qwamos/keyboard/config/typing_profile.json",
+      "min_keystrokes_for_analysis": 10,
+      "anomaly_threshold": 0.30,
+      "enable_continuous_learning": true,
+      "save_profile_interval": 50
+    },
+
+    "memory_wiping": {
+      "wipe_on_screen_lock": true,
+      "wipe_on_mode_switch": true,
+      "overwrite_passes": 3
+    },
+
+    "biometric_auth": {
+      "enable_on_anomaly": true,
+      "authenticator_types": ["BIOMETRIC_STRONG"],
+      "timeout_seconds": 30
+    }
+  },
+
+  "modes": {
+    "STANDARD": {
+      "description": "Regular typing with hardware encryption",
+      "security_features": ["hardware_encryption", "ml_detection"],
+      "visual_feedback": true,
+      "clipboard_enabled": true
+    },
+
+    "PASSWORD": {
+      "description": "Maximum security for passwords",
+      "security_features": [
+        "hardware_encryption",
+        "ml_detection",
+        "flag_secure",
+        "no_clipboard",
+        "no_autocomplete",
+        "haptic_only_feedback"
+      ],
+      "visual_feedback": false,
+      "clipboard_enabled": false,
+      "enable_random_layout": true,
+      "enable_decoy_chars": true
+    },
+
+    "TERMINAL": {
+      "description": "Command-line optimized input",
+      "security_features": ["hardware_encryption"],
+      "visual_feedback": true,
+      "clipboard_enabled": true,
+      "special_keys": ["Ctrl", "Alt", "Tab", "Esc", "|", "~", "/", ">", "<"]
+    }
+  },
+
+  "layouts": {
+    "QWERTY": {
+      "rows": [
+        ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+        ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
+        ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
+        ["z", "x", "c", "v", "b", "n", "m"]
+      ]
+    },
+
+    "AZERTY": {
+      "rows": [
+        ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+        ["a", "z", "e", "r", "t", "y", "u", "i", "o", "p"],
+        ["q", "s", "d", "f", "g", "h", "j", "k", "l", "m"],
+        ["w", "x", "c", "v", "b", "n"]
+      ]
+    }
+  },
+
+  "privacy": {
+    "no_internet_permission": true,
+    "no_telemetry": true,
+    "no_analytics": true,
+    "no_crash_reporting": true,
+    "local_processing_only": true
+  },
+
+  "performance": {
+    "max_buffer_size": 8192,
+    "ml_inference_timeout_ms": 100,
+    "haptic_duration_ms": 10
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "version": "1.0.0",
+  "system_name": "QWAMOS AI App Builder",
+  "description": "Multi-AI app generator with triple crosscheck validation",
+
+  "ai_coordination": {
+    "pipeline_type": "multi_ai_triple_crosscheck",
+    "max_iterations": 3,
+    "min_security_score": 90.0,
+    "min_consensus_confidence": 0.75,
+
+    "ai_roles": {
+      "kali_gpt": {
+        "focus": "security",
+        "weight": 0.4,
+        "responsibilities": [
+          "vulnerability_scanning",
+          "security_requirements_analysis",
+          "minimal_permissions_recommendation",
+          "threat_modeling"
+        ]
+      },
+
+      "claude": {
+        "focus": "architecture_and_implementation",
+        "weight": 0.35,
+        "responsibilities": [
+          "code_generation",
+          "architecture_design",
+          "security_review",
+          "performance_optimization"
+        ]
+      },
+
+      "chatgpt": {
+        "focus": "user_experience_and_quality",
+        "weight": 0.25,
+        "responsibilities": [
+          "ui_generation",
+          "code_quality_review",
+          "dependency_audit",
+          "enhancement_suggestions"
+        ]
+      }
+    }
+  },
+
+  "crosscheck_validation": {
+    "enabled": true,
+    "stages": [
+      "requirements_analysis",
+      "code_generation",
+      "security_audit",
+      "quality_assurance"
+    ],
+
+    "consensus_requirements": {
+      "requirements": {
+        "min_agreement": 0.75,
+        "required_reviewers": 3
+      },
+      "code": {
+        "min_agreement": 0.70,
+        "required_reviewers": 2
+      },
+      "security": {
+        "min_agreement": 1.0,
+        "required_reviewers": 3
+      }
+    }
+  },
+
+  "security_audit": {
+    "triple_audit_required": true,
+    "min_score_per_ai": 90.0,
+    "audit_types": [
+      "vulnerability_scan",
+      "architecture_security",
+      "dependency_audit",
+      "manifest_analysis",
+      "permission_review"
+    ],
+
+    "fail_conditions": [
+      "network_calls_without_permission",
+      "suspicious_permissions",
+      "known_vulnerabilities",
+      "insecure_crypto",
+      "hardcoded_secrets"
+    ]
+  },
+
+  "quality_assurance": {
+    "zero_errors_required": true,
+    "min_code_coverage": 0.80,
+    "automated_tests": true,
+
+    "test_types": [
+      "unit_tests",
+      "integration_tests",
+      "security_tests",
+      "performance_tests"
+    ]
+  },
+
+  "enhancement_suggestions": {
+    "enabled": true,
+    "require_user_approval": true,
+    "max_suggestions": 10,
+
+    "categories": [
+      "security_improvements",
+      "performance_optimizations",
+      "ux_enhancements",
+      "code_refactoring",
+      "additional_features"
+    ]
+  },
+
+  "build_system": {
+    "isolated_vm": true,
+    "vm_snapshot": true,
+    "security_scan_before_build": true,
+
+    "build_steps": [
+      "copy_code_to_vm",
+      "install_dependencies",
+      "compile_code",
+      "run_security_scans",
+      "generate_apk",
+      "sign_with_qwamos_key",
+      "final_validation"
+    ]
+  },
+
+  "deployment": {
+    "dedicated_vm_per_app": true,
+    "minimal_permissions_only": true,
+    "network_isolation": true,
+
+    "vm_config": {
+      "cpu_cores": 2,
+      "ram_mb": 1024,
+      "storage_gb": 2,
+      "network": "isolated"
+    }
+  },
+
+  "privacy": {
+    "no_internet_default": true,
+    "no_telemetry": true,
+    "local_processing_only": true,
+    "user_approval_required": true
+  },
+
+  "performance": {
+    "max_build_time_minutes": 10,
+    "max_ai_response_time_seconds": 60,
+    "enable_caching": true
+  }
+}

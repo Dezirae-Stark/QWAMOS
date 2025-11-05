@@ -1,0 +1,51 @@
+[Unit]
+Description=QWAMOS Claude API Service (via Tor)
+Documentation=https://github.com/Dezirae-Stark/QWAMOS
+After=network.target qwamos-tor.service
+Requires=qwamos-tor.service
+
+[Service]
+Type=simple
+User=qwamos
+Group=qwamos
+WorkingDirectory=/opt/qwamos/ai/claude
+
+# Environment variables
+Environment="PYTHONUNBUFFERED=1"
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+Environment="TOR_PROXY=socks5h://127.0.0.1:9050"
+Environment="HTTPS_PROXY=socks5h://127.0.0.1:9050"
+
+# Start Claude service daemon
+ExecStart=/usr/bin/python3 /opt/qwamos/ai/claude/claude_controller.py daemon
+
+# Restart on failure
+Restart=on-failure
+RestartSec=10s
+
+# Resource limits
+MemoryLimit=1G
+CPUQuota=30%
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/qwamos/ai/claude/cache /opt/qwamos/ai/config /var/log/qwamos
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictRealtime=true
+RestrictNamespaces=true
+
+# Network restrictions (only localhost for Tor)
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+IPAddressAllow=127.0.0.1/8 ::1/128
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=qwamos-claude
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,55 @@
+[Unit]
+Description=QWAMOS Kali GPT Local LLM Service
+Documentation=https://github.com/Dezirae-Stark/QWAMOS
+After=network.target
+
+[Service]
+Type=simple
+User=qwamos
+Group=qwamos
+WorkingDirectory=/opt/qwamos/ai/kali_gpt
+
+# Environment variables
+Environment="PYTHONUNBUFFERED=1"
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+Environment="MODEL_PATH=/opt/qwamos/ai/kali_gpt/models/llama-3.1-8b-q4.gguf"
+Environment="CONTEXT_LENGTH=8192"
+Environment="THREADS=4"
+
+# Start Kali GPT LLM server
+ExecStart=/usr/bin/python3 /opt/qwamos/ai/kali_gpt/kali_gpt_controller.py server
+
+# Restart on failure
+Restart=on-failure
+RestartSec=15s
+
+# Resource limits (LLM is memory-intensive)
+MemoryLimit=8G
+MemoryHigh=6G
+CPUQuota=80%
+
+# Priority
+Nice=-5
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/qwamos/ai/kali_gpt/cache /var/log/qwamos
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictRealtime=true
+RestrictNamespaces=true
+
+# Network isolation (Kali GPT is local-only)
+PrivateNetwork=true
+RestrictAddressFamilies=AF_UNIX
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=qwamos-kali-gpt
+
+[Install]
+WantedBy=multi-user.target

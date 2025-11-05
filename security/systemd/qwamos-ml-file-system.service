@@ -1,0 +1,49 @@
+[Unit]
+Description=QWAMOS ML File System Monitor
+Documentation=https://github.com/Dezirae-Stark/QWAMOS
+After=network.target qwamos-ai-manager.service
+Wants=qwamos-ai-manager.service
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/opt/qwamos/security/ml
+
+# Environment
+Environment="PYTHONUNBUFFERED=1"
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+Environment="TF_CPP_MIN_LOG_LEVEL=2"
+
+# ML File System Monitor
+ExecStart=/usr/bin/python3 /opt/qwamos/security/ml/file_system_monitor.py
+
+# Restart on failure
+Restart=on-failure
+RestartSec=10s
+
+# Resource limits
+MemoryLimit=1G
+MemoryHigh=800M
+CPUQuota=30%
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/etc /root /home /usr/bin /usr/sbin /var /opt/qwamos /var/log/qwamos
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictRealtime=true
+RestrictNamespaces=true
+
+# File system access (inotify)
+RestrictAddressFamilies=AF_UNIX
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=qwamos-ml-filesystem
+
+[Install]
+WantedBy=multi-user.target
