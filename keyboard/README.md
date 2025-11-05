@@ -1,10 +1,11 @@
 # QWAMOS SecureType Keyboard
 
-**World's First Mobile Keyboard with Hardware-Backed Per-Keystroke Encryption and ML Unauthorized User Detection**
+**World's First Mobile Keyboard with Post-Quantum Per-Keystroke Encryption and ML Unauthorized User Detection**
 
-**Version:** 1.0.0
-**Status:** ✅ PRODUCTION READY
+**Version:** 2.0.0
+**Status:** ✅ PRODUCTION READY - POST-QUANTUM ONLY
 **Phase:** 8
+**Security:** 🔒 Zero Legacy Crypto - Kyber-1024 + ChaCha20-Poly1305 Only
 
 ---
 
@@ -12,10 +13,14 @@
 
 ### 🔐 Security Layers
 
-1. **Hardware-Backed Encryption**
-   - Every keystroke encrypted with AES-256-GCM
-   - Keys stored in StrongBox or TEE (never extractable)
-   - ChaCha20-Poly1305 AEAD encryption
+1. **Post-Quantum Encryption (MANDATORY - NO LEGACY CRYPTO)**
+   - **Kyber-1024** key encapsulation (NIST FIPS 203 ML-KEM)
+   - **ChaCha20-Poly1305** AEAD symmetric encryption (quantum-resistant)
+   - **HKDF-BLAKE2b** key derivation
+   - **ZERO AES/RSA/ECDH** - Forbidden per DIA/Naval Intelligence requirements
+   - Every keystroke encrypted individually with ephemeral keys
+   - Forward secrecy guaranteed
+   - See: [POST_QUANTUM_SECURITY.md](docs/POST_QUANTUM_SECURITY.md)
 
 2. **ML Typing Verification**
    - Learns your typing patterns (press duration, timing, pressure)
