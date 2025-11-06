@@ -1,0 +1,59 @@
+name: qwamos_ui
+description: QWAMOS Hypervisor UI with neon shaders and motion blur effects
+version: 1.0.0+1
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI & Animation
+  flutter_animate: ^4.5.0
+  animated_glow: ^2.0.0
+  flutter_blurhash: ^0.8.0
+  shimmer: ^3.0.0
+
+  # Fonts
+  google_fonts: ^6.1.0
+
+  # State Management
+  provider: ^6.1.1
+
+  # Utilities
+  intl: ^0.19.0
+  collection: ^1.18.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Shader files
+  shaders:
+    - shaders/neon_overlay.frag
+    - shaders/motion_blur.frag
+    - shaders/noise_flicker.frag
+
+  # Assets
+  assets:
+    - assets/
+    - assets/screenshots/
+
+  # Fonts
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: fonts/Inter-Regular.ttf
+        - asset: fonts/Inter-Bold.ttf
+          weight: 700
+    - family: RobotoMono
+      fonts:
+        - asset: fonts/RobotoMono-Regular.ttf
+        - asset: fonts/RobotoMono-Bold.ttf
+          weight: 700
