@@ -14,6 +14,7 @@ import '../widgets/hal_gpt.dart';
 import '../widgets/x86_emulation.dart';
 import '../widgets/theme_customization.dart';
 import '../widgets/bootloader_integration.dart';
+import 'advanced_dashboard.dart';
 
 class MainDashboard extends StatelessWidget {
   const MainDashboard({super.key});
@@ -79,6 +80,21 @@ class MainDashboard extends StatelessWidget {
                         duration: 2000.ms,
                         color: QwamosColors.neonGreen.withOpacity(0.3),
                       ),
+                ),
+                // Advanced Dashboard Button
+                IconButton(
+                  icon: Icon(
+                    Icons.security,
+                    color: QwamosColors.cyberViolet,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AdvancedDashboard(),
+                      ),
+                    );
+                  },
                 ),
                 // Settings Icon
                 IconButton(
