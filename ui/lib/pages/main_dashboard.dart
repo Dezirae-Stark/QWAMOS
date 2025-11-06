@@ -14,6 +14,10 @@ import '../widgets/hal_gpt.dart';
 import '../widgets/x86_emulation.dart';
 import '../widgets/theme_customization.dart';
 import '../widgets/bootloader_integration.dart';
+import '../widgets/ml_threat_detection.dart';
+import '../widgets/ai_assistants_panel.dart';
+import '../widgets/ai_app_builder.dart';
+import '../widgets/securetype_keyboard_settings.dart';
 import 'advanced_dashboard.dart';
 
 class MainDashboard extends StatelessWidget {
@@ -137,6 +141,22 @@ class MainDashboard extends StatelessWidget {
 
                   // HAL-GPT
                   const HalGptWidget(),
+                  const SizedBox(height: 24),
+
+                  // ML Threat Detection
+                  const MlThreatDetectionWidget(),
+                  const SizedBox(height: 24),
+
+                  // AI Assistants Panel
+                  const AiAssistantsPanelWidget(),
+                  const SizedBox(height: 24),
+
+                  // AI App Builder
+                  const AiAppBuilderWidget(),
+                  const SizedBox(height: 24),
+
+                  // SecureType Keyboard Settings
+                  const SecureTypeKeyboardSettingsWidget(),
                   const SizedBox(height: 24),
 
                   // x86 Emulation

@@ -8,6 +8,10 @@ import '../widgets/silent_self_destruct.dart';
 import '../widgets/aegis_vault.dart';
 import '../widgets/crypto_wallet_hub.dart';
 import '../widgets/adaptive_skin_layers.dart';
+import '../widgets/network_isolation_controller.dart';
+import '../widgets/dom0_policy_manager.dart';
+import '../widgets/hardware_security_controls.dart';
+import '../widgets/emergency_protection.dart';
 import '../widgets/quick_actions.dart';
 import '../widgets/vm_list.dart';
 
@@ -89,6 +93,22 @@ class AdvancedDashboard extends StatelessWidget {
 
                   // Adaptive Skin Layers
                   const AdaptiveSkinLayersWidget(),
+                  const SizedBox(height: 24),
+
+                  // Network Isolation Controller
+                  const NetworkIsolationControllerWidget(),
+                  const SizedBox(height: 24),
+
+                  // Dom0 Policy Manager
+                  const Dom0PolicyManagerWidget(),
+                  const SizedBox(height: 24),
+
+                  // Hardware Security Controls
+                  const HardwareSecurityControlsWidget(),
+                  const SizedBox(height: 24),
+
+                  // Emergency Protection
+                  const EmergencyProtectionWidget(),
                   const SizedBox(height: 24),
 
                   // Quick Actions (Repeated)
