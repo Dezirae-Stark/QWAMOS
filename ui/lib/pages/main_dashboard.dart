@@ -144,15 +144,15 @@ class MainDashboard extends StatelessWidget {
                   const SizedBox(height: 24),
 
                   // ML Threat Detection
-                  const MlThreatDetectionWidget(),
+                  const MLThreatDetectionWidget(),
                   const SizedBox(height: 24),
 
                   // AI Assistants Panel
-                  const AiAssistantsPanelWidget(),
+                  const AIAssistantsPanelWidget(),
                   const SizedBox(height: 24),
 
                   // AI App Builder
-                  const AiAppBuilderWidget(),
+                  const AIAppBuilderWidget(),
                   const SizedBox(height: 24),
 
                   // SecureType Keyboard Settings

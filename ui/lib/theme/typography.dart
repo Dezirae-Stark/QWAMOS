@@ -31,7 +31,24 @@ class QwamosTypography {
     color: QwamosColors.textPrimary,
   );
 
+  static TextStyle h5 = GoogleFonts.inter(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    color: QwamosColors.textPrimary,
+  );
+
+  static TextStyle h6 = GoogleFonts.inter(
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+    color: QwamosColors.textPrimary,
+  );
+
   // Body Styles
+  static TextStyle body = GoogleFonts.inter(
+    fontSize: 14,
+    fontWeight: FontWeight.normal,
+    color: QwamosColors.textPrimary,
+  );
   static TextStyle bodyLarge = GoogleFonts.inter(
     fontSize: 16,
     fontWeight: FontWeight.normal,

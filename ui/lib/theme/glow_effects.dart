@@ -181,7 +181,10 @@ class GlowEffects {
     required Color color,
     double size = 8,
     bool pulsing = true,
+    bool isAnimated = true, // Alias for pulsing
   }) {
+    // Use pulsing or isAnimated (whichever is provided)
+    final bool shouldPulse = pulsing && isAnimated;
     Widget dot = Container(
       width: size,
       height: size,
@@ -198,7 +201,7 @@ class GlowEffects {
       ),
     );
 
-    if (!pulsing) return dot;
+    if (!shouldPulse) return dot;
 
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.6, end: 1.0),
