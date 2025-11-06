@@ -67,49 +67,56 @@ See `IMPLEMENTATION_GUIDE.md` for complete specification.
 
 ## 🚀 Installation & Setup
 
-### Prerequisites
+### Quick Start (Automated Build)
 
-1. **Install Flutter** (if not already installed):
-   ```bash
-   # For Termux/Android
-   pkg install flutter
+**Recommended:** Use GitHub Actions for automated APK builds.
 
-   # Or download from flutter.dev
-   ```
+1. Push code to GitHub (already done!)
+2. Go to: https://github.com/Dezirae-Stark/QWAMOS/actions
+3. Click "Build Flutter UI" workflow
+4. Download APK artifacts
 
-2. **Verify Flutter installation**:
-   ```bash
-   flutter doctor
-   ```
+**See [`BUILD_GUIDE.md`](BUILD_GUIDE.md) for complete instructions.**
 
-### Build Instructions
+### Build Locally (Desktop Required)
 
-1. **Navigate to the project**:
-   ```bash
-   cd /data/data/com.termux/files/home/QWAMOS/ui
-   ```
+**Note:** Flutter development requires a desktop environment (Linux/macOS/Windows). Building on Termux/Android is not supported.
 
-2. **Get dependencies**:
-   ```bash
-   flutter pub get
-   ```
+**Prerequisites:**
+- Flutter SDK 3.24.5+
+- Java JDK 17+
+- Desktop OS (Linux x64, macOS, or Windows)
 
-3. **Run on connected device**:
-   ```bash
-   flutter run
-   ```
+**Build Commands:**
+```bash
+# Clone repository
+git clone https://github.com/Dezirae-Stark/QWAMOS.git
+cd QWAMOS/ui
 
-4. **Build APK for release**:
-   ```bash
-   flutter build apk --release
-   ```
+# Install dependencies
+flutter pub get
 
-   Output: `build/app/outputs/flutter-apk/app-release.apk`
+# Build release APK (split per architecture)
+flutter build apk --release --split-per-abi
 
-5. **Build for web (demo)**:
-   ```bash
-   flutter build web
-   ```
+# Output: build/app/outputs/flutter-apk/
+# - app-arm64-v8a-release.apk   (~8MB, recommended for Motorola Edge 2025)
+# - app-armeabi-v7a-release.apk (~7MB, older 32-bit devices)
+# - app-x86_64-release.apk      (~9MB, emulators)
+```
+
+**Installation:**
+```bash
+# Via ADB
+adb install build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+```
+
+**Complete build guide:** See [`BUILD_GUIDE.md`](BUILD_GUIDE.md) for:
+- Platform-specific setup (Linux/macOS/Windows)
+- GitHub Actions automated builds
+- Troubleshooting
+- Production signing
+- CI/CD workflows
 
 ---
 

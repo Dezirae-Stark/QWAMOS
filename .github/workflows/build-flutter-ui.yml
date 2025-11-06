@@ -1,0 +1,96 @@
+name: Build Flutter UI
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'ui/**'
+      - '.github/workflows/build-flutter-ui.yml'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'ui/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Flutter APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.5'
+          channel: 'stable'
+          cache: true
+
+      - name: Verify Flutter installation
+        run: |
+          flutter --version
+          flutter doctor -v
+
+      - name: Get dependencies
+        working-directory: ./ui
+        run: flutter pub get
+
+      - name: Analyze code
+        working-directory: ./ui
+        run: flutter analyze
+        continue-on-error: true
+
+      - name: Run tests
+        working-directory: ./ui
+        run: flutter test
+        continue-on-error: true
+
+      - name: Build APK (Debug)
+        working-directory: ./ui
+        run: flutter build apk --debug
+
+      - name: Build APK (Release)
+        working-directory: ./ui
+        run: flutter build apk --release --split-per-abi
+
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: qwamos-ui-debug
+          path: ui/build/app/outputs/flutter-apk/app-debug.apk
+          retention-days: 30
+
+      - name: Upload Release APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: qwamos-ui-release
+          path: ui/build/app/outputs/flutter-apk/app-*-release.apk
+          retention-days: 90
+
+      - name: Get APK info
+        working-directory: ./ui
+        run: |
+          echo "## Build Information" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### APK Files Generated:" >> $GITHUB_STEP_SUMMARY
+          ls -lh build/app/outputs/flutter-apk/*.apk >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Flutter Version:" >> $GITHUB_STEP_SUMMARY
+          flutter --version >> $GITHUB_STEP_SUMMARY
+
+      - name: Create Release (on tag)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ui/build/app/outputs/flutter-apk/app-*-release.apk
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
