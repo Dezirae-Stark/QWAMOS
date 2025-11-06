@@ -10,6 +10,10 @@ import '../widgets/network_gateway.dart';
 import '../widgets/encryption_manager.dart';
 import '../widgets/airgap_controls.dart';
 import '../widgets/osint_tools.dart';
+import '../widgets/hal_gpt.dart';
+import '../widgets/x86_emulation.dart';
+import '../widgets/theme_customization.dart';
+import '../widgets/bootloader_integration.dart';
 
 class MainDashboard extends StatelessWidget {
   const MainDashboard({super.key});
@@ -113,6 +117,22 @@ class MainDashboard extends StatelessWidget {
 
                   // OSINT Tools
                   const OsintToolsWidget(),
+                  const SizedBox(height: 24),
+
+                  // HAL-GPT
+                  const HalGptWidget(),
+                  const SizedBox(height: 24),
+
+                  // x86 Emulation
+                  const X86EmulationWidget(),
+                  const SizedBox(height: 24),
+
+                  // Theme Customization
+                  const ThemeCustomizationWidget(),
+                  const SizedBox(height: 24),
+
+                  // Bootloader Integration
+                  const BootloaderIntegrationWidget(),
                   const SizedBox(height: 24),
 
                   // Quick Actions
