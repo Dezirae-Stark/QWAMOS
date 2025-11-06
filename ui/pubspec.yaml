@@ -12,8 +12,6 @@ dependencies:
 
   # UI & Animation
   flutter_animate: ^4.5.0
-  animated_glow: ^2.0.0
-  flutter_blurhash: ^0.8.0
   shimmer: ^3.0.0
 
   # Fonts
@@ -24,7 +22,6 @@ dependencies:
 
   # Utilities
   intl: ^0.19.0
-  collection: ^1.18.0
 
 dev_dependencies:
   flutter_test:
@@ -44,16 +41,3 @@ flutter:
   assets:
     - assets/
     - assets/screenshots/
-
-  # Fonts
-  fonts:
-    - family: Inter
-      fonts:
-        - asset: fonts/Inter-Regular.ttf
-        - asset: fonts/Inter-Bold.ttf
-          weight: 700
-    - family: RobotoMono
-      fonts:
-        - asset: fonts/RobotoMono-Regular.ttf
-        - asset: fonts/RobotoMono-Bold.ttf
-          weight: 700
