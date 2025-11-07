@@ -1,0 +1,30 @@
+#!/sbin/sh
+# QWAMOS TWRP Update Binary
+# This is the installer script executed by TWRP recovery
+
+OUTFD=$2
+ZIP=$3
+
+# Print to TWRP console
+ui_print() {
+  echo "ui_print $1" > /proc/self/fd/$OUTFD
+  echo "ui_print" > /proc/self/fd/$OUTFD
+}
+
+# Set progress bar
+set_progress() {
+  echo "set_progress $1" > /proc/self/fd/$OUTFD
+}
+
+# Extract updater-script and execute
+SCRIPT=/tmp/qwamos-updater-script
+unzip -o "$ZIP" META-INF/com/google/android/updater-script -d /tmp
+chmod 755 $SCRIPT
+
+# Execute the updater-script
+sh $SCRIPT $OUTFD $ZIP
+
+# Cleanup
+rm -f $SCRIPT
+
+exit 0

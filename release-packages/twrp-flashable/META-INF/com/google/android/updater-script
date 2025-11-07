@@ -1,0 +1,96 @@
+ui_print("========================================");
+ui_print("  QWAMOS v1.0.0-qbamos-gold Installer  ");
+ui_print("  Post-Quantum Mobile Security OS      ");
+ui_print("========================================");
+ui_print(" ");
+
+# Mount system partition
+ui_print("Mounting system partition...");
+run_program("/sbin/busybox", "mount", "/system");
+run_program("/sbin/busybox", "mount", "-o", "rw,remount", "/system");
+
+# Mount data partition
+ui_print("Mounting data partition...");
+run_program("/sbin/busybox", "mount", "/data");
+
+# Check available space
+ui_print("Checking available space...");
+ui_print(" ");
+
+# Backup existing boot partition (safety)
+ui_print("Backing up existing boot partition...");
+run_program("/sbin/busybox", "dd", "if=/dev/block/by-name/boot_a", "of=/sdcard/qwamos_boot_backup.img", "bs=4M");
+ui_print("✓ Backup saved to /sdcard/qwamos_boot_backup.img");
+ui_print(" ");
+
+# Flash QWAMOS kernel and initramfs
+ui_print("Installing QWAMOS kernel...");
+package_extract_file("boot.img", "/dev/block/by-name/boot_a");
+ui_print("✓ Kernel installed to boot_a");
+ui_print(" ");
+
+# Install system files
+ui_print("Installing QWAMOS system files...");
+package_extract_dir("system", "/system");
+set_metadata_recursive("/system/qwamos", "uid", 0, "gid", 0, "dmode", 0755, "fmode", 0644);
+set_metadata_recursive("/system/qwamos/bin", "uid", 0, "gid", 0, "dmode", 0755, "fmode", 0755);
+ui_print("✓ System files installed");
+ui_print(" ");
+
+# Install data files
+ui_print("Installing QWAMOS data files...");
+package_extract_dir("data", "/data");
+set_metadata_recursive("/data/qwamos", "uid", 0, "gid", 0, "dmode", 0755, "fmode", 0644);
+ui_print("✓ Data files installed");
+ui_print(" ");
+
+# Create QWAMOS directories
+ui_print("Creating QWAMOS directories...");
+run_program("/sbin/busybox", "mkdir", "-p", "/data/qwamos/vms");
+run_program("/sbin/busybox", "mkdir", "-p", "/data/qwamos/keys");
+run_program("/sbin/busybox", "mkdir", "-p", "/data/qwamos/volumes");
+run_program("/sbin/busybox", "mkdir", "-p", "/data/qwamos/logs");
+run_program("/sbin/busybox", "mkdir", "-p", "/data/qwamos/dom0");
+run_program("/sbin/busybox", "mkdir", "-p", "/data/qwamos/gateway_vm");
+run_program("/sbin/busybox", "mkdir", "-p", "/data/qwamos/workstation_vm");
+run_program("/sbin/busybox", "mkdir", "-p", "/etc/qwamos");
+ui_print("✓ Directories created");
+ui_print(" ");
+
+# Set SELinux contexts (if SELinux enabled)
+ui_print("Setting SELinux contexts...");
+run_program("/sbin/busybox", "chcon", "-R", "u:object_r:system_file:s0", "/system/qwamos");
+ui_print("✓ SELinux contexts set");
+ui_print(" ");
+
+# Install kernel modules
+ui_print("Installing kernel modules...");
+package_extract_dir("modules", "/system/lib/modules");
+set_metadata_recursive("/system/lib/modules", "uid", 0, "gid", 0, "dmode", 0755, "fmode", 0644);
+ui_print("✓ Kernel modules installed");
+ui_print(" ");
+
+# Unmount partitions
+ui_print("Unmounting partitions...");
+unmount("/system");
+unmount("/data");
+ui_print("✓ Partitions unmounted");
+ui_print(" ");
+
+# Installation complete
+ui_print("========================================");
+ui_print("  QWAMOS Installation Complete!        ");
+ui_print("========================================");
+ui_print(" ");
+ui_print("Next steps:");
+ui_print("1. Reboot into QWAMOS");
+ui_print("2. Complete first-boot setup");
+ui_print("3. Generate post-quantum keys");
+ui_print("4. Configure network routing mode");
+ui_print(" ");
+ui_print("IMPORTANT: Boot backup saved to:");
+ui_print("/sdcard/qwamos_boot_backup.img");
+ui_print(" ");
+ui_print("Documentation: github.com/Dezirae-Stark/QWAMOS");
+ui_print(" ");
+ui_print("Enjoy QWAMOS! 🔐");

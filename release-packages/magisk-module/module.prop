@@ -1,0 +1,9 @@
+id=qwamos
+name=QWAMOS Security Layer
+version=v1.0.0-qbamos-gold
+versionCode=100
+author=Dezirae Stark (First Sterling Capital, LLC)
+description=Post-quantum hardened mobile security OS with VM isolation, ML threat detection, and hardware security features. Brings Qubes + Whonix security to Android.
+support=https://github.com/Dezirae-Stark/QWAMOS/issues
+donate=https://github.com/Dezirae-Stark/QWAMOS#-support-qwamos
+updateJson=https://raw.githubusercontent.com/Dezirae-Stark/QWAMOS/master/magisk-update.json
