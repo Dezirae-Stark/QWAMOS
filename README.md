@@ -4,6 +4,13 @@
 
 # QWAMOS - Qubes Whonix Advanced Mobile Operating System
 
+> _"Post-quantum hardened mobile virtualization bringing Qubes + Whonix security to Android."_
+
+[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL%203.0-blue.svg)](LICENSE)
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](PROJECT_STATUS.md)
+[![Security](https://img.shields.io/badge/Security-Post--Quantum-purple.svg)](crypto/pq/TEST_RESULTS.md)
+[![Reproducible](https://img.shields.io/badge/Build-Reproducible-orange.svg)](SUPPLYCHAIN.md)
+
 **Ground-up mobile OS with post-quantum cryptography and VM-based isolation**
 
 **Current Status:** Phase 11 @ 100% (Flutter Hypervisor UI) ⭐ **PRODUCTION READY** | Phase 10 @ 100% (Advanced Hardware Security) | Phase 9 @ 100% (AI App Builder)
@@ -22,6 +29,33 @@
 [![Overall](https://img.shields.io/badge/Overall-99.5%25-brightgreen.svg)](#-build-progress)
 
 </div>
+
+---
+
+<details>
+<summary><b>Table of Contents</b></summary>
+
+- [Project Overview](#-project-overview)
+- [Build Progress](#-build-progress)
+- [Architecture](#️-architecture)
+- [AI & Machine Learning Features](#-ai--machine-learning-features)
+- [Security Features](#-security-features)
+- [Repository Structure](#-repository-structure)
+- [Quick Start](#-quick-start)
+- [Documentation](#-documentation)
+- [Current Milestones](#-current-milestones)
+- [Threat Model & Protection](#-threat-model--protection-against-state-level-actors)
+- [Project Statistics](#-project-statistics)
+- [Signature Verification](#signature-verification)
+- [Reproducible Build](#reproducible-build)
+- [Privacy Statement](#privacy-statement)
+- [Contributing](#-contributing)
+- [Support](#-support-qwamos)
+- [Security Policy](#security-policy)
+- [License](#-license)
+- [Contact](#-contact)
+
+</details>
 
 ---
 
@@ -1605,9 +1639,66 @@ QWAMOS is community-funded open-source software. Your donations help us continue
 
 ---
 
+## Signature Verification
+
+All official releases are signed using Ed448.
+
+**Fingerprint:**
+```
+18C4E89E37D5ECD392F52E85269CD0658D8BD942DCF33BE4E37CC94933E4C4D2
+```
+
+**Verify integrity:**
+```bash
+$ sha256sum QWAMOS.apk
+$ gpg --verify QWAMOS_v1.0.0.asc QWAMOS.apk
+```
+
+---
+
+## Reproducible Build
+
+1. Build locally within verified Termux + Debian environment.
+2. Validate checksum against published release hashes.
+3. Compare output to the tagged baseline: `v1.0.0-qbamos-gold`.
+
+See [SUPPLYCHAIN.md](SUPPLYCHAIN.md) for complete build instructions and dependency verification.
+
+---
+
+## Privacy Statement
+
+> **"QWAMOS performs no outbound telemetry or data collection of any kind."**
+
+- ✅ No analytics, crash reporting, or usage statistics
+- ✅ No INTERNET permission for keyboard (OS-enforced)
+- ✅ All AI queries routed through Tor (user-controlled)
+- ✅ Local ML processing (no cloud inference)
+- ✅ Zero third-party tracking SDKs
+- ✅ Open source and independently auditable
+
+---
+
+## Security Policy
+
+**Responsible Disclosure:**
+
+If you discover a security vulnerability in QWAMOS, please report it responsibly.
+
+- **Contact:** clockwork.halo@tutanota.de
+- **PGP Fingerprint:** `18C4E89E37D5ECD392F52E85269CD0658D8BD942DCF33BE4E37CC94933E4C4D2`
+- **Response Timeline:**
+  - Acknowledgment: Within 7 days
+  - Initial assessment: Within 14 days
+  - Resolution target: Within 30 days (critical issues prioritized)
+
+> For complete disclosure guidelines, see [SECURITY.md](SECURITY.md)
+
+---
+
 ## 📄 License
 
-GPL-3.0
+AGPL-3.0 - See [LICENSE](LICENSE) for details.
 
 ---
 
@@ -1625,9 +1716,15 @@ GPL-3.0
 
 - **GitHub:** https://github.com/Dezirae-Stark/QWAMOS
 - **Issues:** https://github.com/Dezirae-Stark/QWAMOS/issues
+- **Email:** clockwork.halo@tutanota.de
 
 ---
 
 **QWAMOS - Building a private, secure mobile future**
 
 *"Mobile privacy should not require a PhD in cryptography."*
+
+---
+
+© 2025 First Sterling Capital, LLC · Author: Dezirae Stark
+Version 1.0.0 · [Contact](mailto:clockwork.halo@tutanota.de)
