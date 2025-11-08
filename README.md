@@ -1741,6 +1741,10 @@ If you discover a security vulnerability in QWAMOS, please report it responsibly
 
 AGPL-3.0 - See [LICENSE](LICENSE) for details.
 
+QWAMOS © 2025 Dezirae Stark / First Sterling Capital, LLC  
+Licensed under AGPL-3.0 with additional clause:  
+Commercial resale or rebranding requires express written permission.
+
 ### Corporate Structure
 
 QWAMOS is developed and maintained by **First Sterling Capital, LLC**, under AGPL-3.0 open-source license. Contributions are accepted under a Contributor License Agreement (CLA) ensuring derivative transparency and project authenticity.
