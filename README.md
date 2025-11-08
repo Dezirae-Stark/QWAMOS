@@ -32,6 +32,12 @@
 
 ---
 
+## Executive Summary
+
+QWAMOS is a post-quantum, AI-driven mobile operating system combining QubesOS virtualization with Whonix anonymity. It isolates network, storage, and application layers using VM domains secured by Kyber-1024, ChaCha20-Poly1305, and BLAKE3. Triple-AI orchestration enables autonomous threat detection, app generation, and live mitigation. Built by **Dezirae Stark** · **First Sterling Capital, LLC** · Production-ready for nation-state defense applications.
+
+---
+
 <details>
 <summary><b>Table of Contents</b></summary>
 
@@ -625,25 +631,11 @@ flutter build apk --release    # Build production APK
 
 ### Current: 4-VM Security Architecture
 
-```
-┌───────────────────────────────────────────────────────┐
-│                   Dom0 (Control VM)                   │
-│  • Policy Manager (qwamosd)                           │
-│  • Offline - NO NETWORK                               │
-│  • Signs all configs                                  │
-└───────────────────────────────────────────────────────┘
-        │ Control Bus (Ed25519 signed messages)
-        ├──────────────┬────────────┬──────────────┐
-        ▼              ▼            ▼              ▼
-┌──────────────┐ ┌───────────┐ ┌──────────┐ ┌──────────┐
-│  Gateway VM  │ │Workstation│ │Trusted UI│ │Attestation│
-│  (Radio)     │ │   (Apps)  │ │    VM    │ │  Service │
-├──────────────┤ ├───────────┤ ├──────────┤ ├──────────┤
-│• Baseband    │ │• User Apps│ │• Overlays│ │• StrongBox│
-│• Tor/I2P     │ │• No NIC   │ │• Call UI │ │• Boot PCRs│
-│• Firewall    │ │• Isolated │ │• Badges  │ │• Verifier│
-└──────────────┘ └───────────┘ └──────────┘ └──────────┘
-```
+<div align="center">
+
+![QWAMOS Architecture](assets/diagram/architecture.svg)
+
+</div>
 
 ### Boot Chain
 
@@ -667,6 +659,19 @@ Power On → U-Boot (Kyber-1024 verify) → Linux 6.6 LTS → KVM Hypervisor
 ### Security Toggles Dashboard
 ![Screenshot 2](assets/screenshots/screenshot2.png)
 
+</div>
+
+---
+
+## 🎥 Demo Preview
+
+<div align="center">
+
+![QWAMOS Demo](assets/screenshots/demo_preview.gif)
+
+[📹 Watch Full Video (MP4)](assets/screenshots/demo_preview.mp4)
+
+> 10-second QWAMOS UI preview with neon shader overlays and VM security dashboard.
 
 </div>
 
@@ -1019,6 +1024,21 @@ PROVEN by Android manifest (no INTERNET permission)
 
 ---
 
+## ⚖️ Comparison with Other Secure Mobile OSes
+
+| Feature | QWAMOS | GrapheneOS | CalyxOS |
+|---------|--------|------------|---------|
+| **VM Isolation** | ✅ Multi-VM (Dom0, Gateway, Workstation, UI) | ❌ | ❌ |
+| **Post-Quantum Crypto** | ✅ Kyber-1024, ChaCha20-Poly1305 | ❌ AES-256 | ❌ AES-256 |
+| **AI Threat Detection** | ✅ ML + Triple-AI coordination | ⚠️ Partial | ❌ |
+| **App Generation** | ✅ On-device triple-AI builder | ❌ | ❌ |
+| **Baseband Isolation** | ✅ Dedicated Gateway VM | ⚠️ Software toggle | ⚠️ Software toggle |
+| **Reproducible Builds** | ✅ | ✅ | ✅ |
+| **Zero Telemetry** | ✅ Enforced offline mode | ✅ | ✅ |
+| **Hardware Kill Switch** | ✅ GPIO-controlled | ⚠️ Optional | ❌ |
+
+---
+
 ## 📁 Repository Structure
 
 ```
@@ -1177,6 +1197,27 @@ QWAMOS/
 ├── SESSION_*.md             # Development session logs
 └── PHASE*_AUDIT_REPORT.md  # Phase completion audits
 ```
+
+---
+
+## 🧑‍💻 For Developers
+
+### Local Build & Test Summary
+
+```bash
+git clone https://github.com/Dezirae-Stark/QWAMOS
+cd QWAMOS
+python3 ai/ai_manager.py --test
+python3 crypto/pq/test_pq_crypto.py
+make -C security test
+```
+
+### Development Focus Areas
+
+- **AI & ML models** (Phases 6–9)
+- **Network isolation and gateway VMs** (Phase 5)
+- **Flutter UI enhancements** (Phase 11)
+- **Hardware testing for ML bootloader lock** (Phase 10)
 
 ---
 
@@ -1700,6 +1741,10 @@ If you discover a security vulnerability in QWAMOS, please report it responsibly
 
 AGPL-3.0 - See [LICENSE](LICENSE) for details.
 
+### Corporate Structure
+
+QWAMOS is developed and maintained by **First Sterling Capital, LLC**, under AGPL-3.0 open-source license. Contributions are accepted under a Contributor License Agreement (CLA) ensuring derivative transparency and project authenticity.
+
 ---
 
 ## 🙏 Acknowledgments
@@ -1728,3 +1773,7 @@ AGPL-3.0 - See [LICENSE](LICENSE) for details.
 
 © 2025 First Sterling Capital, LLC · Author: Dezirae Stark
 Version 1.0.0 · [Contact](mailto:clockwork.halo@tutanota.de)
+
+---
+
+*Enhanced README, SVG, and demo media generated by Claude Code (2025-11) under direction of Dezirae Stark.*

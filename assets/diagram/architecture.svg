@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700">
+  <defs>
+    <!-- Glow filter for neon effect -->
+    <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Gradient definitions -->
+    <linearGradient id="cyanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00E5FF;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#00E5FF;stop-opacity:0.6" />
+    </linearGradient>
+
+    <linearGradient id="violetGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#B368FF;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#B368FF;stop-opacity:0.6" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="700" fill="#0A0A0A"/>
+
+  <!-- Title -->
+  <text x="600" y="40" font-family="Inter, Roboto, sans-serif" font-size="28" font-weight="bold"
+        fill="#E0E0E0" text-anchor="middle" filter="url(#neonGlow)">
+    QWAMOS 4-Domain Security Architecture
+  </text>
+
+  <!-- Dom0 Control VM (Top) -->
+  <g filter="url(#neonGlow)">
+    <rect x="300" y="80" width="600" height="100" rx="12"
+          fill="url(#cyanGradient)" stroke="#00E5FF" stroke-width="2"/>
+    <text x="600" y="115" font-family="Inter, Roboto, sans-serif" font-size="22" font-weight="bold"
+          fill="#00E5FF" text-anchor="middle">Dom0 (Control VM)</text>
+    <text x="600" y="145" font-family="Roboto, monospace" font-size="14" fill="#E0E0E0" text-anchor="middle">
+      Offline | Policy Manager | Signs configs
+    </text>
+  </g>
+
+  <!-- Control Bus Arrow -->
+  <g filter="url(#neonGlow)">
+    <line x1="600" y1="180" x2="600" y2="240" stroke="#00E5FF" stroke-width="3"/>
+    <polygon points="600,240 595,230 605,230" fill="#00E5FF"/>
+    <text x="610" y="210" font-family="Roboto, monospace" font-size="12" fill="#E0E0E0">
+      Control Bus (Ed25519-Signed)
+    </text>
+  </g>
+
+  <!-- Four VM boxes -->
+  <!-- Gateway VM -->
+  <g filter="url(#neonGlow)">
+    <rect x="50" y="260" width="240" height="160" rx="10"
+          fill="url(#violetGradient)" stroke="#B368FF" stroke-width="2"/>
+    <text x="170" y="290" font-family="Inter, Roboto, sans-serif" font-size="18" font-weight="bold"
+          fill="#B368FF" text-anchor="middle">Gateway VM</text>
+    <text x="170" y="310" font-family="Roboto, monospace" font-size="13" fill="#E0E0E0" text-anchor="middle">
+      (Radio Layer)
+    </text>
+    <text x="60" y="340" font-family="Roboto, monospace" font-size="12" fill="#E0E0E0">
+      • Baseband
+    </text>
+    <text x="60" y="360" font-family="Roboto, monospace" font-size="12" fill="#E0E0E0">
+      • Tor/I2P
+    </text>
+    <text x="60" y="380" font-family="Roboto, monospace" font-size="12" fill="#E0E0E0">
+      • DNSCrypt
+    </text>
+    <text x="60" y="400" font-family="Roboto, monospace" font-size="12" fill="#E0E0E0">
+      • Firewall
+    </text>
+  </g>
+
+  <!-- Workstation VM -->
+  <g filter="url(#neonGlow)">
+    <rect x="320" y="260" width="240" height="160" rx="10"
+          fill="url(#violetGradient)" stroke="#B368FF" stroke-width="2"/>
+    <text x="440" y="290" font-family="Inter, Roboto, sans-serif" font-size="18" font-weight="bold"
+          fill="#B368FF" text-anchor="middle">Workstation VM</text>
+    <text x="440" y="310" font-family="Roboto, monospace" font-size="13" fill="#E0E0E0" text-anchor="middle">
+      (Apps Layer)
+    </text>
+    <text x="330" y="340" font-family="Roboto, monospace" font-size="12" fill="#E0E0E0">
+      • User Apps
+    </text>
+    <text x="330" y="360" font-family="Roboto, monospace" font-size="12" fill="#E0E0E0">
+      • No Network
+    </text>
+    <text x="330" y="380" font-family="Roboto, monospace" font-size="12" fill="#E0E0E0">
+      • Isolated
+    </text>
+  </g>
+
+  <!-- Trusted UI VM -->
+  <g filter="url(#neonGlow)">
+    <rect x="590" y="260" width="240" height="160" rx="10"
+          fill="url(#violetGradient)" stroke="#B368FF" stroke-width="2"/>
+    <text x="710" y="290" font-family="Inter, Roboto, sans-serif" font-size="18" font-weight="bold"
+          fill="#B368FF" text-anchor="middle">Trusted UI VM</text>
+    <text x="710" y="310" font-family="Roboto, monospace" font-size="13" fill="#E0E0E0" text-anchor="middle">
+      (Interface Layer)
+    </text>
+    <text x="600" y="340" font-family="Roboto, monospace" font-size="12" fill="#E0E0E0">
+      • Secure Overlays
+    </text>
+    <text x="600" y="360" font-family="Roboto, monospace" font-size="12" fill="#E0E0E0">
+      • Keyboard
+    </text>
+    <text x="600" y="380" font-family="Roboto, monospace" font-size="12" fill="#E0E0E0">
+      • Call UI
+    </text>
+  </g>
+
+  <!-- Attestation VM -->
+  <g filter="url(#neonGlow)">
+    <rect x="860" y="260" width="240" height="160" rx="10"
+          fill="url(#violetGradient)" stroke="#B368FF" stroke-width="2"/>
+    <text x="980" y="290" font-family="Inter, Roboto, sans-serif" font-size="18" font-weight="bold"
+          fill="#B368FF" text-anchor="middle">Attestation VM</text>
+    <text x="980" y="310" font-family="Roboto, monospace" font-size="13" fill="#E0E0E0" text-anchor="middle">
+      (Security Layer)
+    </text>
+    <text x="870" y="340" font-family="Roboto, monospace" font-size="12" fill="#E0E0E0">
+      • StrongBox
+    </text>
+    <text x="870" y="360" font-family="Roboto, monospace" font-size="12" fill="#E0E0E0">
+      • Boot PCRs
+    </text>
+    <text x="870" y="380" font-family="Roboto, monospace" font-size="12" fill="#E0E0E0">
+      • Verifier
+    </text>
+  </g>
+
+  <!-- Connection arrows from Dom0 to VMs -->
+  <g filter="url(#neonGlow)">
+    <!-- To Gateway -->
+    <path d="M 400 240 Q 200 250 170 260" stroke="#00E5FF" stroke-width="2" fill="none"/>
+    <polygon points="170,260 175,254 168,253" fill="#00E5FF"/>
+
+    <!-- To Workstation -->
+    <line x1="500" y1="240" x2="440" y2="260" stroke="#00E5FF" stroke-width="2"/>
+    <polygon points="440,260 445,254 438,253" fill="#00E5FF"/>
+
+    <!-- To Trusted UI -->
+    <line x1="700" y1="240" x2="710" y2="260" stroke="#00E5FF" stroke-width="2"/>
+    <polygon points="710,260 715,254 708,253" fill="#00E5FF"/>
+
+    <!-- To Attestation -->
+    <path d="M 800 240 Q 950 250 980 260" stroke="#00E5FF" stroke-width="2" fill="none"/>
+    <polygon points="980,260 985,254 978,253" fill="#00E5FF"/>
+  </g>
+
+  <!-- Security icons at bottom -->
+  <g filter="url(#neonGlow)">
+    <!-- Lock icon (Kyber) -->
+    <circle cx="250" cy="500" r="30" fill="none" stroke="#00E5FF" stroke-width="2"/>
+    <rect x="240" y="505" width="20" height="25" rx="2" fill="none" stroke="#00E5FF" stroke-width="2"/>
+    <rect x="245" y="515" width="10" height="3" fill="#00E5FF"/>
+    <text x="250" y="560" font-family="Roboto, monospace" font-size="11" fill="#E0E0E0" text-anchor="middle">
+      Kyber-1024
+    </text>
+
+    <!-- Shield icon (ChaCha20) -->
+    <path d="M 450 470 L 470 490 L 450 530 L 430 490 Z" fill="none" stroke="#B368FF" stroke-width="2"/>
+    <line x1="450" y1="490" x2="450" y2="515" stroke="#B368FF" stroke-width="2"/>
+    <line x1="440" y1="505" x2="460" y2="505" stroke="#B368FF" stroke-width="2"/>
+    <text x="450" y="560" font-family="Roboto, monospace" font-size="11" fill="#E0E0E0" text-anchor="middle">
+      ChaCha20
+    </text>
+
+    <!-- Onion icon (Tor) -->
+    <circle cx="650" cy="500" r="25" fill="none" stroke="#00E5FF" stroke-width="2"/>
+    <circle cx="650" cy="500" r="17" fill="none" stroke="#00E5FF" stroke-width="1.5"/>
+    <circle cx="650" cy="500" r="10" fill="none" stroke="#00E5FF" stroke-width="1.5"/>
+    <text x="650" y="560" font-family="Roboto, monospace" font-size="11" fill="#E0E0E0" text-anchor="middle">
+      Tor/I2P
+    </text>
+
+    <!-- Key icon (BLAKE3) -->
+    <circle cx="850" cy="495" r="8" fill="none" stroke="#B368FF" stroke-width="2"/>
+    <rect x="850" y="495" width="25" height="10" rx="2" fill="none" stroke="#B368FF" stroke-width="2"/>
+    <rect x="860" y="497" width="3" height="6" fill="#B368FF"/>
+    <rect x="867" y="497" width="3" height="6" fill="#B368FF"/>
+    <text x="850" y="560" font-family="Roboto, monospace" font-size="11" fill="#E0E0E0" text-anchor="middle">
+      BLAKE3
+    </text>
+  </g>
+
+  <!-- Bottom caption -->
+  <text x="600" y="630" font-family="Inter, Roboto, sans-serif" font-size="16" font-weight="600"
+        fill="#E0E0E0" text-anchor="middle" filter="url(#neonGlow)">
+    Post-Quantum Isolation Stack
+  </text>
+  <text x="600" y="660" font-family="Roboto, monospace" font-size="13" fill="#B368FF"
+        text-anchor="middle" filter="url(#neonGlow)">
+    Dezirae Stark · First Sterling Capital, LLC
+  </text>
+</svg>
