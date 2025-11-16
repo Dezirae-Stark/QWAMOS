@@ -1,0 +1,49 @@
+name: QWAMOS - Forensic Audit
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  schedule:
+    - cron: "0 */6 * * *" # every 6 hours
+
+jobs:
+  forensic:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect world-writable files
+        run: |
+          WW=$(find . -type f -perm -0002 | wc -l)
+          if [ "$WW" -ne 0 ]; then
+            echo "[!] World-writable files detected"
+            exit 1
+          fi
+
+      - name: Check for debug flags
+        run: |
+          if grep -RIn "DEBUG *= *true" .; then
+            echo "Debug flags detected"
+            exit 1
+          fi
+
+      - name: Detect suspicious binaries
+        run: |
+          BIN=$(find . -type f -not -path "./release-packages/*" \
+            -and -not -path "*/.git/*" -exec file {} \; \
+            | grep "ELF" | wc -l)
+          if [ "$BIN" -gt 0 ]; then
+            echo "[!] Unexpected ELF binaries found"
+            exit 1
+          fi
+
+      - name: Scan for secrets (fast)
+        run: |
+          egrep -RIn "(api_key|secret|password|BEGIN RSA|PRIVATE KEY)" . || true
+
+      - name: Report completed
+        run: echo "Forensic audit completed"
