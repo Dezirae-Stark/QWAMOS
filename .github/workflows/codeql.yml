@@ -1,0 +1,41 @@
+name: QWAMOS - CodeQL Analysis
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  schedule:
+    - cron: "0 3 * * 1"  # weekly full scan
+
+jobs:
+  analyze:
+    name: CodeQL Security Scan
+    runs-on: ubuntu-latest
+
+    permissions:
+      actions: write
+      contents: read
+      security-events: write
+
+    strategy:
+      matrix:
+        language: [ 'python', 'cpp', 'java', 'javascript', 'ruby', 'go', 'csharp' ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
