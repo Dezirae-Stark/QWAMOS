@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QWAMOS - Secure Mobile OS Demo</title>
+
+    <!-- FONTS: Replace with your preferred fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================
+           BRAND COLORS - Modify these for palette changes
+           ============================================ */
+        :root {
+            --neon-green: #00FFB3;
+            --cyber-violet: #B368FF;
+            --dark-bg: #0a0a0f;
+            --text-white: #ffffff;
+            --text-gray: #a0a0a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            overflow: hidden;
+            color: var(--text-white);
+        }
+
+        /* Main Animation Container */
+        #animation-container {
+            width: 1920px;
+            height: 1080px;
+            position: relative;
+            background: radial-gradient(circle at 50% 50%, #0f0f1a, #0a0a0f);
+            overflow: hidden;
+        }
+
+        /* Edge Glow Pulses */
+        .edge-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .edge-glow::before,
+        .edge-glow::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .edge-glow::before {
+            top: -10%;
+            left: -10%;
+            width: 600px;
+            height: 600px;
+            background: var(--neon-green);
+            animation-delay: 0s;
+        }
+
+        .edge-glow::after {
+            bottom: -10%;
+            right: -10%;
+            width: 700px;
+            height: 700px;
+            background: var(--cyber-violet);
+            animation-delay: 2s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.2); opacity: 0.4; }
+        }
+
+        /* Scanline Overlay */
+        .scanline-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 255, 179, 0.03) 0px,
+                transparent 2px,
+                transparent 4px
+            );
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 100;
+            animation: scanline-move 8s linear infinite;
+        }
+
+        @keyframes scanline-move {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
+        }
+
+        /* Scene 1: Title */
+        .scene-title {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+            animation: scene1-appear 2s ease-out forwards;
+        }
+
+        @keyframes scene1-appear {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.8); }
+        }
+
+        .title-main {
+            font-size: 140px;
+            font-weight: 900;
+            letter-spacing: 20px;
+            background: linear-gradient(135deg, var(--neon-green), var(--cyber-violet));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 80px rgba(0, 255, 179, 0.5);
+            animation: neon-flicker 0.5s ease-in-out 3;
+        }
+
+        @keyframes neon-flicker {
+            0%, 100% { opacity: 1; }
+            45% { opacity: 0.8; }
+            50% { opacity: 1; }
+            55% { opacity: 0.9; }
+        }
+
+        .title-subtitle {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 32px;
+            color: var(--text-gray);
+            margin-top: 20px;
+            letter-spacing: 4px;
+            animation: subtitle-fade 2s ease-out forwards;
+        }
+
+        @keyframes subtitle-fade {
+            0%, 30% { opacity: 0; transform: translateY(20px); }
+            50% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; }
+        }
+
+        /* Scene 2: Phone + Dashboard */
+        .scene-phone {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 11;
+            opacity: 0;
+            animation: scene2-appear 3s 2s ease-out forwards;
+        }
+
+        @keyframes scene2-appear {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            100% { opacity: 1; }
+        }
+
+        .phone-container {
+            width: 400px;
+            height: 800px;
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border-radius: 50px;
+            border: 4px solid rgba(0, 255, 179, 0.3);
+            box-shadow:
+                0 0 100px rgba(0, 255, 179, 0.3),
+                inset 0 0 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            transform: perspective(1000px) rotateY(-30deg) rotateX(5deg);
+            animation: phone-rotate 3s 2s ease-out forwards;
+        }
+
+        @keyframes phone-rotate {
+            0% { transform: perspective(1000px) rotateY(-30deg) rotateX(5deg); }
+            100% { transform: perspective(1000px) rotateY(0deg) rotateX(0deg); }
+        }
+
+        .phone-screen {
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            right: 20px;
+            bottom: 60px;
+            background: #0a0a0f;
+            border-radius: 35px;
+            padding: 30px;
+            overflow: hidden;
+        }
+
+        .vm-dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 100%;
+        }
+
+        .vm-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(0, 255, 179, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            animation: vm-card-appear 0.5s ease-out forwards;
+        }
+
+        .vm-card:nth-child(1) { animation-delay: 2.5s; }
+        .vm-card:nth-child(2) { animation-delay: 2.8s; }
+        .vm-card:nth-child(3) { animation-delay: 3.1s; }
+        .vm-card:nth-child(4) { animation-delay: 3.4s; }
+
+        @keyframes vm-card-appear {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .vm-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--neon-green);
+        }
+
+        .progress-ring {
+            width: 80px;
+            height: 80px;
+            position: relative;
+        }
+
+        .progress-ring svg {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-circle {
+            fill: none;
+            stroke: rgba(0, 255, 179, 0.2);
+            stroke-width: 6;
+        }
+
+        .progress-ring-fill {
+            fill: none;
+            stroke: var(--neon-green);
+            stroke-width: 6;
+            stroke-linecap: round;
+            stroke-dasharray: 226;
+            stroke-dashoffset: 226;
+            filter: drop-shadow(0 0 10px var(--neon-green));
+        }
+
+        .vm-card:nth-child(1) .progress-ring-fill { animation: ring-charge 1s 2.5s ease-out forwards; }
+        .vm-card:nth-child(2) .progress-ring-fill { animation: ring-charge 1s 2.8s ease-out forwards; }
+        .vm-card:nth-child(3) .progress-ring-fill { animation: ring-charge 1s 3.1s ease-out forwards; }
+        .vm-card:nth-child(4) .progress-ring-fill { animation: ring-charge 1s 3.4s ease-out forwards; }
+
+        @keyframes ring-charge {
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* Scene 3: Crypto Layer */
+        .scene-crypto {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 12;
+            opacity: 0;
+            animation: scene3-appear 2s 5s ease-out forwards;
+        }
+
+        @keyframes scene3-appear {
+            0% { opacity: 0; transform: scale(0.8); }
+            10% { opacity: 1; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .crypto-title {
+            font-size: 60px;
+            font-weight: 700;
+            color: var(--neon-green);
+            text-shadow: 0 0 30px var(--neon-green);
+            margin-bottom: 60px;
+            opacity: 0;
+            animation: fade-in 0.5s 5.2s ease-out forwards;
+        }
+
+        .crypto-nodes {
+            position: relative;
+            width: 800px;
+            height: 300px;
+        }
+
+        .crypto-node {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--cyber-violet);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            background: rgba(179, 104, 255, 0.1);
+            box-shadow: 0 0 30px transparent;
+            transition: all 0.5s ease;
+        }
+
+        .crypto-node.active {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 50px var(--neon-green);
+            background: rgba(0, 255, 179, 0.2);
+        }
+
+        .node-1 {
+            left: 50px;
+            top: 90px;
+            animation: node-activate 0.5s 5.5s ease-out forwards;
+        }
+
+        .node-2 {
+            left: 340px;
+            top: 90px;
+            animation: node-activate 0.5s 5.8s ease-out forwards;
+        }
+
+        .node-3 {
+            left: 630px;
+            top: 90px;
+            animation: node-activate 0.5s 6.1s ease-out forwards;
+        }
+
+        @keyframes node-activate {
+            to { border-color: var(--neon-green); box-shadow: 0 0 50px var(--neon-green); background: rgba(0, 255, 179, 0.2); }
+        }
+
+        .crypto-line {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--neon-green), transparent);
+            transform-origin: left center;
+            opacity: 0;
+        }
+
+        .line-1 {
+            left: 170px;
+            top: 150px;
+            width: 170px;
+            animation: line-draw 0.5s 5.5s ease-out forwards;
+        }
+
+        .line-2 {
+            left: 460px;
+            top: 150px;
+            width: 170px;
+            animation: line-draw 0.5s 5.8s ease-out forwards;
+        }
+
+        @keyframes line-draw {
+            from { opacity: 0; transform: scaleX(0); }
+            to { opacity: 1; transform: scaleX(1); }
+        }
+
+        .crypto-labels {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 24px;
+            margin-top: 40px;
+            color: var(--neon-green);
+            text-shadow: 0 0 20px var(--neon-green);
+            opacity: 0;
+            animation: fade-in 0.5s 6.2s ease-out forwards;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Scene 4: Threat Detection */
+        .scene-threat {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 13;
+            opacity: 0;
+            animation: scene4-appear 2s 7s ease-out forwards;
+        }
+
+        @keyframes scene4-appear {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            100% { opacity: 1; }
+        }
+
+        .packet-grid {
+            display: grid;
+            grid-template-columns: repeat(20, 40px);
+            gap: 10px;
+            margin-bottom: 60px;
+        }
+
+        .packet {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 255, 179, 0.2);
+            border: 2px solid var(--neon-green);
+            border-radius: 5px;
+            animation: packet-flow 2s linear infinite;
+        }
+
+        .packet.threat {
+            background: rgba(255, 0, 0, 0.3);
+            border-color: #ff0000;
+            animation: packet-threat 1s ease-in-out 7.5s forwards;
+        }
+
+        @keyframes packet-flow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes packet-threat {
+            0% { background: rgba(255, 0, 0, 0.3); border-color: #ff0000; }
+            50% { transform: scale(1.2); }
+            100% { opacity: 0; transform: scale(0); }
+        }
+
+        .ai-hub {
+            width: 300px;
+            height: 300px;
+            position: relative;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fade-in 0.5s 7.3s ease-out forwards;
+        }
+
+        .ai-center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, var(--neon-green), transparent);
+            border-radius: 50%;
+            border: 3px solid var(--neon-green);
+            box-shadow: 0 0 60px var(--neon-green);
+            animation: pulse-hub 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-hub {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .ai-node {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: rgba(179, 104, 255, 0.2);
+            border: 2px solid var(--cyber-violet);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 0 30px var(--cyber-violet);
+        }
+
+        .ai-node-1 { top: 0; left: 50%; transform: translateX(-50%); }
+        .ai-node-2 { bottom: 0; left: 0; }
+        .ai-node-3 { bottom: 0; right: 0; }
+
+        .threat-title {
+            font-size: 40px;
+            font-weight: 600;
+            color: var(--text-white);
+            text-shadow: 0 0 30px var(--neon-green);
+            opacity: 0;
+            animation: fade-in 0.5s 7.5s ease-out forwards;
+        }
+
+        /* Scene 5: Final Tagline */
+        .scene-final {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 14;
+            opacity: 0;
+            animation: scene5-appear 1s 9s ease-out forwards;
+        }
+
+        @keyframes scene5-appear {
+            0% { opacity: 0; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .final-tagline {
+            font-size: 64px;
+            font-weight: 700;
+            text-align: center;
+            background: linear-gradient(135deg, var(--neon-green), var(--cyber-violet));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(0, 255, 179, 0.5);
+            margin-bottom: 60px;
+        }
+
+        .cta-button {
+            padding: 25px 60px;
+            font-size: 28px;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--neon-green), var(--cyber-violet));
+            border: none;
+            border-radius: 50px;
+            color: var(--dark-bg);
+            cursor: pointer;
+            box-shadow: 0 0 40px rgba(0, 255, 179, 0.6);
+            animation: cta-pulse 1s 9.5s ease-in-out;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes cta-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 0 60px rgba(0, 255, 179, 0.8); }
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 60px rgba(0, 255, 179, 0.8);
+        }
+
+        /* Particle Effects */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 99;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--neon-green);
+            animation: particle-float 6s linear infinite;
+        }
+
+        @keyframes particle-float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-1080px) translateX(100px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="animation-container">
+        <!-- Edge Glows -->
+        <div class="edge-glow"></div>
+
+        <!-- Scanline Overlay -->
+        <div class="scanline-overlay"></div>
+
+        <!-- Particles -->
+        <div class="particles" id="particles"></div>
+
+        <!-- Scene 1: Title -->
+        <div class="scene-title">
+            <div class="title-main">QWAMOS</div>
+            <div class="title-subtitle">Qubes + Whonix Advanced Mobile OS</div>
+        </div>
+
+        <!-- Scene 2: Phone & Dashboard -->
+        <div class="scene-phone">
+            <div class="phone-container">
+                <!-- Replace with actual phone model asset if available -->
+                <div class="phone-screen">
+                    <div class="vm-dashboard">
+                        <div class="vm-card">
+                            <div class="vm-label">Workstation</div>
+                            <div class="progress-ring">
+                                <svg width="80" height="80">
+                                    <circle class="progress-ring-circle" cx="40" cy="40" r="36"/>
+                                    <circle class="progress-ring-fill" cx="40" cy="40" r="36"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="vm-card">
+                            <div class="vm-label">Vault</div>
+                            <div class="progress-ring">
+                                <svg width="80" height="80">
+                                    <circle class="progress-ring-circle" cx="40" cy="40" r="36"/>
+                                    <circle class="progress-ring-fill" cx="40" cy="40" r="36"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="vm-card">
+                            <div class="vm-label">Kali</div>
+                            <div class="progress-ring">
+                                <svg width="80" height="80">
+                                    <circle class="progress-ring-circle" cx="40" cy="40" r="36"/>
+                                    <circle class="progress-ring-fill" cx="40" cy="40" r="36"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="vm-card">
+                            <div class="vm-label">Disposable</div>
+                            <div class="progress-ring">
+                                <svg width="80" height="80">
+                                    <circle class="progress-ring-circle" cx="40" cy="40" r="36"/>
+                                    <circle class="progress-ring-fill" cx="40" cy="40" r="36"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 3: Crypto Layer -->
+        <div class="scene-crypto">
+            <div class="crypto-title">Post-Quantum Crypto Layer</div>
+            <div class="crypto-nodes">
+                <div class="crypto-line line-1"></div>
+                <div class="crypto-line line-2"></div>
+                <div class="crypto-node node-1">Kyber-1024</div>
+                <div class="crypto-node node-2">ChaCha20<br>Poly1305</div>
+                <div class="crypto-node node-3">BLAKE3</div>
+            </div>
+            <div class="crypto-labels">Kyber-1024 · ChaCha20-Poly1305 · BLAKE3</div>
+        </div>
+
+        <!-- Scene 4: Threat Detection -->
+        <div class="scene-threat">
+            <div class="packet-grid" id="packetGrid"></div>
+            <div class="ai-hub">
+                <div class="ai-center"></div>
+                <div class="ai-node ai-node-1">Kali GPT</div>
+                <div class="ai-node ai-node-2">Claude</div>
+                <div class="ai-node ai-node-3">ChatGPT</div>
+            </div>
+            <div class="threat-title">Real-Time Threat Detection & Response</div>
+        </div>
+
+        <!-- Scene 5: Final Tagline -->
+        <div class="scene-final">
+            <div class="final-tagline">QWAMOS – Secure. Private. Autonomous.</div>
+            <button class="cta-button">Learn More →</button>
+        </div>
+    </div>
+
+    <script>
+        // Generate particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 1920 + 'px';
+            particle.style.animationDelay = Math.random() * 6 + 's';
+            particle.style.animationDuration = (6 + Math.random() * 4) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Generate packet grid
+        const packetGrid = document.getElementById('packetGrid');
+        for (let i = 0; i < 60; i++) {
+            const packet = document.createElement('div');
+            packet.className = 'packet';
+            // Make some packets threats
+            if (Math.random() > 0.85) {
+                packet.classList.add('threat');
+            }
+            packet.style.animationDelay = Math.random() * 2 + 's';
+            packetGrid.appendChild(packet);
+        }
+
+        // Auto-restart animation every 10 seconds
+        setInterval(() => {
+            location.reload();
+        }, 10000);
+    </script>
+</body>
+</html>
