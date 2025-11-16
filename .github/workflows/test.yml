@@ -187,7 +187,7 @@ jobs:
         echo "Scanning for secrets..."
 
         # Only scan QWAMOS source code (not docs, examples, or patterns)
-        SCAN_DIRS="bootloader/kyber* kernel/qwamos* hypervisor/scripts crypto network storage ui system device security frontend recovery"
+        SCAN_DIRS="bootloader hypervisor/scripts kernel crypto network storage ui system device security frontend recovery"
 
         # Check for real Anthropic API keys (full length: sk-ant-api03-[95+ chars])
         if grep -rE 'sk-ant-api03-[a-zA-Z0-9]{95,}' $SCAN_DIRS 2>/dev/null; then

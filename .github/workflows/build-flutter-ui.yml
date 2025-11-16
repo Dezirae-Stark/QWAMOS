@@ -50,7 +50,12 @@ jobs:
 
       - name: Run tests
         working-directory: ./ui
-        run: flutter test
+        run: |
+          if [ -d "test" ]; then
+            flutter test
+          else
+            echo "⚠ No test directory found, skipping tests"
+          fi
         continue-on-error: true
 
       - name: Build APK (Debug)
