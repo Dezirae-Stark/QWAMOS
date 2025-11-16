@@ -1,0 +1,25 @@
+name: QWAMOS - Nightly Full Audit
+on:
+  schedule:
+    - cron: "0 1 * * *"
+
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run all forensic scripts
+        run: bash tools/forensic_audit.sh || exit 1
+
+      - name: Regenerate SBOM
+        uses: anchore/sbom-action/download-syft@v0.15.5
+      - run: syft . -o json > nightly-sbom.json
+
+      - name: Save Nightly Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-audit
+          path: |
+            nightly-sbom.json
+            audit-logs/
