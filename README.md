@@ -38,9 +38,39 @@ QWAMOS is a post-quantum, AI-driven mobile operating system combining QubesOS vi
 
 ---
 
+## 🎬 Demo
+
+<div align="center">
+
+### QWAMOS in Action
+
+Experience the future of mobile security with QWAMOS - a Qubes + Whonix-inspired Android OS featuring post-quantum encryption, VM isolation, and AI-powered threat detection.
+
+<a href="./assets/demo-animation/qwamos-demo.html">
+  <img src="./assets/screenshots/dom0_screenshot_main.png"
+       alt="QWAMOS Demo - Click for interactive animation"
+       width="600"/>
+</a>
+
+<p><i>🎥 <a href="./assets/demo-animation/qwamos-demo.html"><b>Click here to view the interactive 10-second demo animation</b></a></i></p>
+
+### ✨ Demo Highlights
+
+- 🔐 **VM Isolation** - Workstation, Vault, Kali, and Disposable VMs with real-time status
+- 🛡️ **Post-Quantum Crypto** - Kyber-1024 → ChaCha20-Poly1305 → BLAKE3 encryption chain
+- 🤖 **AI-Powered Security** - Multi-AI threat detection (Kali GPT ↔ Claude ↔ ChatGPT)
+- 🔒 **Real-Time Protection** - Live network packet analysis and automated threat response
+
+<sup>Animation: HTML5/CSS3 | Resolution: 1920×1080 | Duration: 10s | [Source Code](./assets/demo-animation/)</sup>
+
+</div>
+
+---
+
 <details>
 <summary><b>Table of Contents</b></summary>
 
+- [🎬 Demo](#-demo)
 - [Project Overview](#-project-overview)
 - [Build Progress](#-build-progress)
 - [Architecture](#️-architecture)
