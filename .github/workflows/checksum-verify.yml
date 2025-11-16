@@ -1,0 +1,26 @@
+name: QWAMOS - Release Integrity Check
+on:
+  push:
+    paths:
+      - "release-packages/**"
+      - "**Checksum.txt"
+  release:
+    types: [published]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate SHA256 Checksums
+        run: |
+          for f in release-packages/*; do
+            bn=$(basename "$f")
+            expected=$(grep "$bn" QWAMOS_Phase*.txt | awk '{print $1}')
+            actual=$(sha256sum "$f" | awk '{print $1}')
+            if [ "$expected" != "$actual" ]; then
+              echo "Checksum mismatch for $bn"
+              exit 1
+            fi
+          done
