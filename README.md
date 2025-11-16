@@ -653,11 +653,35 @@ Power On → U-Boot (Kyber-1024 verify) → Linux 6.6 LTS → KVM Hypervisor
 
 <div align="center">
 
-### VM Manager Interface
-![Screenshot 1](assets/screenshots/screenshot1.png)
+### Main Dashboard
+![Main Dashboard](assets/screenshots/dom0_screenshot_main.png)
 
-### Security Toggles Dashboard
-![Screenshot 2](assets/screenshots/screenshot2.png)
+### Network Controls
+![Network Controls](assets/screenshots/dom0_screenshot_network_1.png)
+
+### Customization Suite
+![Customization Suite](assets/screenshots/dom0_screenshot_customization_suite.png)
+
+### OSINT Suite
+![OSINT Suite](assets/screenshots/dom0_screenshot_OSINT_suite.png)
+
+### APK Builder & Network Obfuscation
+![APK Builder](assets/screenshots/dom0_screenshot_apk_builder_network_obfuscation.png)
+
+### Crypto Wallet Hub
+![Crypto Wallet Hub](assets/screenshots/dom0_screenshot_crypto_wallet_hub.png)
+
+### AEGIS Air-Gapped Vault
+![AEGIS Vault](assets/screenshots/dom0_screenshot_aegis_air_gapped_vault.png)
+
+### Quick Actions VM Menu
+![Quick Actions](assets/screenshots/dom0_screenshot_quick_actions_vm_menu.png)
+
+### Self-Destruct Menu
+![Self-Destruct Menu](assets/screenshots/dom0_screenshot_self_destruct_menu.png)
+
+### Theme Customization Menu
+![Theme Customization](assets/screenshots/dom0_screenshot_theme_customization_menu.png)
 
 </div>
 
