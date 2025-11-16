@@ -1,0 +1,35 @@
+name: QWAMOS - SBOM Generation
+on:
+  push:
+    branches: [ "main", "master" ]
+  release:
+    types: [published]
+  schedule:
+    - cron: "30 2 * * *" # nightly
+
+jobs:
+  sbom:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Syft
+        uses: anchore/sbom-action/download-syft@v0.15.5
+
+      - name: Generate Syft SBOM
+        run: syft . -o json > sbom-syft.json
+
+      - name: Install CycloneDX
+        run: pip install cyclonedx-bom
+
+      - name: Generate CycloneDX SBOM
+        run: cyclonedx-bom -o sbom-cyclonedx.json
+
+      - name: Upload SBOM Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: |
+            sbom-syft.json
+            sbom-cyclonedx.json
