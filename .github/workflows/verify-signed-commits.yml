@@ -1,0 +1,21 @@
+name: QWAMOS - Verify Signed Commits
+on:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: fetch-depth: 0
+
+      - name: Verify all commits on this push are signed
+        run: |
+          unsigned=$(git log --pretty="%H %G?" HEAD~1..HEAD | awk '$2!="G" {print}')
+          if [ -n "$unsigned" ]; then
+            echo "[!] Unsigned commits detected:"
+            echo "$unsigned"
+            exit 1
+          fi
+          echo "All commits are signed ✔"
