@@ -1,0 +1,76 @@
+# Gitleaks configuration for QWAMOS
+# This file allowlists false positives from documentation and test files
+
+title = "QWAMOS Gitleaks Configuration"
+
+[allowlist]
+description = "Allowlist for false positives"
+
+# Allow documentation files with example keys/hashes
+paths = [
+  # Documentation files containing examples
+  '''docs/PROJECT_STATUS\.md''',
+  '''docs/ARCHITECTURE\.md''',
+  '''docs/PHASE5_NETWORK_ISOLATION\.md''',
+  '''docs/TECHNICAL_ARCHITECTURE\.md''',
+
+  # Third-party test files (Ashigaru analysis)
+  '''ashigaru_analysis/.*''',
+
+  # Test fixtures
+  '''.*/test/.*''',
+  '''.*/tests/.*''',
+  '''.*Test\.java''',
+  '''.*_test\.py''',
+  '''test_.*\.py''',
+]
+
+# Allowlist specific commits (old documentation)
+commits = [
+  "c909407d5565d43f93f4a8e39aac3ebbed3c41ca", # PROJECT_STATUS.md examples
+  "b978c6e344f3a74f908dace0c7e34ddfdbd944ab", # ARCHITECTURE.md fingerprints
+  "a29ef6cf5802e063ac7a2ab9c0b175761787e930", # PHASE5 minisign example
+  "f398127e26f47a33018240cc477b4ce59cacb365", # Ashigaru bitcoinj test keys
+]
+
+# Allowlist specific patterns that are examples
+regexes = [
+  # Minisign example keys (used in documentation)
+  '''minisign_key\s*=\s*['"]RWT''',
+
+  # Git fingerprints and hashes (documentation)
+  '''Fingerprint:\s*`[a-f0-9]{40}`''',
+
+  # Bitcoin test private keys (ashigaru test fixtures)
+  '''String\s+privkey\s*=\s*"[A-F0-9]{64}"''',
+
+  # ChaCha20 example (documentation about encryption)
+  '''ChaCha20-Poly1305''',
+]
+
+[[rules]]
+description = "Generic API Key (adjusted for QWAMOS)"
+id = "generic-api-key"
+regex = '''(?i)(?:key|api|token|secret|password)[[:space:]]*[:=][[:space:]]*['"]([a-z0-9]{32,})['"]'''
+
+# Increase entropy threshold to reduce false positives
+[[rules.allowlist]]
+description = "Ignore low-entropy strings"
+regexTarget = "match"
+regexes = [
+  # Ignore strings that are clearly examples or documentation
+  '''ChaCha20''',
+  '''Kyber''',
+  '''BLAKE3''',
+  '''minisign''',
+]
+
+# Stop words that indicate documentation/examples
+stopwords = [
+  "example",
+  "test",
+  "demo",
+  "sample",
+  "placeholder",
+  "documentation",
+]
