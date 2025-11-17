@@ -23,9 +23,10 @@ This document summarizes the implementation of QWAMOS Secure Voice, a post-quant
 - ✅ Created detailed technical documentation (5,700+ lines total)
 - ✅ Updated Simlar README with QWAMOS-specific documentation (330+ lines)
 - ✅ Integration into QWAMOS main repository (submodule added)
-- ✅ All code changes committed and pushed to GitHub (3 commits)
-- ⏳ Carrier call warning system (designed, not yet implemented)
-- ⏳ Network gateway proxy configuration (designed, not yet implemented)
+- ✅ All code changes committed and pushed to GitHub (4 commits)
+- ✅ Carrier call warning system (COMPLETED - 640+ lines)
+- ✅ Network gateway proxy routing for Tor/I2P (COMPLETED - 320 lines)
+- ✅ Video call PQ verification (COMPLETED - 100+ lines added to helper)
 
 ---
 
@@ -473,8 +474,8 @@ This document summarizes the implementation of QWAMOS Secure Voice, a post-quant
 
 **Repository:** https://github.com/Dezirae-Stark/simlar-for-QWAMOS
 **Branch:** `feature/qwamos-pq-secure-voice` ✅ Pushed
-**Commits:** 3 commits (latest: 6787ed12)
-**Files Changed:** 13 files total across all commits
+**Commits:** 4 commits (latest: ed257d56)
+**Files Changed:** 23 files total across all commits
 
 **Recent Commits:**
 ```
@@ -495,6 +496,15 @@ This document summarizes the implementation of QWAMOS Secure Voice, a post-quant
    - Add build requirements for PQ-enabled Liblinphone
    - Document testing procedures and modified files
    - Add cryptographic details and threat model
+
+4. ed257d56 - Add carrier call warning, network proxy routing, and video PQ verification
+   - Implement CarrierCallWarningService with TelephonyManager integration
+   - Add carrier call warning UI (2 activities, 2 layouts)
+   - Create QwamosNetworkConfig for Tor/I2P proxy routing
+   - Extend QwamosPqSecurityHelper with video stream verification
+   - Update LinphoneHandler with network proxy configuration
+   - Add preferences for carrier call policy
+   - 10 files changed, 1,351 insertions
 ```
 
 ### QWAMOS Main Repository
