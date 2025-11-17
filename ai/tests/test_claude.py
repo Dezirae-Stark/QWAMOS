@@ -20,6 +20,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from claude.claude_controller import ClaudeController
 
+# Test constants - NOT real credentials
+TEST_INVALID_API_KEY = "test_invalid_key_for_validation"  # nosec
+
 
 def test_api_key_validation():
     """Test 1: API Key Validation"""
@@ -29,7 +32,8 @@ def test_api_key_validation():
 
     try:
         # This should fail with invalid key
-        claude = ClaudeController(api_key="invalid_key")
+        # lgtm[py/clear-text-logging-sensitive-data]
+        claude = ClaudeController(api_key=TEST_INVALID_API_KEY)
         result = claude.validate_api_key()
 
         if not result:
@@ -279,7 +283,8 @@ def run_all_tests():
 
     for test_name, success in results:
         status = "✅ PASS" if success else "❌ FAIL"
-        print(f"{status:12} {test_name}")
+        # lgtm[py/clear-text-logging-sensitive-data]
+        print(f"{status:12} {test_name}")  # test_name contains only test labels, not credentials
 
     print(f"\nTotal: {passed}/{total} tests passed")
 
