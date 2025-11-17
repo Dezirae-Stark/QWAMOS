@@ -48,23 +48,6 @@ regexes = [
   '''ChaCha20-Poly1305''',
 ]
 
-[[rules]]
-description = "Generic API Key (adjusted for QWAMOS)"
-id = "generic-api-key"
-regex = '''(?i)(?:key|api|token|secret|password)[[:space:]]*[:=][[:space:]]*['"]([a-z0-9]{32,})['"]'''
-
-# Increase entropy threshold to reduce false positives
-[[rules.allowlist]]
-description = "Ignore low-entropy strings"
-regexTarget = "match"
-regexes = [
-  # Ignore strings that are clearly examples or documentation
-  '''ChaCha20''',
-  '''Kyber''',
-  '''BLAKE3''',
-  '''minisign''',
-]
-
 # Stop words that indicate documentation/examples
 stopwords = [
   "example",
