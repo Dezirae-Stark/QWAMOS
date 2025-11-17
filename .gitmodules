@@ -1,0 +1,4 @@
+[submodule "apps/simlar-qwamos"]
+	path = apps/simlar-qwamos
+	url = https://github.com/Dezirae-Stark/simlar-for-QWAMOS.git
+	branch = feature/qwamos-pq-secure-voice
