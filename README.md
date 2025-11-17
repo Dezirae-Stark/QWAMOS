@@ -46,13 +46,16 @@ QWAMOS is a post-quantum, AI-driven mobile operating system combining QubesOS vi
 
 Experience the future of mobile security with QWAMOS - a Qubes + Whonix-inspired Android OS featuring post-quantum encryption, VM isolation, and AI-powered threat detection.
 
-<a href="./assets/demo-animation/qwamos-demo.html">
-  <img src="./assets/screenshots/dom0_screenshot_main.png"
-       alt="QWAMOS Demo - Click for interactive animation"
-       width="600"/>
-</a>
+<!-- Autoplay Demo Animation -->
+<picture>
+  <source srcset="./assets/demo-animation/qwamos-demo.webp" type="image/webp">
+  <img src="./assets/screenshots/demo_preview.gif"
+       alt="QWAMOS Demo Animation"
+       width="800"
+       autoplay loop muted playsinline />
+</picture>
 
-<p><i>🎥 <a href="./assets/demo-animation/qwamos-demo.html"><b>Click here to view the interactive 10-second demo animation</b></a></i></p>
+<p><i>🎥 <a href="./assets/demo-animation/qwamos-demo.html"><b>View full interactive demo</b></a> | <a href="#-quick-start">Get Started →</a></i></p>
 
 ### ✨ Demo Highlights
 
@@ -61,7 +64,7 @@ Experience the future of mobile security with QWAMOS - a Qubes + Whonix-inspired
 - 🤖 **AI-Powered Security** - Multi-AI threat detection (Kali GPT ↔ Claude ↔ ChatGPT)
 - 🔒 **Real-Time Protection** - Live network packet analysis and automated threat response
 
-<sup>Animation: HTML5/CSS3 | Resolution: 1920×1080 | Duration: 10s | [Source Code](./assets/demo-animation/)</sup>
+<sup>Animation: HTML5/CSS3 | Resolution: 1920×1080 | Duration: 10s | [Source Code](./assets/demo-animation/) | [Generate GIF](./assets/demo-animation/generate-video.sh)</sup>
 
 </div>
 
