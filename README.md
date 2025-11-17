@@ -1337,6 +1337,13 @@ bash ~/QWAMOS/security/gateway_vm/firewall/rules-strict.sh
 - **[QUICK_START.md](security/QUICK_START.md)** - 3-minute quick reference
 - **[PHASE3_AUDIT_REPORT.md](PHASE3_AUDIT_REPORT.md)** - Phase 3 completion audit
 
+### Security Governance & Compliance ⭐ **NEW**
+- **[QWAMOS_SLSA_Roadmap.md](docs/QWAMOS_SLSA_Roadmap.md)** - Supply-chain Levels for Software Artifacts (SLSA) Level 3/4 compliance roadmap
+- **[QWAMOS_Hardening_Standard.md](docs/QWAMOS_Hardening_Standard.md)** - Baseline configuration & operational security controls
+- **[QWAMOS_Security_Audit_Readiness_Certificate.md](docs/QWAMOS_Security_Audit_Readiness_Certificate.md)** - Security audit readiness certification
+- **[CLA.md](CLA.md)** - Contributor License Agreement for open-source contributions
+- **[SECURITY_ADVISORY_TEMPLATE.md](.github/SECURITY_ADVISORY_TEMPLATE.md)** - Template for publishing security advisories
+
 ### Phase 5: Network Isolation Documentation
 - **[PHASE5_NETWORK_ISOLATION.md](docs/PHASE5_NETWORK_ISOLATION.md)** - Architecture specification (1,600 lines)
 - **[PHASE5_COMPLETION_SUMMARY.md](docs/PHASE5_COMPLETION_SUMMARY.md)** - Development summary (897 lines)
@@ -1804,7 +1811,7 @@ Commercial resale or rebranding requires express written permission.
 
 ### Corporate Structure
 
-QWAMOS is developed and maintained by **First Sterling Capital, LLC**, under AGPL-3.0 open-source license. Contributions are accepted under a Contributor License Agreement (CLA) ensuring derivative transparency and project authenticity.
+QWAMOS is developed and maintained by **First Sterling Capital, LLC**, under AGPL-3.0 open-source license. Contributions are accepted under a [Contributor License Agreement (CLA)](CLA.md) ensuring derivative transparency and project authenticity.
 
 ---
 
