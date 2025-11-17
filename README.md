@@ -13,13 +13,11 @@
 
 **Ground-up mobile OS with post-quantum cryptography and VM-based isolation**
 
-**Current Status:** Phase 11 @ 100% (Flutter Hypervisor UI) ⭐ **PRODUCTION READY** | Phase 10 @ 100% (Advanced Hardware Security) | Phase 9 @ 100% (AI App Builder)
+**Current Status:** Phase 11 @ 100% (Flutter Hypervisor UI) - Internal feature-complete alpha; undergoing internal validation. External audits scheduled in future phases. | Phase 10 @ 100% (Advanced Hardware Security) | Phase 9 @ 100% (AI App Builder)
 
 **Last Updated:** 2025-11-05
 
 **Version:** v1.0.0-alpha
-
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Phase 11](https://img.shields.io/badge/Phase_11-100%25-brightgreen.svg)](ui/README.md)
 [![Phase 10](https://img.shields.io/badge/Phase_10-100%25-brightgreen.svg)](PHASE10_COMPLETION_SUMMARY.md)
 [![Phase 9](https://img.shields.io/badge/Phase_9-100%25-brightgreen.svg)](ai_app_builder/DEPLOYMENT_SUMMARY.md)
@@ -64,6 +62,17 @@
 
 ---
 
+## Getting Started (Quickstart)
+
+1. **Check hardware compatibility** - Motorola Edge 2025 / Snapdragon 8 Gen 3 (additional devices coming in future phases).
+2. **Follow the Installation Guide** - Flash or deploy QWAMOS using our step-by-step guide.
+3. **Set up your VMs** - Use the Operations Guide to configure your first Gateway, Workstation, and Vault VMs.
+
+➡️ [INSTALLATION.md](./INSTALLATION.md)
+➡️ [OPS_GUIDE.md](./OPS_GUIDE.md)
+
+---
+
 ## Investor Summary
 
 ### Problem Statement
@@ -102,16 +111,13 @@ QWAMOS is the **first mobile operating system** built from the ground up with:
 
 ### Target Markets
 
-| Segment | Addressable Market | Use Case |
-|---------|-------------------|----------|
-| **Government & Defense** | $12B+ federal cybersecurity budget | Classified communications, field operations, intelligence gathering |
-| **Intelligence & Law Enforcement** | 17 U.S. intelligence agencies + state/local | Undercover operations, confidential informants, witness protection |
-| **Financial Institutions** | Fortune 500 banks, hedge funds, crypto traders | C-suite communications, M&A negotiations, proprietary trading strategies |
-| **Journalists & Activists** | 10,000+ investigative journalists globally | Source protection, whistleblower communications, hostile-regime operations |
-| **Corporate Executives** | C-level at F500 companies | Board communications, IP protection, competitive intelligence defense |
-| **High-Net-Worth Individuals** | Ultra-high-net-worth families, celebrities | Personal security, extortion/kidnapping defense, privacy from surveillance |
-
-**Primary Market Focus:** U.S. Department of Defense, Intelligence Community (IC), and Five Eyes partners (initial $50M TAM based on existing secure mobile contracts to Turing Phone, Boeing Black, General Dynamics Sectera Edge)
+| Segment | Estimated Market Size | Primary Use Case |
+|---------|----------------------|------------------|
+| **Government + Defense** | $12B+ Federal Cyber Budget | Classified comms, field operations, intelligence teams |
+| **Intelligence Community** | 17 Agencies + State Fusion | Covert ops, asset comms, compartmented workflows |
+| **Law Enforcement** | Federal, State, Local | Undercover, CI communication, witness protection |
+| **Financial Institutions** | Fortune 500 | C-suite, M&A, proprietary trading security |
+| **Corporations (Private)** | High-Risk Sectors | IP protection, anti-industrial-espionage systems |
 
 ---
 
@@ -134,43 +140,12 @@ QWAMOS is the **first mobile operating system** built from the ground up with:
 
 ### Business Model Options
 
-QWAMOS can be monetized through multiple high-margin channels:
-
-1. **Enterprise Licensing ($500-$2,000 per device/year)**
-   - Per-device subscription for government/corporate deployments
-   - Includes: OS updates, security patches, threat intelligence feeds, 24/7 support
-   - Comparable pricing to: General Dynamics Sectera Edge ($2,500/device), Boeing Black ($~15,000/device in 2014)
-
-2. **Government Contract Licensing ($10M-$100M+ multi-year contracts)**
-   - Department of Defense (DoD) secure mobile program of record
-   - Intelligence Community (IC) tactical communications devices
-   - Federal Law Enforcement Agencies (FBI, DEA, Secret Service)
-   - Five Eyes international partners (UK, Canada, Australia, New Zealand)
-
-3. **OEM Partnership Licensing (Royalty per device sold)**
-   - License QWAMOS to hardened mobile manufacturers (Purism, Pine64, custom defense contractors)
-   - Royalty model: $50-$200 per device depending on volume
-   - White-label variants for carrier-specific deployments
-
-4. **Per-Device Deployment Licensing (One-time fee)**
-   - Individual licenses for high-net-worth individuals, journalists, activists
-   - Pricing: $1,500-$5,000 one-time purchase + optional annual support ($500)
-   - Distribution: Direct sales, security-focused resellers, nonprofit partnerships (EFF, Freedom of the Press Foundation)
-
-5. **Support, Updates & Security Audits (Recurring revenue)**
-   - Premium support tiers: Standard ($10K/year), Enterprise ($50K/year), Mission-Critical ($250K/year)
-   - Annual third-party security audits and penetration testing ($100K-$500K per engagement)
-   - Custom feature development for government/enterprise clients (project-based, $500K-$5M+)
-
-6. **Private-Labeled Versions (Custom development)**
-   - Bespoke QWAMOS variants for specific agencies or enterprises
-   - Examples: Classified-rated version for DoD, financial sector compliance version (SOX/GDPR)
-   - Pricing: $2M-$10M+ per custom variant + ongoing maintenance contracts
-
-**Revenue Projections (Conservative, Year 1-3):**
-- Year 1: Pilot deployments (500-1,000 devices), government RFP responses → $2M-$5M
-- Year 2: First major contract (10,000 devices), enterprise trials → $10M-$25M
-- Year 3: Multiple contracts, OEM partnerships established → $50M-$100M
+| Model Type | Description | Revenue Notes |
+|-----------|-------------|---------------|
+| **Enterprise Licensing** | Per-device or per-seat licensing | Predictable recurring revenue |
+| **Hardened OEM Builds** | Pre-installed on custom hardware | High-margin contractual deployments |
+| **Government Contracts** | Cybersecurity, IC, Defense, Federal agencies | Large multi-year procurement potential |
+| **Professional Services** | Deployments, audits, training | Supplemental revenue |
 
 ---
 
@@ -222,6 +197,37 @@ QWAMOS can be monetized through multiple high-margin channels:
 
 ---
 
+### Risks & Mitigations
+
+**Hardware Access:** Limited to specific devices initially.
+➡️ **Mitigation:** Expanding device compatibility and publishing OEM reference designs.
+
+**Security Audits:** External audits required for high-assurance use.
+➡️ **Mitigation:** Contracted third-party cryptographic + OS hardening audit planned.
+
+**Export Controls:** PQ cryptography and dual-use security tooling may trigger controls.
+➡️ **Mitigation:** Planned ITAR/EAR review and compliance strategy.
+
+**User Expectations:** High security often reduces consumer comfort.
+➡️ **Mitigation:** Clear documentation + dual user modes ("standard" vs "expert").
+
+---
+
+## Is QWAMOS Right for You?
+
+QWAMOS is ideal if you:
+- Handle sensitive communications (journalist, activist, attorney, investigator, contractor)
+- Travel in hostile jurisdictions or through adversarial border checkpoints
+- Need strong separation between work, personal, and high-risk apps
+- Require post-quantum encryption and compartmentalization by design
+
+QWAMOS may not be ideal if you:
+- Depend on Google Play Services or typical consumer Android workflows
+- Want a mainstream, commercial, stable-for-everyone UI/UX experience
+- Are unfamiliar with virtualization-based operating systems
+
+---
+
 ## User-Friendly Overview
 
 ### What is QWAMOS?
@@ -231,6 +237,14 @@ Imagine if your smartphone worked like a high-security government facility: inst
 **That's QWAMOS.** It's a mobile operating system that treats every app like a potential security risk and puts it in its own **virtual machine (VM)**—a completely isolated software environment. Even if one app gets hacked, the attacker is trapped in that VM and can't access your other apps, files, or data.
 
 On top of this, QWAMOS uses **post-quantum encryption**—the kind of cryptography that's designed to resist attacks from quantum computers, which will make today's encryption obsolete within the next decade. And every time you connect to the internet, your traffic is automatically routed through **Tor and I2P anonymity networks**, hiding your identity and location from surveillance.
+
+---
+
+### AI Privacy
+
+- **Kali GPT**: runs 100% on-device, with no network access.
+- **Claude / ChatGPT** (optional): cloud AI accessed only through Tor; a sanitization layer removes sensitive tokens before transmission.
+- **All cloud AI**: isolated in its own VM with firewall rules preventing cross-VM data leakage.
 
 ---
 
@@ -406,33 +420,7 @@ QWAMOS is a post-quantum, AI-driven mobile operating system combining QubesOS vi
 
 ## 🎬 Demo
 
-<div align="center">
-
-### QWAMOS in Action
-
-Experience the future of mobile security with QWAMOS - a Qubes + Whonix-inspired Android OS featuring post-quantum encryption, VM isolation, and AI-powered threat detection.
-
-<!-- Autoplay Demo Animation -->
-<picture>
-  <source srcset="./assets/demo-animation/qwamos-demo.webp" type="image/webp">
-  <img src="./assets/screenshots/demo_preview.gif"
-       alt="QWAMOS Demo Animation"
-       width="800"
-       autoplay loop muted playsinline />
-</picture>
-
-<p><i>🎥 <a href="./assets/demo-animation/qwamos-demo.html"><b>View full interactive demo</b></a> | <a href="#-quick-start">Get Started →</a></i></p>
-
-### ✨ Demo Highlights
-
-- 🔐 **VM Isolation** - Workstation, Vault, Kali, and Disposable VMs with real-time status
-- 🛡️ **Post-Quantum Crypto** - Kyber-1024 → ChaCha20-Poly1305 → BLAKE3 encryption chain
-- 🤖 **AI-Powered Security** - Multi-AI threat detection (Kali GPT ↔ Claude ↔ ChatGPT)
-- 🔒 **Real-Time Protection** - Live network packet analysis and automated threat response
-
-<sup>Animation: HTML5/CSS3 | Resolution: 1920×1080 | Duration: 10s | [Source Code](./assets/demo-animation/) | [Generate GIF](./assets/demo-animation/generate-video.sh)</sup>
-
-</div>
+➡️ See the full demo and screenshots in the main [Demo section above](#screenshots--demo-animation).
 
 ---
 
@@ -471,8 +459,8 @@ QWAMOS is a security-focused mobile operating system built from scratch with:
 - **Post-Quantum Cryptography:** Kyber-1024 + Argon2id + ChaCha20-Poly1305 + BLAKE3 ✅ **PRODUCTION READY**
 - **VM-Based Isolation:** 4-domain architecture (Dom0, Gateway, Workstation, Trusted UI)
 - **Mandatory Tor/I2P:** All network traffic anonymized
-- **Advanced Hardware Security:** ML-powered bootloader lock + hardware kill switches + firmware integrity monitoring ⭐ **NATION-STATE DEFENSE**
-- **AI App Builder:** World's first mobile OS with triple-AI app generation and validation ⭐ **REVOLUTIONARY**
+- **Advanced Hardware Security:** ML-powered bootloader lock + hardware kill switches + firmware integrity monitoring - Designed for nation-state threat models
+- **AI App Builder:** Implements a novel triple-AI security model (world's first mobile OS with triple-AI app generation and validation)
 - **AI-Powered Threat Detection:** ML-based real-time threat detection with multi-AI coordinated response
 - **Secure Keyboard:** Post-quantum encrypted keyboard (Kyber-1024 + ChaCha20) with anti-keylogging and ML anomaly detection
 - **Triple AI Assistant:** Kali GPT (local) + Claude + ChatGPT for security, coding, and general assistance
@@ -481,6 +469,9 @@ QWAMOS is a security-focused mobile operating system built from scratch with:
 - **Panic Protection:** Emergency wipe gesture + duress profiles
 
 **Target Hardware:** Motorola Edge 2025 (Snapdragon 8 Gen 3)
+
+QWAMOS currently targets the Motorola Edge 2025 with Snapdragon 8 Gen 3 as the reference device. Additional devices with unlockable boot chains and ARM64 SoCs will be added in subsequent phases.
+
 **Development Environment:** Termux on Android ARM64
 
 ---
@@ -540,476 +531,55 @@ QWAMOS is a security-focused mobile operating system built from scratch with:
 - ⏳ Final 5%: Device integration & testing
 
 ### Phase 6: AI Assistants Integration (100% ✅)
-**Complete Implementation**
+- ✅ Central AI Manager orchestrating Kali GPT (local), Claude, and ChatGPT
+- ✅ Request sanitizer, CLI interface, React Native UI, systemd services
+- ✅ Zero telemetry from Kali GPT, hardware-encrypted API keys
 
-- ✅ **Central AI Manager** (`ai/ai_manager.py`) - Orchestrates all AI services
-- ✅ **Kali GPT Controller** - Local Llama 3.1 8B for pentesting (100% private, no network)
-- ✅ **Claude Controller** - Advanced reasoning via Anthropic API (Tor routing)
-- ✅ **ChatGPT Controller** - General AI via OpenAI API (Tor routing)
-- ✅ **Configuration System** (3 JSON configs with full settings)
-- ✅ **CLI Interface** (`qwamos-ai`) - enable/disable, query, chat, stats
-- ✅ **Test Suites** (3 comprehensive test files, 900+ lines)
-- ✅ **Request Sanitizer** - Removes PII before API calls (IPs, emails, passwords, etc.)
-- ✅ **React Native UI** - AIAssistants, AIChat, AIStats screens (1,815 lines)
-- ✅ **Java Native Bridge** - QWAMOSAIBridge.java (370 lines)
-- ✅ **TypeScript Service Layer** - AIManager.ts (398 lines)
-- ✅ **Systemd Services** - 4 services for AI orchestration
-- ✅ **Deployment Scripts** - Automated installation (2 scripts)
-- ✅ **Complete Documentation** - PHASE6_DEPLOYMENT_GUIDE.md, PHASE6_COMPLETION_SUMMARY.md
-
-**CLI Usage:**
-```bash
-./ai/qwamos-ai enable kali-gpt
-./ai/qwamos-ai query claude "Explain this code"
-./ai/qwamos-ai chat kali-gpt
-```
-
-**Features:**
-- Toggle services on/off
-- Query any AI with natural language
-- Interactive chat mode
-- Usage stats & cost tracking
-- Hardware-encrypted API keys
-- Zero telemetry from Kali GPT
+See full details in [PHASE6_COMPLETION_SUMMARY.md](docs/PHASE6_COMPLETION_SUMMARY.md)
 
 ### Phase 7: ML Threat Detection & Response (100% ✅)
-**Complete Implementation** - [`docs/PHASE7_COMPLETION_SUMMARY.md`](docs/PHASE7_COMPLETION_SUMMARY.md)
+- ✅ 3 ML models (Autoencoder, Random Forest, LSTM) for network, filesystem, and syscall analysis
+- ✅ Multi-AI coordination (Kali GPT → Claude → ChatGPT) for automated response
+- ✅ React Native dashboard with real-time monitoring
+- ✅ Action executor with firewall, process termination, VM snapshots
 
-**Revolutionary AI-powered security system with real-time threat detection and automated response**
+See full details in [PHASE7_COMPLETION_SUMMARY.md](docs/PHASE7_COMPLETION_SUMMARY.md)
 
-**Implementation Statistics:**
-- **18 files**, **~8,585 lines of code**
-- **3 ML models** (Autoencoder, Random Forest, LSTM)
-- **Multi-AI coordination** (Kali GPT → Claude → ChatGPT)
-- **React Native dashboard** with real-time monitoring
+### Phase 8: SecureType Keyboard (100% ✅)
+- ✅ Per-keystroke post-quantum encryption (Kyber-1024 + ChaCha20-Poly1305)
+- ✅ ML typing anomaly detection, anti-keylogging, anti-screenshot protection
+- ✅ Zero telemetry guarantee (no INTERNET permission)
+- ✅ 4 keyboard modes: Password, Terminal, Standard, Gesture
 
-**Core Components:**
-- ✅ **Network Anomaly Detector** (`network_anomaly_detector.py`, ~600 lines)
-  - Autoencoder neural network (TensorFlow Lite, ARM64 optimized)
-  - Real-time packet capture (Scapy)
-  - Detects: Port scans, DDoS, C2 communications, data exfiltration
-  - 50-dimensional feature extraction, 95%+ accuracy
+See full details in [PHASE8_COMPLETION_SUMMARY.md](keyboard/docs/PHASE8_COMPLETION_SUMMARY.md)
 
-- ✅ **File System Monitor** (`file_system_monitor.py`, ~550 lines)
-  - Random Forest classifier (100 trees)
-  - Real-time file monitoring (Watchdog)
-  - Detects: Ransomware (mass encryption), malware, unauthorized modifications
-  - 30-dimensional feature extraction, 98%+ accuracy
+### Phase 9: AI App Builder & Code Generator (100% ✅)
+- ✅ Triple-AI coordination (Kali GPT + Claude + ChatGPT) for on-demand app generation
+- ✅ Triple-AI security audit (all must score ≥90/100), zero-error QA requirement
+- ✅ VM-based isolated builds, one dedicated VM per deployed app
+- ✅ 8-stage pipeline: Requirements → Code → Security → QA → Build → Deploy
 
-- ✅ **System Call Analyzer** (`system_call_analyzer.py`, ~500 lines)
-  - LSTM sequence analysis
-  - Kernel-level syscall tracing
-  - Detects: Privilege escalation, process injection, reverse shells
-  - 128 syscall vocabulary, 96%+ accuracy
-
-- ✅ **AI Response Coordinator** (`ai_response_coordinator.py`, ~550 lines)
-  - Multi-AI pipeline: Kali GPT (local) → Claude (Tor) → ChatGPT (Tor)
-  - Asynchronous threat handling (asyncio)
-  - Permission-based response filtering
-  - Action plan creation and execution
-
-- ✅ **Action Executor** (`action_executor.py`, ~400 lines)
-  - Actions: Firewall, process termination, network isolation, VM snapshot, file quarantine, auto-patching
-  - Dry-run mode, rollback capabilities
-  - Comprehensive audit logging
-
-- ✅ **React Native Dashboard** (`ThreatDashboard.tsx`, ~600 lines)
-  - System health meter (0-100)
-  - Detector controls (ON/OFF toggles)
-  - Real-time threat list with filtering
-  - Threat detail modal with AI analysis
-  - Quick action buttons
-
-- ✅ **TypeScript Service Layer** (`ThreatDetectionService.ts`, ~350 lines)
-  - 20+ API methods
-  - Java native bridge integration
-  - Error handling and retry logic
-
-- ✅ **Systemd Services** (4 services, ~210 lines)
-  - Security hardening (NoNewPrivileges, ProtectSystem)
-  - Resource limits (6.5GB RAM peak, 1.8 cores)
-  - Auto-restart on failure
-
-- ✅ **Deployment Automation** (`deploy_threat_detection.sh`, ~395 lines)
-  - One-command installation
-  - Dependency management
-  - Service configuration
-
-- ✅ **Comprehensive Documentation** (3 guides, ~3,200 lines)
-  - PHASE7_DEPLOYMENT_GUIDE.md (deployment & configuration)
-  - PHASE7_ML_TRAINING_GUIDE.md (model training procedures)
-  - PHASE7_API_DOCUMENTATION.md (complete API reference)
-
-**Performance:**
-- Network detection: 50-150ms per packet batch
-- File system detection: 10-50ms per file event
-- System call detection: 5-20ms per syscall sequence
-- AI response pipeline: 30-90s per threat
-- Throughput: 10,000+ packets/sec, 500+ file events/sec
-
-### Phase 8: SecureType Keyboard (100% ✅) ⭐ **NEW - v2.0 POST-QUANTUM UPGRADE**
-**Complete Implementation** - [`keyboard/docs/PHASE8_COMPLETION_SUMMARY.md`](keyboard/docs/PHASE8_COMPLETION_SUMMARY.md)
-**Security Policy** - [`keyboard/docs/POST_QUANTUM_SECURITY.md`](keyboard/docs/POST_QUANTUM_SECURITY.md)
-
-**World's first mobile keyboard with POST-QUANTUM per-keystroke encryption and ML user verification**
-
-**Implementation Statistics:**
-- **27 files**, **~6,800 lines of code**
-- **React Native UI** (7 components, ~2,500 lines)
-- **Java Native Security** (4 modules, ~1,600 lines)
-- **Python ML System** (typing anomaly detector, ~450 lines)
-- **Post-quantum crypto service** (612 lines)
-- **Deployment package ready** (34KB tarball)
-
-**Security Features:**
-- ✅ **POST-QUANTUM ENCRYPTION** (MANDATORY - NO LEGACY CRYPTO):
-  - **Kyber-1024** key encapsulation (NIST FIPS 203 ML-KEM)
-  - **ChaCha20-Poly1305** AEAD encryption (quantum-resistant)
-  - **HKDF-BLAKE2b** key derivation
-  - **ZERO AES/RSA/ECDH** - Forbidden per DIA/Naval Intelligence requirements
-  - Every keystroke encrypted individually with ephemeral keys
-  - Forward secrecy guaranteed
-  - Secure memory wiping (3-pass DoD 5220.22-M)
-- ✅ **Anti-Keylogging Protection**:
-  - Touch coordinate obfuscation (±5px random noise)
-  - Encrypted keystroke buffer
-  - No accessibility service access
-- ✅ **Anti-Screenshot Protection**:
-  - FLAG_SECURE prevents screen capture
-  - Auto-activation for password fields
-  - Works with malicious screen capture apps
-- ✅ **Shoulder-Surfing Resistance**:
-  - Randomized keyboard layouts (every 30s)
-  - Invisible typing mode (haptic only)
-  - Decoy character generation (15-20 chars)
-  - Gesture-based input support
-- ✅ **ML Typing Anomaly Detection**:
-  - Learns your typing pattern (press duration, timing, pressure)
-  - Detects unauthorized users (>30% deviation)
-  - Auto-locks and requires biometric re-authentication
-- ✅ **Zero Telemetry Guarantee**:
-  - NO INTERNET permission in manifest (OS-level enforcement)
-  - No analytics/crash reporting
-  - 100% offline processing
-  - Open source & auditable
-
-**Keyboard Modes:**
-- 🔒 **Password Mode** - No visual feedback, encrypted buffer, random layout
-- ⌨️ **Terminal Mode** - Special keys (Ctrl, Alt, Tab, Esc), syntax highlighting
-- ✍️ **Standard Mode** - Regular typing with post-quantum encryption
-- 👆 **Gesture Mode** - Swipe patterns for passwords
-
-**Innovation:**
-- 🌟 First keyboard with per-keystroke POST-QUANTUM encryption (Kyber-1024)
-- 🌟 First keyboard with ZERO legacy crypto (no AES/RSA/ECDH)
-- 🌟 First keyboard with ML-based unauthorized user detection
-- 🌟 First keyboard with guaranteed zero telemetry (no INTERNET permission)
-
-**Performance:**
-- Keystroke encryption latency: 6-8ms (Kyber-1024 + ChaCha20)
-- ML analysis latency: 10-20ms
-- 2.7x faster than AES-256-GCM
-- Total latency: 15-30ms (unnoticeable)
-- Memory usage: ~150MB
-- CPU usage: ~10-15% while typing
-
-### Phase 9: AI App Builder & Code Generator (100% ✅) ⭐ **REVOLUTIONARY**
-**Complete Implementation** - [`ai_app_builder/DEPLOYMENT_SUMMARY.md`](ai_app_builder/DEPLOYMENT_SUMMARY.md)
-
-**World's first mobile OS with AI-powered on-demand app generation and triple-AI validation system**
-
-**Implementation Statistics:**
-- **15 files**, **~6,961 lines of code**
-- **7 Python modules** (~4,539 lines) - Complete backend system
-- **2 React Native components** (~639 lines) - UI and service layer
-- **1 Java native bridge** (~365 lines) - React Native ↔ Python
-- **Deployment package ready** (executable scripts with validation)
-
-**Revolutionary Features:**
-- ✅ **Triple-AI Coordination** (Kali GPT 40% + Claude 35% + ChatGPT 25%):
-  - All 3 AIs analyze requirements with consensus requirement (≥75% agreement)
-  - Round-robin code generation with peer crosschecks (max 3 iterations)
-  - Real-time coordination and conflict resolution
-- ✅ **Triple-AI Security Audit** (ALL must approve):
-  - Kali GPT: Vulnerability scanning, threat modeling, crypto analysis
-  - Claude: Architecture security, design patterns, input validation
-  - ChatGPT: Dependency audit, manifest security, code quality
-  - **Pass requirement: ALL 3 AIs score ≥90/100** (weighted average ≥90)
-  - Comprehensive checks: SQL injection, XSS, hardcoded secrets, insecure crypto
-- ✅ **Zero-Error Quality Assurance**:
-  - AI-generated test suites (unit, integration, security, performance)
-  - Automated test execution with **zero failures required**
-  - Code coverage analysis (≥80% required)
-  - Kali GPT: Security tests | Claude: Functional tests | ChatGPT: UX tests
-- ✅ **Enhancement Suggestion Engine**:
-  - All 3 AIs suggest improvements (security, performance, UX)
-  - Categorized by priority (HIGH/MEDIUM/LOW)
-  - **User approval required for all enhancements**
-  - Automatic application of approved enhancements
-- ✅ **Isolated Build System**:
-  - VM-based isolated builds (dedicated VM per build)
-  - Security scanning before build
-  - APK generation and signing with QWAMOS keystore
-  - VM cleanup/snapshot for debugging
-- ✅ **Deployment Manager**:
-  - **One dedicated VM per app** (maximum isolation)
-  - Minimal permissions enforcement (dangerous permissions blocked)
-  - Network isolation by default (no internet unless explicitly granted)
-  - Real-time threat detection (crypto mining, unauthorized network activity)
-  - Automatic threat response (terminate apps on critical threats)
-- ✅ **React Native UI**:
-  - Natural language app request input
-  - Real-time progress tracking (8 stages)
-  - Code preview modal with syntax highlighting
-  - Security audit report viewer
-  - Enhancement approval workflow with details
-- ✅ **Complete Infrastructure**:
-  - Java native bridge for React Native ↔ Python communication
-  - Configuration system with security thresholds
-  - Deployment scripts with automated validation
-  - Comprehensive documentation (README + Deployment Summary)
-
-**What It Solves:**
-- ❌ **Problem:** Traditional app stores expose users to malware, spyware, telemetry, bloatware
-- ✅ **Solution:** Generate apps on-demand with guaranteed security and zero telemetry
-
-**8-Stage Pipeline:**
-1. Requirements Analysis (consensus required by all 3 AIs)
-2. Code Generation (round-robin with crosschecks)
-3. Security Audit (triple-AI, all must pass ≥90/100)
-4. Quality Assurance (zero errors required)
-5. Enhancement Suggestions (user approval)
-6. User Approval (review code and security audit)
-7. Isolated Build (VM-based, security scans)
-8. Deployment (dedicated VM per app, minimal permissions)
-
-**Total time: 2-5 minutes** per app
-
-**Example Use Cases:**
-```
-"Build a todo app with AES encryption and dark mode"
-→ Fully encrypted, zero telemetry, no network access
-
-"Create a password manager with post-quantum encryption"
-→ Kyber-1024 + ChaCha20-Poly1305 encryption, biometric unlock, no cloud sync
-
-"Build a secure messenger with E2E encryption"
-→ Signal protocol, metadata protection, disappearing messages
-```
-
-**Security Guarantees:**
-- ✓ All code audited by 3 AIs before deployment
-- ✓ Zero-error requirement (automated QA)
-- ✓ Isolated VMs (one per app)
-- ✓ Minimal permissions only
-- ✓ Network isolation by default
-- ✓ Zero telemetry guaranteed
-- ✓ Real-time threat detection
-
-**Performance:**
-- Code generation: 30-90 seconds (AI coordination)
-- Security audit: 10-30 seconds (triple-AI)
-- Quality assurance: 20-60 seconds (automated tests)
-- Build: 30-120 seconds (isolated VM)
-- Total: 2-5 minutes end-to-end
-
-**Innovation:**
-🌟 **World's First:**
-- Mobile OS with triple-AI app generation
-- Guaranteed security validation (all 3 AIs must approve)
-- Zero-error requirement enforced by AI-generated tests
-- On-demand app generation eliminating untrusted third-party apps
+See full details in [DEPLOYMENT_SUMMARY.md](ai_app_builder/DEPLOYMENT_SUMMARY.md)
 
 ---
 
 ### Phase 10: Advanced Hardware Security & Anti-Persistence (100% ✅)
-**Complete Implementation** - [`PHASE10_COMPLETION_SUMMARY.md`](PHASE10_COMPLETION_SUMMARY.md)
+- ✅ ML-powered bootloader lock with emergency override
+- ✅ Firmware integrity monitor (bootloader hash verification, TrustZone checking)
+- ✅ A/B partition isolation, hardware kill switch kernel driver
+- ✅ WikiLeaks Vault 7 attack mitigation (Dark Matter, Weeping Angel)
 
-**Nation-state level protection against firmware persistence and hardware surveillance**
-
-**Revolutionary:** ML-powered bootloader lock + hardware kill switches + firmware integrity monitoring
-
-**Implementation Statistics:**
-- **10 files created**, **3,534 lines of code** (Python, C, TypeScript, Bash)
-- **20,000+ words** of documentation
-- **17 integration tests** (100% pass)
-- **Development time:** 1 day (2025-11-05)
-
-**Documentation:**
-- [`docs/PHASE10_ADVANCED_HARDWARE_SECURITY.md`](docs/PHASE10_ADVANCED_HARDWARE_SECURITY.md) - Complete specification (19,000+ words)
-- [`docs/PHASE10_USB_KILLSWITCH_SCHEMATIC.md`](docs/PHASE10_USB_KILLSWITCH_SCHEMATIC.md) - Hardware schematics (1,100+ lines, $35-50 BOM)
-- [`PHASE10_COMPLETION_SUMMARY.md`](PHASE10_COMPLETION_SUMMARY.md) - Implementation summary
-
-**Target Threats:**
-- ✅ **WikiLeaks Vault 7 "Fake Power-Off" Attacks** (Weeping Angel, Dark Matter)
-- ✅ **A/B Partition Cross-Contamination** (Slot B malware → Slot A)
-- ✅ **Persistent Bootloader/TEE Rootkits**
-- ✅ **Hardware-Level Surveillance** (camera/mic active when "off")
-- ✅ **Baseband Firmware Backdoors** (Qualcomm XTRA, carrier IQ)
-
-**Implemented Components:**
-
-**1. ML Bootloader Override System** ✅ (612 LOC)
-- User-optional bootloader lock toggle (Settings → Security)
-- Phase 7 ML threat detector integration (4-tier threat levels)
-- Emergency override with 10-second user permission workflow
-- Biometric authentication required for override bypass
-- Instant lock on CRITICAL threats (bootloader tampering, TrustZone compromise)
-- Comprehensive audit logging (/var/log/qwamos/ml_override.log)
-
-**2. Firmware Integrity Monitor** ✅ (587 LOC)
-- Runtime bootloader hash verification (SHA256, every 5 minutes)
-- TrustZone integrity checking (detect TEE compromise)
-- Firmware version rollback detection (prevent downgrade attacks)
-- Power rail monitoring (detect fake power-off "Weeping Angel" attacks)
-- ML override integration (auto-lock bootloader on compromise)
-
-**3. A/B Partition Isolation** ✅ (523 LOC)
-- Cross-slot write detection (Android Slot B → QWAMOS Slot A)
-- Hash verification of inactive slot (SHA256)
-- Mount-level isolation (remount Slot B as read-only when QWAMOS boots)
-- Shared resource monitoring (persist, modem, bluetooth partitions)
-- ML override integration (lock on cross-slot attack)
-
-**4. Hardware Kill Switch Kernel Driver** ✅ (342 LOC C)
-- USB-C GPIO control via CC/SBU pins (camera, mic, cellular)
-- 3-channel relay control (physical air-gap disconnection)
-- Sysfs interface: /sys/kernel/usb_killswitch/
-- Root-only access with audit logging
-- Cannot be bypassed by software (true hardware disconnect)
-
-**5. Hardware Kill Switch Module** ✅ (Schematics Complete)
-- Complete circuit diagrams and PCB layout
-- Bill of materials ($35-50 USD, all components)
-- 3D printable enclosure (ABS/PLA, 80x55x25mm)
-- Assembly instructions and testing procedures
-- USB-C passthrough (charging and data work normally)
-
-**6. Bootloader Lock UI Toggle** ✅ (428 LOC React Native)
-- Settings → Security → Bootloader Lock
-- Real-time status display (LOCKED/UNLOCKED)
-- Override warning system (red alert when ML emergency lock active)
-- Threat history viewer (last 60 minutes)
-- Biometric reset for emergency override
-
-**Implementation Statistics:**
-- **Total Code:** 3,534 lines (Python, C, TypeScript, Bash)
-- **Documentation:** 20,000+ words (specs, schematics, completion summary)
-- **Test Coverage:** 17 integration tests (100% pass)
-- **Files Created:** 10 files (7 code, 3 documentation)
-- **Development Time:** 1 day (2025-11-05)
-
-**Deployment:**
-```bash
-cd /data/data/com.termux/files/home/QWAMOS/security
-sudo ./deploy_phase10.sh
-```
-
-**Status:** ✅ **IMPLEMENTATION COMPLETE** - Ready for device testing
-
-**Security Validation:**
-- ✅ WikiLeaks Vault 7 "Dark Matter" attack: **MITIGATED**
-- ✅ WikiLeaks Vault 7 "Weeping Angel" attack: **MITIGATED**
-- ✅ A/B partition cross-contamination: **MITIGATED**
-- ✅ Bootloader persistence attacks: **MITIGATED**
-- ✅ TrustZone compromise detection: **IMPLEMENTED**
-
-**Innovation:**
-🌟 **World's First:**
-- Mobile OS with ML-powered emergency bootloader lock (user-optional + AI override)
-- Runtime firmware integrity monitoring with fake power-off detection
-- Physical hardware kill switches (USB-C GPIO-controlled relays)
-- A/B partition isolation (prevent Android → QWAMOS cross-contamination)
-- 10-second user permission workflow (biometric required)
+See full details in [PHASE10_COMPLETION_SUMMARY.md](PHASE10_COMPLETION_SUMMARY.md)
 
 ---
 
-### Phase 11: Flutter Hypervisor UI (100% ✅) ⭐ **PRODUCTION READY**
-**Complete Implementation** - [`ui/README.md`](ui/README.md)
+### Phase 11: Flutter Hypervisor UI (100% ✅)
+- ✅ 26 widgets across 2 dashboards (main + advanced)
+- ✅ GPU-accelerated GLSL shaders (neon overlay, motion blur, noise flicker)
+- ✅ 100% coverage of all QWAMOS backend features (Phases 3-10)
+- ✅ Material Design 3 dark theme with neon glow effects
 
-**Pixel-perfect Flutter UI with GPU-accelerated neon shaders and 100% feature coverage**
-
-**Implementation Statistics:**
-- **26 widgets** across 2 dashboards (main + advanced)
-- **~1,500 lines** of new widget code (this commit)
-- **34+ total files** (widgets, pages, theme system, shaders)
-- **100% coverage** of all QWAMOS backend features (Phases 3-10)
-- **Development time:** 2 days (2025-11-05)
-
-**Documentation:**
-- [`ui/README.md`](ui/README.md) - Complete widget inventory and build guide
-- [`ui/IMPLEMENTATION_GUIDE.md`](ui/IMPLEMENTATION_GUIDE.md) - 470+ line specification
-
-**Core Components:**
-
-**1. Theme System** ✅
-- Complete color palette (Neon Green #00FFB3, Cyber Violet #B368FF, Aqua Blue #00E5FF)
-- Typography system (Inter + Roboto Mono with Google Fonts)
-- Dark theme configuration (Material Design 3)
-- Glow effects utilities (neon shadows, status dots, pulsing animations)
-
-**2. GPU Shaders** ✅ (3 GLSL shaders)
-- `neon_overlay.frag` - Pulsing neon glow effect
-- `motion_blur.frag` - Directional motion blur (8 samples)
-- `noise_flicker.frag` - Holographic grain overlay with scanlines
-
-**3. Main Dashboard Widgets** ✅ (16 widgets)
-- Security Status Panel (Encryption/Kyber/ChaCha20 indicators)
-- VeraCrypt Volumes Manager
-- Encryption Manager (Kyber-1024 key generation)
-- Network Gateway (TOR/I2P/DNS/VPN status)
-- Airgap Controls (USB/Bluetooth/NFC blocks)
-- OSINT Tools Grid (Haloscope/Shodan/Torchmeter/Rosary)
-- HAL-GPT Neural Learning Interface
-- **ML Threat Detection Dashboard** (Phase 7) - System health meter, threat list
-- **AI Assistants Control Panel** (Phase 6) - Kali GPT/Claude/ChatGPT management
-- **AI App Builder Interface** (Phase 9) - Triple-AI app generation pipeline
-- **SecureType Keyboard Settings** (Phase 8) - PQ keyboard configuration
-- x86 Emulation Monitor (CPU/RAM circular progress rings)
-- Theme Customization (Dark mode, theme, font selector)
-- Bootloader Integration (Status and unlock controls)
-- Quick Actions (Create VM, Decoy-VM, Destroy, Isolate)
-- VM List (work-vm, kali-nethunter, vault-vm, disposable-vm)
-
-**4. Advanced Dashboard Widgets** ✅ (10 widgets)
-- Chimæra Protocol (Decay sliders with purple theme)
-- Quantum Decay Chain (IP status boxes for Tor/I2P/VPN/DNS)
-- Silent Self-Destruct (Countdown timer with trigger checklist)
-- ÆGIS Vault (Lock/unlock interface)
-- Crypto Wallet Hub (Samourai/Colde wallet cards)
-- Adaptive Skin Layers (Theme preview cards)
-- **Network Isolation Controller** (Phase 5) - 6 routing modes, service toggles
-- **Dom0 Policy Manager** (Phase 3) - 12 security policy toggles
-- **Hardware Security Controls** (Phase 10) - ML bootloader lock, kill switches
-- **Emergency Protection** - Panic gesture, duress profiles, emergency wipe
-
-**Feature Coverage:**
-- ✅ Phase 3: Dom0 Policy Manager widget
-- ✅ Phase 4: Encryption Manager widget
-- ✅ Phase 5: Network Isolation Controller widget
-- ✅ Phase 6: AI Assistants Control Panel widget
-- ✅ Phase 7: ML Threat Detection Dashboard widget
-- ✅ Phase 8: SecureType Keyboard Settings widget
-- ✅ Phase 9: AI App Builder Interface widget
-- ✅ Phase 10: Hardware Security Controls widget
-- ✅ Additional: Emergency Protection, VeraCrypt, OSINT, Crypto Wallet, and more
-
-**Technical Features:**
-- GPU-accelerated GLSL shaders (GLSL version 460 core)
-- flutter_animate for smooth transitions (easeInOutCubic)
-- Custom painted circular progress indicators
-- Stateful widgets with interactive controls
-- Material Design 3 with dark theme
-- Neon glow effects with layered shadows
-- Shimmer animations on critical elements
-
-**Build Instructions:**
-```bash
-cd /data/data/com.termux/files/home/QWAMOS/ui
-flutter pub get
-flutter run                    # Test on device
-flutter build apk --release    # Build production APK
-```
+See full details in [ui/README.md](ui/README.md)
 
 **Output:** `build/app/outputs/flutter-apk/app-release.apk`
 
