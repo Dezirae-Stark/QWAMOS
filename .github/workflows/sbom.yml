@@ -115,6 +115,14 @@ jobs:
 
           if ! git diff --staged --quiet; then
             git commit -m "chore: Update SBOM for ${{ steps.version.outputs.version }}"
+
+            # Pull latest changes before pushing
+            git pull --rebase origin master || {
+              echo "Rebase failed, attempting merge..."
+              git rebase --abort
+              git pull --no-rebase origin master
+            }
+
             git push origin master
           fi
 

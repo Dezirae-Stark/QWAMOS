@@ -89,47 +89,45 @@ RUN rm -f /usr/lib/python*/EXTERNALLY-MANAGED
 
 # Install Python packages (development + testing)
 # Note: Using system pip without upgrade to avoid Debian externally-managed-environment issues
+# Split into smaller groups for better caching and error isolation
+
+# Core packages first
 RUN python3 -m pip install --no-cache-dir \
-    # Cryptography
     cryptography \
-    pycryptodome \
-    # Testing
+    pycryptodome
+
+# Testing frameworks
+RUN python3 -m pip install --no-cache-dir \
     pytest \
     pytest-cov \
     pytest-xdist \
     pytest-benchmark \
     pytest-timeout \
-    hypothesis \
-    # Linting
+    hypothesis
+
+# Code quality tools
+RUN python3 -m pip install --no-cache-dir \
     black \
     pylint \
     mypy \
     bandit \
     flake8 \
     isort \
-    autopep8 \
-    # Security scanning
+    yapf
+
+# Security and build tools
+RUN python3 -m pip install --no-cache-dir \
     safety \
     pip-audit \
-    semgrep \
-    # Documentation
-    sphinx \
-    sphinx-rtd-theme \
-    mkdocs \
-    mkdocs-material \
-    # Build tools
     build \
-    twine \
-    # Development tools
+    twine
+
+# Development and LSP tools
+RUN python3 -m pip install --no-cache-dir \
     ipython \
     ipdb \
-    pdb++ \
-    # LSP servers
     python-lsp-server \
-    pylsp-mypy \
-    # Formatters
-    autopep8 \
-    yapf
+    pylsp-mypy
 
 # Install Kotlin
 ENV KOTLIN_VERSION=1.9.20

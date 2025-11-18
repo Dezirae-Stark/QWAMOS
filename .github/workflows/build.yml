@@ -24,8 +24,8 @@ jobs:
         REPO_SIZE=$(du -sh . | cut -f1)
         echo "Repository size: $REPO_SIZE"
 
-        # Ensure no large files were committed
-        find . -type f -size +50M | while read file; do
+        # Ensure no large files were committed (exclude .git directory)
+        find . -type f -size +50M -not -path "./.git/*" | while read file; do
           echo "ERROR: Large file detected: $file"
           exit 1
         done

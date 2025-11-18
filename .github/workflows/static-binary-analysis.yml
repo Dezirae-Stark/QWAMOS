@@ -64,8 +64,7 @@ jobs:
             cmake \
             nasm \
             binutils \
-            python3-dev \
-            pyinstaller
+            python3-dev
 
           pip install pyinstaller nuitka
 

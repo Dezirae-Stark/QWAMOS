@@ -300,6 +300,14 @@ jobs:
             exit 0
           }
 
+          # Pull latest changes and rebase
+          echo "Pulling latest changes..."
+          git pull --rebase origin master || {
+            echo "Rebase failed, attempting to resolve..."
+            git rebase --abort
+            git pull --no-rebase origin master
+          }
+
           # Push changes
           echo "Pushing changes to master..."
           git push origin master
