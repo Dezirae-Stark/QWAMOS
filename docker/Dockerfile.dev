@@ -84,13 +84,12 @@ RUN apt-get update && apt-get install -y \
 # Set up workspace
 WORKDIR /workspace
 
-# Install Python packages (development + testing)
-RUN pip3 install --no-cache-dir --upgrade \
-    pip \
-    setuptools \
-    wheel
+# Remove EXTERNALLY-MANAGED marker to allow pip installs (safe in Docker containers)
+RUN rm -f /usr/lib/python*/EXTERNALLY-MANAGED
 
-RUN pip3 install --no-cache-dir \
+# Install Python packages (development + testing)
+# Note: Using system pip without upgrade to avoid Debian externally-managed-environment issues
+RUN python3 -m pip install --no-cache-dir \
     # Cryptography
     cryptography \
     pycryptodome \
