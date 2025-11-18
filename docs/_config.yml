@@ -1,0 +1,159 @@
+# QWAMOS Documentation - Jekyll Configuration
+# GitHub Pages site configuration
+
+# Site settings
+title: QWAMOS Documentation
+description: >-
+  Quantum-Resistant Workstation and Mobile Operating System.
+  Privacy-focused, VM-isolated, anonymized computing platform for Android.
+
+baseurl: "/QWAMOS"
+url: "https://dezirae-stark.github.io"
+
+# Repository
+repository: Dezirae-Stark/QWAMOS
+github_username: Dezirae-Stark
+
+# Theme configuration
+theme: just-the-docs
+color_scheme: dark
+
+# Just the Docs configuration
+search_enabled: true
+search:
+  heading_level: 2
+  previews: 3
+  preview_words_before: 5
+  preview_words_after: 10
+  tokenizer_separator: /[\s/]+/
+  rel_url: true
+  button: true
+
+# Navigation
+nav_sort: case_insensitive
+
+# Footer content
+footer_content: >-
+  Copyright &copy; 2025 QWAMOS Project. Licensed under AGPL-3.0.
+  <br>
+  <a href="https://github.com/Dezirae-Stark/QWAMOS">GitHub Repository</a> |
+  <a href="https://github.com/Dezirae-Stark/QWAMOS/wiki">Wiki</a> |
+  <a href="mailto:qwamos@tutanota.com">Contact</a>
+
+# Back to top link
+back_to_top: true
+back_to_top_text: "Back to top"
+
+# Logo
+logo: "/assets/images/qwamos-logo.png"
+favicon_ico: "/assets/images/favicon.ico"
+
+# Aux links for the upper right navigation
+aux_links:
+  "QWAMOS on GitHub":
+    - "https://github.com/Dezirae-Stark/QWAMOS"
+  "Download Latest Release":
+    - "https://github.com/Dezirae-Stark/QWAMOS/releases/latest"
+  "Sponsor":
+    - "https://github.com/sponsors/Dezirae-Stark"
+
+# Makes Aux links open in a new tab
+aux_links_new_tab: true
+
+# Heading anchor links
+heading_anchors: true
+
+# Markdown configuration
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: true
+
+# Plugins
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-feed
+  - jekyll-github-metadata
+
+# SEO tag configuration
+lang: en-US
+author:
+  name: QWAMOS Project
+  email: qwamos@tutanota.com
+  twitter: qwamos
+
+social:
+  name: QWAMOS Project
+  links:
+    - https://github.com/Dezirae-Stark/QWAMOS
+
+# Twitter card
+twitter:
+  card: summary_large_image
+  username: qwamos
+
+# Collections (for organized documentation)
+collections:
+  guides:
+    permalink: "/:collection/:path/"
+    output: true
+  architecture:
+    permalink: "/:collection/:path/"
+    output: true
+  security:
+    permalink: "/:collection/:path/"
+    output: true
+
+# Defaults for collections
+defaults:
+  - scope:
+      path: ""
+      type: "guides"
+    values:
+      layout: "default"
+      nav_order: 2
+  - scope:
+      path: ""
+      type: "architecture"
+    values:
+      layout: "default"
+      nav_order: 3
+  - scope:
+      path: ""
+      type: "security"
+    values:
+      layout: "default"
+      nav_order: 4
+
+# Exclude from processing
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - "*.swp"
+  - "*.bak"
+  - "*~"
+
+# Include files
+include:
+  - _pages
+
+# Enable GitHub Pages
+github: [metadata]
+
+# Compression
+sass:
+  style: compressed
+
+# Timezone
+timezone: America/Los_Angeles

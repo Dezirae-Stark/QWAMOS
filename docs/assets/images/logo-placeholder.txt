@@ -1,0 +1,22 @@
+# QWAMOS Logo Placeholder
+
+This directory should contain:
+- qwamos-logo.png (main logo for the site header)
+- favicon.ico (browser favicon)
+
+To add actual logo files:
+1. Create or design a QWAMOS logo
+2. Export as PNG (recommended: 200x50px for header)
+3. Create favicon.ico (16x16, 32x32, 48x48 sizes)
+4. Place files in this directory
+5. Update _config.yml if filenames differ
+
+For now, the site will use Just the Docs default styling without a logo.
+
+ASCII Logo concept:
+```
+  ___   _    _   ____  __  __   ___   ___
+ / _ \ | |  | | / () \ |  \/  | / () \ / __)
+ \___\  \_/\_/  \____/ |_|\/|_| \____/ \___)
+ Quantum-Resistant Workstation & Mobile OS
+```

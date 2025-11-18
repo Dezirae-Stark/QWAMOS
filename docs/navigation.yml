@@ -1,0 +1,150 @@
+# QWAMOS Documentation Navigation Structure
+# This file defines the navigation hierarchy for Just the Docs theme
+
+# Main navigation sections
+navigation:
+  - title: Home
+    url: /
+    order: 1
+
+  - title: Getting Started
+    order: 2
+    children:
+      - title: Installation & Setup
+        url: /ANDROID_VM_SETUP_GUIDE
+      - title: User VM Creation
+        url: /USER_VM_CREATION_GUIDE
+      - title: VM Configurations
+        url: /VM_CONFIGURATIONS
+      - title: Setup Guide
+        url: /SETUP_GUIDE
+
+  - title: Architecture
+    order: 3
+    children:
+      - title: Technical Architecture
+        url: /TECHNICAL_ARCHITECTURE
+      - title: Architecture Overview
+        url: /ARCHITECTURE
+      - title: Hypervisor Specification
+        url: /PHASE3_HYPERVISOR_SPEC
+      - title: Network Isolation
+        url: /PHASE5_NETWORK_ISOLATION
+
+  - title: Security
+    order: 4
+    children:
+      - title: Security Policy
+        url: ../SECURITY
+      - title: Storage Encryption
+        url: /STORAGE_ENCRYPTION
+      - title: Post-Quantum Crypto
+        url: /VERACRYPT_POST_QUANTUM_CRYPTO
+      - title: Secure Keyboard
+        url: /SECURE_KEYBOARD_SPEC
+      - title: Hardware Security
+        url: /PHASE10_ADVANCED_HARDWARE_SECURITY
+      - title: Hardening Standard
+        url: /QWAMOS_Hardening_Standard
+      - title: SLSA Roadmap
+        url: /QWAMOS_SLSA_Roadmap
+      - title: Security Audit Readiness
+        url: /QWAMOS_Security_Audit_Readiness_Certificate
+
+  - title: Network & Anonymization
+    order: 5
+    children:
+      - title: Whonix Gateway Setup
+        url: /WHONIX_GATEWAY_SETUP
+      - title: InviZible Pro Integration
+        url: /INVIZIBLE_PRO_INTEGRATION
+      - title: Network Isolation
+        url: /PHASE5_NETWORK_ISOLATION
+
+  - title: AI & Machine Learning
+    order: 6
+    children:
+      - title: Kali GPT Integration
+        url: /KALI_GPT_INTEGRATION
+      - title: AI Assistants (Phase 6)
+        url: /PHASE6_AI_ASSISTANTS_INTEGRATION
+      - title: ML Threat Detection
+        url: /PHASE7_ML_THREAT_DETECTION
+      - title: ML Training Guide
+        url: /PHASE7_ML_TRAINING_GUIDE
+
+  - title: Advanced Features
+    order: 7
+    children:
+      - title: Chimera Decoy Protocol
+        url: /CHIMERA_DECOY_PROTOCOL
+      - title: Data Migration
+        url: /SEAMLESS_DATA_MIGRATION
+      - title: Self-Flashing Installer
+        url: /SELF_FLASHING_INSTALLER
+      - title: USB Kill Switch
+        url: /PHASE10_USB_KILLSWITCH_SCHEMATIC
+      - title: Secure Voice
+        url: /QWAMOS-Secure-Voice-PQ
+      - title: Secure Voice Implementation
+        url: /QWAMOS-SECURE-VOICE-IMPLEMENTATION
+
+  - title: Testing & Deployment
+    order: 8
+    children:
+      - title: Phase 5 Testing Guide
+        url: /PHASE5_TESTING_GUIDE
+      - title: No-Root Testing Plan
+        url: /PHASE5_NO_ROOT_TESTING_PLAN
+      - title: Phase 6 Deployment
+        url: /PHASE6_DEPLOYMENT_GUIDE
+      - title: Phase 7 Deployment
+        url: /PHASE7_DEPLOYMENT_GUIDE
+
+  - title: Project Status
+    order: 9
+    children:
+      - title: Current Status
+        url: /PROJECT_STATUS
+      - title: Phase 5 Completion
+        url: /PHASE5_COMPLETION_SUMMARY
+      - title: Phase 7 Completion
+        url: /PHASE7_COMPLETION_SUMMARY
+      - title: UI Status
+        url: /TOUCHSCREEN_AND_UI_STATUS
+
+  - title: API & Development
+    order: 10
+    children:
+      - title: API Documentation
+        url: /PHASE7_API_DOCUMENTATION
+      - title: Contributing Guidelines
+        url: ../CONTRIBUTING
+      - title: Code of Conduct
+        url: ../CODE_OF_CONDUCT
+
+# External links
+external_links:
+  - title: GitHub Repository
+    url: https://github.com/Dezirae-Stark/QWAMOS
+    icon: github
+
+  - title: GitHub Wiki
+    url: https://github.com/Dezirae-Stark/QWAMOS/wiki
+    icon: book
+
+  - title: Discussions
+    url: https://github.com/Dezirae-Stark/QWAMOS/discussions
+    icon: comments
+
+  - title: Issues
+    url: https://github.com/Dezirae-Stark/QWAMOS/issues
+    icon: bug
+
+  - title: Releases
+    url: https://github.com/Dezirae-Stark/QWAMOS/releases
+    icon: download
+
+  - title: Sponsor
+    url: https://github.com/sponsors/Dezirae-Stark
+    icon: heart
