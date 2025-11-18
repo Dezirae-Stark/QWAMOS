@@ -93,11 +93,11 @@ jobs:
 
           echo "Generating SBOM for QWAMOS ${VERSION}..."
 
-          syft dir:. --config sbom/sbom-config.yml --output json --file "${BUILD_DIR}/sbom.json"
-          syft dir:. --config sbom/sbom-config.yml --output cyclonedx-xml --file "${BUILD_DIR}/sbom.xml"
-          syft dir:. --config sbom/sbom-config.yml --output spdx-json --file "${BUILD_DIR}/sbom.spdx.json"
-          syft dir:. --config sbom/sbom-config.yml --output cyclonedx-json --file "${BUILD_DIR}/sbom.cyclonedx.json"
-          syft dir:. --config sbom/sbom-config.yml --output table --file "${BUILD_DIR}/sbom.txt"
+          syft dir:. --output json --file "${BUILD_DIR}/sbom.json"
+          syft dir:. --output cyclonedx-xml --file "${BUILD_DIR}/sbom.xml"
+          syft dir:. --output spdx-json --file "${BUILD_DIR}/sbom.spdx.json"
+          syft dir:. --output cyclonedx-json --file "${BUILD_DIR}/sbom.cyclonedx.json"
+          syft dir:. --output table --file "${BUILD_DIR}/sbom.txt"
 
           mkdir -p sbom/latest
           cp "${BUILD_DIR}"/* sbom/latest/
