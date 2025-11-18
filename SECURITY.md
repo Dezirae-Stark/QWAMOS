@@ -1,395 +1,716 @@
 # Security Policy
 
-**QWAMOS Security Team**
-**Last Updated:** 2025-11-07
-**Version:** v1.0.0-qbamos-gold
+## Table of Contents
+
+- [Supported Versions](#supported-versions)
+- [Reporting a Vulnerability](#reporting-a-vulnerability)
+- [Vulnerability Reporting Template](#vulnerability-reporting-template)
+- [Response Timeline](#response-timeline)
+- [Disclosure Policy](#disclosure-policy)
+- [Security Researcher Safe Harbor](#security-researcher-safe-harbor)
+- [Security Patch Guidelines](#security-patch-guidelines)
+- [Known Sensitive Components](#known-sensitive-components)
+- [Security Audits & CVEs](#security-audits--cves)
+- [Security Best Practices](#security-best-practices)
 
 ---
 
-## Responsible Disclosure Policy
+## Supported Versions
 
-The QWAMOS project takes security vulnerabilities seriously. We appreciate the security research community's efforts to responsibly disclose issues and will work with researchers to verify, reproduce, and address security vulnerabilities.
+QWAMOS follows a rolling release model with security updates applied to the latest stable version and the previous major version for a limited time.
+
+| Version | Supported          | Security Updates Until |
+| ------- | ------------------ | ---------------------- |
+| main    | :white_check_mark: | Continuous (development) |
+| v1.x.x  | :white_check_mark: | Current stable release |
+| v0.x.x  | :x:                | No longer supported |
+| < v0.1  | :x:                | No longer supported |
+
+**Recommendation**: Always use the latest stable release for optimal security.
+
+**End-of-Life Policy**:
+- Major versions receive security updates for 12 months after the next major release
+- Minor versions receive security updates until the next minor release
+- Patch versions are superseded immediately by the next patch
 
 ---
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in QWAMOS, please report it responsibly.
+**⚠️ CRITICAL: DO NOT disclose security vulnerabilities publicly in GitHub Issues or Discussions.**
 
-### Contact Information
+### Secure Reporting Channels
 
-**Primary Contact:**
-- **Email:** clockwork.halo@tutanota.de
-- **PGP/GPG Fingerprint:** `18C4E89E37D5ECD392F52E85269CD0658D8BD942DCF33BE4E37CC94933E4C4D2`
-- **PGP Key Algorithm:** Ed448
+We take security vulnerabilities seriously and appreciate responsible disclosure. Please report security issues through one of these channels:
 
-**Encrypted Communication:**
-We strongly encourage the use of PGP-encrypted email for vulnerability reports. You can find our public key at:
-- **GitHub:** https://github.com/Dezirae-Stark/QWAMOS/blob/main/gpg_public_key.asc
-- **Keyserver:** (Upload pending)
+#### 1. Private Email (Preferred)
+
+**Email**: [qwamos@tutanota.com](mailto:qwamos@tutanota.com)
+
+**Subject Line Format**: `[SECURITY] Brief vulnerability description`
+
+**Encryption**: We recommend using PGP encryption for sensitive reports:
+- PGP Key: Available on request
+- Fingerprint: Contact us for current key
+
+#### 2. GitHub Private Security Advisory (Alternative)
+
+For GitHub-hosted vulnerabilities, you can use GitHub's private security advisory feature:
+
+1. Go to https://github.com/Dezirae-Stark/QWAMOS/security/advisories
+2. Click "New draft security advisory"
+3. Fill in the details
+4. Submit privately
+
+**Note**: Email is preferred for time-sensitive or critical vulnerabilities.
+
+### What NOT to Do
+
+- ❌ **DO NOT** open public GitHub Issues for security vulnerabilities
+- ❌ **DO NOT** post vulnerability details in Discussions
+- ❌ **DO NOT** disclose vulnerabilities on social media
+- ❌ **DO NOT** share exploits publicly before coordinated disclosure
+- ❌ **DO NOT** test vulnerabilities on systems you don't own or have permission to test
 
 ---
 
-## What to Include in Your Report
+## Vulnerability Reporting Template
 
-Please provide as much information as possible to help us understand and reproduce the vulnerability:
+Please include the following information in your vulnerability report:
 
 ### Required Information
-1. **Vulnerability Description:** Clear explanation of the security issue
-2. **Affected Component:** Which QWAMOS component or module is affected
-3. **Version:** QWAMOS version number (e.g., v1.0.0-alpha, commit hash)
-4. **Impact Assessment:** Potential security impact (confidentiality, integrity, availability)
-5. **Attack Scenario:** Description of how an attacker could exploit this vulnerability
 
-### Optional but Helpful Information
-6. **Proof of Concept:** Steps to reproduce the vulnerability
-7. **Exploit Code:** Working exploit code (if available and safe to share)
-8. **Suggested Fix:** Your recommendation for remediation (if available)
-9. **CVE References:** Related CVE numbers (if applicable)
-10. **Screenshots/Logs:** Visual evidence or log files demonstrating the issue
+```markdown
+## Vulnerability Summary
+
+**Title**: Brief descriptive title
+**Severity**: Critical / High / Medium / Low
+**Component**: [PQC / Gateway / VM Isolation / Panic System / Other]
+**CVE-ID**: (if already assigned)
+
+## Description
+
+Detailed description of the vulnerability and its impact.
+
+## Affected Versions
+
+- Version(s) affected:
+- First vulnerable version:
+- Last vulnerable version:
+
+## Vulnerability Type
+
+Select all that apply:
+- [ ] Cryptographic weakness (algorithm, implementation, key management)
+- [ ] Authentication bypass
+- [ ] Authorization failure
+- [ ] VM escape / isolation breach
+- [ ] Network deanonymization
+- [ ] Information disclosure
+- [ ] Denial of service
+- [ ] Code execution (local / remote)
+- [ ] Privilege escalation
+- [ ] Input validation failure
+- [ ] Memory safety issue (buffer overflow, use-after-free, etc.)
+- [ ] Other: ___________
+
+## Impact Assessment
+
+**Confidentiality**: High / Medium / Low / None
+**Integrity**: High / Medium / Low / None
+**Availability**: High / Medium / Low / None
+
+**Threat Model Tier Affected**: Tier 1 / Tier 2 / Tier 3 / Tier 4 / Tier 5
+(See: https://github.com/Dezirae-Stark/QWAMOS/wiki/Security-Model)
+
+**Exploitability**: Trivial / Easy / Moderate / Difficult / Very Difficult
+
+## Attack Scenario
+
+Describe how an attacker could exploit this vulnerability:
+
+1. Preconditions (what access/conditions are required)
+2. Step-by-step exploitation process
+3. Post-exploitation impact
+
+## Proof of Concept
+
+**DO NOT include working exploits that could cause harm.**
+
+Provide:
+- Conceptual code showing the vulnerability (sanitized)
+- Steps to reproduce (in a safe testing environment)
+- Expected vs actual behavior
+- Screenshots or logs (if applicable)
+
+**Test Environment**:
+- Device:
+- Android Version:
+- QWAMOS Version:
+- Installation Method: Termux / Rooted KVM / Custom ROM
+
+## Affected Components
+
+Specific files, modules, or functions affected:
+
+- File: `path/to/file.py`
+- Function: `function_name()`
+- Line numbers: XX-YY
+
+## Suggested Fix
+
+If you have ideas for mitigating or fixing the vulnerability:
+
+- Proposed solution
+- Alternative approaches
+- Relevant patches or commits (if available)
+
+## References
+
+- Related CVEs:
+- Security advisories:
+- Research papers:
+- Proof of concept code (external links):
+
+## Researcher Information
+
+**Name**: (optional - for attribution in advisory)
+**Affiliation**: (optional)
+**Contact**: (optional - for follow-up)
+**PGP Key**: (optional - for encrypted communication)
+
+**Attribution Preference**:
+- [ ] Public acknowledgment with name
+- [ ] Public acknowledgment anonymously
+- [ ] No public acknowledgment
+
+## Additional Notes
+
+Any additional context or information.
+```
 
 ---
 
 ## Response Timeline
 
-We commit to the following response timeline for security vulnerability reports:
+We are committed to responding to security reports promptly and transparently.
+
+### Expected Response Times
 
 | Stage | Timeline | Description |
 |-------|----------|-------------|
-| **Initial Acknowledgment** | Within 7 days | Confirm receipt of your report |
-| **Initial Assessment** | Within 14 days | Triage severity and confirm vulnerability |
-| **Progress Update** | Every 7 days | Regular updates on investigation progress |
-| **Resolution Target** | Within 30 days | Fix critical vulnerabilities (may vary by severity) |
-| **Public Disclosure** | 90 days | Coordinated disclosure after fix is released |
+| **Initial Response** | 24-48 hours | Acknowledgment of receipt |
+| **Triage & Validation** | 3-7 days | Confirm vulnerability and assess severity |
+| **Patch Development** | 7-30 days | Develop and test fix (depends on complexity) |
+| **Security Advisory** | 30-90 days | Coordinated public disclosure |
+| **CVE Assignment** | As needed | Request CVE-ID if applicable |
 
-**Note:** Timeline may vary based on vulnerability complexity and severity. We will keep you informed throughout the process.
+### Severity-Based SLAs
 
----
+**Critical Vulnerabilities** (CVSS 9.0-10.0):
+- VM escape, crypto breaks, network deanonymization
+- Initial response: 24 hours
+- Patch target: 7 days
+- Disclosure: 30 days
 
-## Severity Classification
+**High Vulnerabilities** (CVSS 7.0-8.9):
+- Privilege escalation, authentication bypass, data exposure
+- Initial response: 48 hours
+- Patch target: 14 days
+- Disclosure: 60 days
 
-We use the following severity levels to prioritize vulnerabilities:
+**Medium Vulnerabilities** (CVSS 4.0-6.9):
+- DoS, information disclosure, input validation issues
+- Initial response: 72 hours
+- Patch target: 30 days
+- Disclosure: 90 days
 
-### **CRITICAL** (CVSS 9.0-10.0)
-- Remote code execution without authentication
-- Complete system compromise
-- Bootloader/kernel privilege escalation
-- TrustZone/TEE compromise
-- Post-quantum crypto implementation flaws
+**Low Vulnerabilities** (CVSS 0.1-3.9):
+- Minor issues, theoretical attacks
+- Initial response: 7 days
+- Patch target: Next release
+- Disclosure: 90 days
 
-**Resolution Target:** 7-14 days
-
----
-
-### **HIGH** (CVSS 7.0-8.9)
-- Authenticated remote code execution
-- VM escape vulnerabilities
-- Bypass of security isolation (Dom0 ↔ VM)
-- Network anonymity leaks (Tor/I2P bypass)
-- Hardware kill switch bypass
-
-**Resolution Target:** 14-30 days
-
----
-
-### **MEDIUM** (CVSS 4.0-6.9)
-- Information disclosure (sensitive data)
-- Denial of service attacks
-- Privilege escalation (within VM)
-- Authentication bypass (non-critical components)
-- Cryptographic weaknesses (non-breaking)
-
-**Resolution Target:** 30-60 days
+**Note**: Timelines may be extended by mutual agreement if additional research or development time is needed.
 
 ---
 
-### **LOW** (CVSS 0.1-3.9)
-- Minor information disclosure
-- UI/UX security issues
-- Non-exploitable bugs
-- Low-impact denial of service
+## Disclosure Policy
 
-**Resolution Target:** 60-90 days
+QWAMOS follows a **Coordinated Vulnerability Disclosure** policy.
 
----
+### Disclosure Process
 
-## Scope
-
-### In-Scope Components
-
-The following QWAMOS components are within the scope of our security program:
-
-#### **Core System**
-- ✅ Bootloader (U-Boot) and secure boot chain
-- ✅ Linux kernel and KVM hypervisor
-- ✅ Dom0 policy manager and control bus
-- ✅ VM isolation and compartmentalization
-
-#### **Cryptography (Critical)**
-- ✅ Post-quantum cryptography (Kyber-1024, ChaCha20, BLAKE3)
-- ✅ Key derivation (Argon2id)
-- ✅ Volume encryption (PostQuantumVolume)
-- ✅ TrustZone/StrongBox integration
-- ✅ Secure boot and attestation
-
-#### **Network Security**
-- ✅ Tor/I2P/DNSCrypt integration
-- ✅ Network isolation and firewall rules
-- ✅ IP leak detection
-- ✅ Baseband isolation
-
-#### **Hardware Security (Phase 10)**
-- ✅ ML bootloader override system
-- ✅ Firmware integrity monitor
-- ✅ A/B partition isolation
-- ✅ Hardware kill switch kernel driver
-
-#### **AI & ML Systems**
-- ✅ AI assistants (Kali GPT, Claude, ChatGPT)
-- ✅ ML threat detection (network, filesystem, syscall)
-- ✅ AI app builder and security auditor
-- ✅ SecureType keyboard (PQ encryption, ML anomaly detection)
-
-#### **User Interface**
-- ✅ React Native UI components
-- ✅ Flutter hypervisor UI
-- ✅ Native module bridges (Java ↔ Python)
-
----
-
-### Out-of-Scope
-
-The following are **NOT** considered valid security vulnerabilities:
-
-❌ **Upstream Dependencies**
-- Vulnerabilities in Linux kernel, QEMU, Tor, etc. (report to upstream projects)
-- CVEs in third-party libraries (we will track and patch, but not our vulnerability)
-
-❌ **Physical Access Attacks**
-- Physical hardware extraction (e.g., decapping chips)
-- TEMPEST/RF side-channel attacks (requires specialized equipment)
-- Rubber-hose cryptanalysis (coercion)
-
-❌ **Theoretical Attacks**
-- Attacks requiring >$1M budget or nation-state resources
-- Quantum computer attacks (we use post-quantum crypto, but current quantum computers cannot break it)
-- Supply chain attacks on hardware manufacturers
-
-❌ **Social Engineering**
-- Phishing attacks against users
-- Credential theft via non-technical means
-
-❌ **Non-Security Issues**
-- Feature requests
-- Performance issues (unless exploitable)
-- UI/UX bugs (unless security impact)
-
----
-
-## Public Disclosure Policy
-
-### Coordinated Disclosure
-
-We believe in **responsible coordinated disclosure**:
-
-1. **Private Reporting:** Report vulnerability privately to our security team
-2. **Investigation:** We investigate and develop a fix
-3. **Fix Release:** Security patch released (versioned update)
-4. **Public Disclosure:** Vulnerability details published 90 days after fix release
-5. **Credit:** Researcher credited in security advisory (if desired)
+1. **Private Reporting**: Researcher reports vulnerability privately
+2. **Acknowledgment**: We acknowledge receipt within 24-48 hours
+3. **Validation**: We confirm and assess the vulnerability (3-7 days)
+4. **Patch Development**: We develop a fix (timeline depends on severity)
+5. **Security Advisory**: We prepare a draft security advisory
+6. **Researcher Review**: Researcher reviews advisory and patch (optional)
+7. **Release**: We release patched version
+8. **Public Disclosure**: We publish security advisory (coordinated timing)
+9. **CVE Publication**: CVE details published (if applicable)
 
 ### Disclosure Timeline
 
-- **Day 0:** Vulnerability reported to QWAMOS security team
-- **Day 7:** Initial acknowledgment and severity assessment
-- **Day 14-30:** Fix development and testing
-- **Day 30:** Security patch released to users
-- **Day 90:** Public disclosure of vulnerability details
-- **Day 120:** Full technical write-up (if applicable)
+**Standard Timeline**: 90 days from initial report to public disclosure
 
-**Researcher Credit:**
-- Your name (or pseudonym) listed in security advisory
-- CVE assignment (if applicable)
-- Acknowledgment in CHANGELOG and release notes
+**Early Disclosure**: May occur if:
+- Fix is released and widely deployed
+- Vulnerability is being actively exploited in the wild
+- Vulnerability details are already public
+- Mutual agreement with researcher
 
----
+**Extended Timeline**: May occur if:
+- Fix is complex and requires extensive testing
+- Coordinating with upstream dependencies
+- Multiple vulnerabilities being addressed together
+- Researcher requests extension
 
-## Security Advisories
+### Public Advisory Contents
 
-Published security advisories will be available at:
+Our security advisories include:
 
-- **GitHub Security Advisories:** https://github.com/Dezirae-Stark/QWAMOS/security/advisories
-- **CHANGELOG:** https://github.com/Dezirae-Stark/QWAMOS/blob/main/CHANGELOG.md
-- **Mailing List:** (To be established)
-
-**Advisory Format:**
-- **CVE Number:** (if assigned)
-- **Severity:** Critical/High/Medium/Low
-- **Affected Versions:** (e.g., v1.0.0 - v1.0.5)
-- **Fixed Version:** (e.g., v1.0.6)
-- **Vulnerability Description:** Technical details
-- **Impact:** Exploitation scenarios
-- **Mitigation:** Workarounds (if available)
-- **Credit:** Researcher attribution
+- Vulnerability description (non-technical summary)
+- Affected versions
+- Fixed versions
+- Severity rating (CVSS score)
+- Impact assessment
+- Mitigation steps (if patch not immediately available)
+- Upgrade instructions
+- Researcher acknowledgment (with permission)
+- Timeline of disclosure
+- CVE-ID (if assigned)
 
 ---
 
-## Security Hardening Recommendations
+## Security Researcher Safe Harbor
+
+QWAMOS is committed to supporting security researchers who help improve our security.
+
+### Safe Harbor Provisions
+
+If you comply with this security policy, we will:
+
+✅ **Not pursue legal action** against you for security research activities
+✅ **Not report you to law enforcement** for good faith security research
+✅ **Work with you** to understand and resolve the vulnerability
+✅ **Publicly acknowledge** your contribution (with your permission)
+✅ **Consider you** for our security researcher recognition program
+
+### Safe Harbor Requirements
+
+To qualify for safe harbor protections, you must:
+
+1. **Follow Responsible Disclosure**: Report vulnerabilities privately and allow reasonable time for patching
+2. **Avoid Harm**: Do not exploit vulnerabilities for malicious purposes
+3. **Respect Privacy**: Do not access, modify, or delete data belonging to others
+4. **Test Responsibly**: Only test on your own systems or systems you have explicit permission to test
+5. **Avoid Service Disruption**: Do not perform testing that could degrade or disrupt services
+6. **Follow the Law**: Comply with all applicable laws in your jurisdiction
+
+### Legal Considerations
+
+**This safe harbor does NOT cover**:
+
+- ❌ Unauthorized access to production systems or user data
+- ❌ Social engineering attacks on QWAMOS developers or users
+- ❌ Physical attacks on infrastructure
+- ❌ Denial of service attacks
+- ❌ Automated scanning that disrupts services
+- ❌ Activities that violate laws in your jurisdiction
+
+**Disclaimer**: This policy is a good faith commitment but does not create a legally binding contract. We cannot control the actions of third parties, upstream dependencies, or law enforcement.
+
+---
+
+## Security Patch Guidelines
+
+If you would like to submit a security patch, please follow these guidelines:
+
+### Before Submitting a Patch
+
+1. **Report the vulnerability first** via private channels (email or GitHub Security Advisory)
+2. **Wait for triage** - Let us confirm the vulnerability and coordinate a fix
+3. **Discuss your approach** - We may have architectural constraints or alternative solutions
+
+### Submitting Security Patches
+
+**DO**:
+- ✅ Submit patches via private channels (email or private fork)
+- ✅ Include clear commit messages explaining the fix
+- ✅ Add tests that verify the fix
+- ✅ Update documentation if behavior changes
+- ✅ Follow our coding standards (see CONTRIBUTING.md)
+- ✅ Sign your commits with GPG (preferred)
+
+**DON'T**:
+- ❌ Submit security patches via public pull requests
+- ❌ Reference the vulnerability in commit messages (use vague descriptions)
+- ❌ Include proof-of-concept exploits in patch comments
+- ❌ Break backward compatibility without discussion
+- ❌ Introduce new dependencies without approval
+
+### Patch Review Process
+
+1. We review the patch privately
+2. We may request changes or clarifications
+3. We test the patch across all VM modes and gateways
+4. We integrate the patch into our codebase (may refactor)
+5. We credit you in the security advisory (with permission)
+6. We release the patched version
+7. We publicly acknowledge your contribution
+
+### Security Patch Attribution
+
+If you submit a security patch:
+- You will be credited in the security advisory (unless you prefer anonymity)
+- Your name will appear in CHANGELOG.md
+- You may receive a CVE "Discovered By" credit
+- You will be recognized in our Security Researchers Hall of Fame
+
+---
+
+## Known Sensitive Components
+
+The following components are particularly security-sensitive and should be carefully reviewed when making changes or reporting vulnerabilities.
+
+### 1. Post-Quantum Cryptography (PQC) Stack
+
+**Location**: `qwamos/crypto/`
+
+**Critical Modules**:
+- **Kyber-1024 KEM** (`kyber.py`): Key encapsulation mechanism for quantum-resistant key exchange
+- **ChaCha20-Poly1305 AEAD** (`symmetric.py`): Authenticated encryption with associated data
+- **BLAKE3 Hashing** (`hash.py`): Cryptographic hash function for integrity verification
+- **Key Derivation** (`kdf.py`): KDF for deriving encryption keys
+- **Random Number Generation** (`random.py`): Cryptographically secure randomness
+
+**Vulnerability Types to Watch For**:
+- ⚠️ Side-channel attacks (timing, cache, power analysis)
+- ⚠️ Weak randomness or entropy issues
+- ⚠️ Key reuse or improper key rotation
+- ⚠️ Algorithm implementation flaws
+- ⚠️ Memory leaks of key material
+- ⚠️ Improper key storage or transmission
+
+**Impact if Compromised**:
+- Complete confidentiality loss (all encrypted data)
+- VM disk decryption
+- Network traffic decryption
+- Authentication bypass
+
+**Testing Requirements**:
+```bash
+# Run crypto test suite
+pytest tests/crypto/ -v
+
+# Test key generation
+python3 -c "from qwamos.crypto.kyber import generate_keypair; generate_keypair()"
+
+# Test encryption/decryption
+python3 tests/crypto/test_aead.py
+```
+
+---
+
+### 2. Gateway Stack (Network Anonymization)
+
+**Location**: `qwamos/gateway/`
+
+**Critical Components**:
+- **Tor Integration** (`tor.py`): SOCKS5 proxy for Tor network access
+- **I2P Integration** (`i2p.py`): HTTP proxy for I2P network access
+- **DNSCrypt** (`dnscrypt.py`): DNS-over-HTTPS for DNS privacy
+- **Gateway Manager** (`manager.py`): Orchestrates gateway selection and failover
+- **Traffic Router** (`router.py`): Routes traffic through gateways
+
+**Vulnerability Types to Watch For**:
+- ⚠️ IP/DNS leaks (bypass of anonymization)
+- ⚠️ Clearnet fallback without warning
+- ⚠️ Correlation attacks (timing, traffic analysis)
+- ⚠️ MITM attacks on gateway connections
+- ⚠️ Credential leaks in gateway configuration
+- ⚠️ DNS rebinding attacks
+
+**Impact if Compromised**:
+- User deanonymization
+- Real IP address exposure
+- Location tracking
+- Network activity correlation
+- Censorship bypass failure
+
+**Testing Requirements**:
+```bash
+# Test Tor connectivity
+curl --socks5 127.0.0.1:9050 https://check.torproject.org
+
+# Test I2P connectivity
+curl --proxy http://127.0.0.1:4444 http://stats.i2p/
+
+# Test DNS resolution
+dig @127.0.0.1 -p 5353 google.com
+
+# Check for leaks
+python3 tests/gateway/test_leak_detection.py
+```
+
+---
+
+### 3. VM Isolation Layer
+
+**Location**: `qwamos/vm/`
+
+**Critical Components**:
+- **QEMU Backend** (`qemu.py`): Software-based VM emulation
+- **Chroot Backend** (`chroot.py`): Namespace-based isolation
+- **PRoot Backend** (`proot.py`): Userspace virtualization
+- **KVM Backend** (`kvm.py`): Hardware-accelerated virtualization
+- **VM Manager** (`manager.py`): VM lifecycle management
+- **Disk Encryption** (`disk.py`): Encrypted VM disk images
+- **Isolation Enforcer** (`isolation.py`): Seccomp/AppArmor policies
+
+**Vulnerability Types to Watch For**:
+- ⚠️ VM escape vulnerabilities
+- ⚠️ Privilege escalation (guest to host)
+- ⚠️ Shared memory leaks
+- ⚠️ Device passthrough issues
+- ⚠️ Filesystem isolation bypass
+- ⚠️ Network isolation bypass
+- ⚠️ Resource exhaustion (DoS)
+
+**Impact if Compromised**:
+- Host system compromise
+- Cross-VM attacks
+- Data exfiltration from host
+- Persistent malware on host
+- Complete system takeover
+
+**Testing Requirements**:
+```bash
+# Test VM isolation
+./scripts/test_vm_isolation.sh qemu
+./scripts/test_vm_isolation.sh chroot
+./scripts/test_vm_isolation.sh proot
+./scripts/test_vm_isolation.sh kvm
+
+# Test seccomp policies
+pytest tests/vm/test_seccomp.py
+
+# Test disk encryption
+pytest tests/vm/test_disk_encryption.py
+```
+
+---
+
+### 4. Panic/Wipe Subsystem
+
+**Location**: `qwamos/panic/`
+
+**Critical Components**:
+- **Panic Detector** (`detector.py`): Detects panic triggers (duress password, USB removal, etc.)
+- **Wipe Engine** (`wipe.py`): Secure data deletion
+- **Key Destruction** (`keys.py`): Emergency key material destruction
+- **VM Termination** (`terminate.py`): Immediate VM shutdown
+- **Evidence Removal** (`cleanup.py`): Removes forensic artifacts
+
+**Vulnerability Types to Watch For**:
+- ⚠️ Panic trigger bypass
+- ⚠️ Incomplete data wiping
+- ⚠️ Key recovery after wipe
+- ⚠️ Race conditions in wipe process
+- ⚠️ Wipe mechanism disclosure
+- ⚠️ Denial of service via panic trigger
+
+**Impact if Compromised**:
+- Data recovery after panic
+- Forensic evidence preservation
+- User identification
+- Duress detection bypass
+- False panic triggers (data loss)
+
+**Testing Requirements**:
+```bash
+# Test panic detection (USE CAUTION - may trigger wipe)
+pytest tests/panic/test_detector.py --safe-mode
+
+# Test wipe verification (on test data only)
+pytest tests/panic/test_wipe.py
+
+# Test key destruction
+pytest tests/panic/test_key_destruction.py
+```
+
+---
+
+### 5. Authentication & Authorization
+
+**Location**: `qwamos/auth/`
+
+**Critical Components**:
+- **User Authentication** (`auth.py`): Password/biometric authentication
+- **VM Access Control** (`access.py`): VM permission management
+- **Session Management** (`session.py`): User session handling
+- **Duress Mode** (`duress.py`): Plausible deniability features
+
+**Vulnerability Types to Watch For**:
+- ⚠️ Authentication bypass
+- ⚠️ Weak password storage
+- ⚠️ Session hijacking
+- ⚠️ Privilege escalation
+- ⚠️ Brute force vulnerabilities
+
+---
+
+### 6. Storage & Encryption
+
+**Location**: `qwamos/storage/`
+
+**Critical Components**:
+- **Volume Management** (`volumes.py`): Encrypted volume creation/mounting
+- **Key Management** (`keystore.py`): Encryption key storage
+- **Backup System** (`backup.py`): Encrypted backups
+
+**Vulnerability Types to Watch For**:
+- ⚠️ Plaintext key storage
+- ⚠️ Weak encryption parameters
+- ⚠️ Backup integrity issues
+- ⚠️ Key exposure in memory
+
+---
+
+## Security Audits & CVEs
+
+### Security Audits
+
+**Status**: No formal security audit has been completed yet.
+
+**Roadmap**:
+- Q2 2025: Internal security review
+- Q4 2025: Third-party security audit (target)
+
+**Interested in auditing QWAMOS?** Contact: [qwamos@tutanota.com](mailto:qwamos@tutanota.com)
+
+### CVE Program
+
+We participate in the CVE (Common Vulnerabilities and Exposures) program.
+
+**CVE Namespace**: We request CVEs through GitHub Security Advisories or directly through MITRE.
+
+**Published CVEs**: None to date
+
+**Requesting a CVE**: If you discover a vulnerability, we will work with you to request a CVE-ID if appropriate.
+
+---
+
+## Security Best Practices
 
 ### For Users
 
-If you are running QWAMOS, we recommend:
+**Installation**:
+- ✅ Always download QWAMOS from official sources
+- ✅ Verify Git commit signatures
+- ✅ Use the latest stable release
+- ✅ Keep Android and Termux updated
 
-1. **Keep Updated:** Install security updates promptly
-2. **Enable Strict Mode:** Use `STRICT_MODE=on` for maximum security
-3. **Verify Signatures:** Always verify GPG signatures on releases
-4. **Reproducible Builds:** Build from source and verify checksums
-5. **Hardware Kill Switches:** Use physical kill switches for camera/mic/cellular
-6. **Panic Gesture:** Configure and test emergency wipe gesture
-7. **Duress Profiles:** Set up decoy user accounts
+**Configuration**:
+- ✅ Use strong, unique passwords
+- ✅ Enable disk encryption for all VMs
+- ✅ Configure gateways correctly (Tor/I2P/DNSCrypt)
+- ✅ Review threat model tier and adjust settings accordingly
+
+**Operational Security**:
+- ✅ Regularly backup encrypted volumes
+- ✅ Test panic/wipe functionality in safe environment
+- ✅ Monitor logs for anomalies
+- ✅ Understand your adversary model (see Security-Model.md)
 
 ### For Developers
 
-If you are contributing to QWAMOS:
+**Code Review**:
+- ✅ All crypto changes require two reviewer approvals
+- ✅ VM isolation changes require thorough testing
+- ✅ Gateway changes require leak testing
 
-1. **Code Review:** All code changes require peer review
-2. **Static Analysis:** Run security linters (bandit, semgrep, shellcheck)
-3. **Dependency Audits:** Verify all dependencies in SUPPLYCHAIN.md
-4. **No Hardcoded Secrets:** Never commit API keys, passwords, or private keys
-5. **Signed Commits:** Sign all Git commits with GPG
-6. **Security Testing:** Run integration tests before merging
-7. **Threat Modeling:** Consider adversarial scenarios
+**Testing**:
+- ✅ Run full test suite before commits
+- ✅ Test all VM modes (QEMU/Chroot/PRoot/KVM)
+- ✅ Test all gateway configurations (Tor/I2P/DNSCrypt)
+- ✅ Verify crypto test suite passes
 
----
-
-## Bug Bounty Program
-
-**Status:** Currently unfunded
-
-We do not currently offer a paid bug bounty program. However, we deeply appreciate security research and will:
-
-- ✅ Publicly credit researchers (with permission)
-- ✅ Provide CVE assignments for significant vulnerabilities
-- ✅ Acknowledge contributions in release notes
-- ✅ Future consideration for paid bounties if funding becomes available
+**Dependencies**:
+- ✅ Pin dependency versions
+- ✅ Review dependency security advisories
+- ✅ Minimize external dependencies in security-critical code
 
 ---
 
-## Past Security Incidents
+## Security Resources
 
-**Status:** No security incidents to date.
+**Documentation**:
+- [Security Model Wiki](https://github.com/Dezirae-Stark/QWAMOS/wiki/Security-Model) - Threat model and adversary tiers
+- [Architecture Wiki](https://github.com/Dezirae-Stark/QWAMOS/wiki/Architecture) - System design and isolation boundaries
+- [Developer Guide](https://github.com/Dezirae-Stark/QWAMOS/wiki/Developer-Guide) - Secure development practices
 
-This section will be updated if any security incidents occur.
+**External Resources**:
+- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+- [CWE Top 25](https://cwe.mitre.org/top25/)
+- [NIST Post-Quantum Cryptography](https://csrc.nist.gov/projects/post-quantum-cryptography)
+- [Tor Project Security](https://www.torproject.org/docs/documentation.html)
 
----
-
-## Security Best Practices in QWAMOS
-
-### Implemented Security Measures
-
-QWAMOS incorporates defense-in-depth security:
-
-#### **Layer 1: Hardware Security**
-- ARM TrustZone (StrongBox/Keymaster)
-- Verified boot (measured boot with PCR logs)
-- Hardware kill switches (camera, mic, cellular)
-- Secure memory wiping (3-pass DoD 5220.22-M)
-
-#### **Layer 2: Bootloader & Kernel**
-- U-Boot signature verification
-- Kyber-1024 post-quantum secure boot
-- Kernel hardening (KASLR, stack canaries, W^X)
-- SELinux + AppArmor + TOMOYO
-
-#### **Layer 3: VM Isolation**
-- 4-domain architecture (Dom0, Gateway, Workstation, Trusted UI)
-- KVM hypervisor (hardware virtualization)
-- Network isolation (workstation has NO network)
-- Firewall with DEFAULT DROP
-
-#### **Layer 4: Cryptography**
-- Post-quantum encryption (Kyber-1024 + ChaCha20-Poly1305)
-- Memory-hard KDF (Argon2id)
-- Integrity verification (BLAKE3)
-- Zero legacy crypto (no AES/RSA/ECDH in keyboard)
-
-#### **Layer 5: Network Anonymity**
-- Mandatory Tor/I2P egress
-- DNS over Tor (no leaks)
-- VPN cascading support
-- IP leak detection (6-layer testing)
-
-#### **Layer 6: ML Threat Detection**
-- Real-time network anomaly detection
-- File system monitoring (ransomware, malware)
-- System call analysis (privilege escalation)
-- Multi-AI coordinated response
-
-#### **Layer 7: Emergency Protection**
-- Panic gesture (instant wipe)
-- Duress profiles (decoy data)
-- Radio kill switch
-- Session key destruction
+**Security Tools**:
+- [Bandit](https://github.com/PyCQA/bandit) - Python security linter
+- [Safety](https://github.com/pyupio/safety) - Dependency vulnerability scanner
+- [CodeQL](https://codeql.github.com/) - Semantic code analysis
 
 ---
 
-## Security Audit Status
+## Hall of Fame
 
-### Internal Audits
-- ✅ Phase 4 (Post-Quantum Crypto): 6/6 tests passing
-- ✅ Phase 7 (ML Threat Detection): 17/17 integration tests passing
-- ✅ Phase 10 (Hardware Security): Complete implementation audit
+We recognize security researchers who have responsibly disclosed vulnerabilities.
 
-### External Audits
-- ⏳ Awaiting third-party security audit (target: Q1 2026)
-- ⏳ Awaiting cryptographic review by security firm
+**Security Researchers** (in chronological order):
 
-### Continuous Security
-- ✅ Dependabot enabled (GitHub dependency scanning)
-- ✅ CodeQL analysis enabled
-- ✅ Automated CVE tracking
+_No vulnerabilities have been reported yet. Be the first!_
+
+**How to be listed**:
+- Report a valid security vulnerability
+- Follow responsible disclosure
+- Receive confirmation that vulnerability is fixed
+- Provide permission for public acknowledgment
 
 ---
 
-## Security Hall of Fame
+## Contact Information
 
-We will publicly recognize security researchers who responsibly disclose vulnerabilities:
+**Security Team Email**: [qwamos@tutanota.com](mailto:qwamos@tutanota.com)
 
-**Hall of Fame:**
-- (No entries yet - be the first!)
+**Subject Line**: `[SECURITY] Your brief description`
 
----
+**PGP Encryption**: Available on request (contact us for public key)
 
-## Additional Resources
+**Response Time**: 24-48 hours for initial acknowledgment
 
-- **SUPPLYCHAIN.md:** Dependency verification and reproducible builds
-- **OPS_GUIDE.md:** Operational security best practices
-- **SUPPORT.md:** Troubleshooting and recovery procedures
-- **Threat Model:** See README.md § "Threat Model & Protection Against State-Level Actors"
+**Security Advisory Page**: https://github.com/Dezirae-Stark/QWAMOS/security/advisories
+
+**General Security Questions**: Post in [Security Research Discussion](https://github.com/Dezirae-Stark/QWAMOS/discussions/4)
 
 ---
 
-## Questions?
+## Updates to This Policy
 
-If you have questions about this security policy:
+This security policy may be updated periodically. Significant changes will be announced in:
+- GitHub Discussions (#2 Announcements)
+- Security Advisory feed
+- Release notes
 
-- **Email:** clockwork.halo@tutanota.de (PGP encrypted preferred)
-- **GitHub Issues:** https://github.com/Dezirae-Stark/QWAMOS/issues (for non-sensitive questions only)
-
-**Do NOT publicly disclose security vulnerabilities in GitHub Issues.**
-
----
-
-## Changelog
-
-- **2025-11-07:** Initial security policy published
-- (Future updates will be listed here)
+**Last Updated**: 2025-11-18
+**Version**: 1.0.0
 
 ---
 
-**Thank you for helping keep QWAMOS secure!**
+**🛡️ Security is a community effort. Thank you for helping keep QWAMOS secure!**
 
----
-
-© 2025 First Sterling Capital, LLC · QWAMOS Project
-Licensed under AGPL-3.0
+**License**: This security policy is part of the QWAMOS project and is licensed under AGPL-3.0.
+**Copyright**: © 2025 QWAMOS Project
+**Contact**: qwamos@tutanota.com
