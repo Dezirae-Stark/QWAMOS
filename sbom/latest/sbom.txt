@@ -1,20 +1,21 @@
 NAME                               VERSION         TYPE                             
 actions/cache                      v4              github-action                    
-actions/checkout                   v4              github-action  (+21 duplicates)  
+actions/checkout                   v4              github-action  (+25 duplicates)  
 actions/configure-pages            v4              github-action                    
 actions/create-release             v1              github-action                    
 actions/deploy-pages               v4              github-action                    
-actions/download-artifact          v4              github-action  (+1 duplicate)    
+actions/download-artifact          v4              github-action  (+3 duplicates)   
 actions/github-script              v7              github-action                    
-actions/setup-java                 v4              github-action  (+1 duplicate)    
+actions/setup-java                 v4              github-action  (+4 duplicates)   
 actions/setup-node                 v4              github-action  (+2 duplicates)   
-actions/setup-python               v5              github-action  (+8 duplicates)   
-actions/upload-artifact            v4              github-action  (+9 duplicates)   
+actions/setup-python               v5              github-action  (+11 duplicates)  
+actions/upload-artifact            v4              github-action  (+13 duplicates)  
 actions/upload-pages-artifact      v3              github-action                    
 anchore/sbom-action/download-syft  v0.15.5         github-action                    
 aquasecurity/trivy-action          master          github-action                    
 bitcoinj-core                      007             java-archive                     
 busybox                            1.38.0          binary                           
+codecov/codecov-action             v4              github-action                    
 commons-codec                      1.10            java-archive                     
 commons-lang3                      3.7             java-archive                     
 docker/build-push-action           v5              github-action                    
@@ -44,6 +45,7 @@ logback-classic                    1.2.13          java-archive
 lycheeverse/lychee-action          v1              github-action  (+1 duplicate)    
 peter-evans/create-pull-request    v6              github-action                    
 qwamos_ui                          1.0.0+1         dart-pub                         
+renovatebot/github-action          v40.1.12        github-action                    
 ruby/setup-ruby                    v1              github-action                    
 rxjava                             2.2.15          java-archive                     
 softprops/action-gh-release        v1              github-action  (+1 duplicate)    
