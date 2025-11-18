@@ -1,0 +1,448 @@
+# Auto-generate README Banner and Badges
+# Creates professional branding assets for QWAMOS repository
+
+name: README Banner & Badges Generator
+
+on:
+  # Run on pushes to master branch
+  push:
+    branches:
+      - master
+    paths:
+      - 'README.md'
+      - 'VERSION'
+      - '.github/workflows/readme-banner.yml'
+      - 'scripts/generate_banner.py'
+
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      regenerate_banner:
+        description: 'Force regenerate banner even if it exists'
+        required: false
+        type: boolean
+        default: false
+
+# Prevent concurrent runs
+concurrency:
+  group: readme-banner-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate-branding:
+    name: Generate Banner & Badges
+    runs-on: ubuntu-latest
+
+    # Skip if commit message contains [skip-banner]
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      !contains(github.event.head_commit.message, '[skip-banner]')
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pillow cairosvg requests pyyaml
+
+      - name: Create assets directory
+        run: |
+          mkdir -p assets
+          echo "Created assets directory"
+
+      - name: Get version information
+        id: version
+        run: |
+          if [ -f VERSION ]; then
+            VERSION=$(cat VERSION | tr -d '\n')
+          else
+            VERSION="v0.1.0"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      # Job 1: Generate Banner
+      - name: Generate QWAMOS banner
+        id: generate_banner
+        run: |
+          cat > scripts/generate_banner.py << 'PYSCRIPT'
+          #!/usr/bin/env python3
+          """
+          Generate QWAMOS README banner with dark theme and circuit pattern
+          """
+          from PIL import Image, ImageDraw, ImageFont
+          import math
+          import sys
+          import os
+
+          def create_banner(output_path="assets/banner.png", width=1200, height=300):
+              """Create dark-themed banner with neon blue grid and circuit pattern"""
+
+              # Colors
+              bg_color = (10, 15, 25)  # Very dark blue
+              grid_color = (20, 40, 80, 100)  # Dark blue grid with transparency
+              neon_blue = (0, 180, 255)  # Neon blue
+              neon_glow = (100, 200, 255, 80)  # Light blue glow
+              accent_color = (0, 255, 200)  # Cyan accent
+
+              # Create base image
+              img = Image.new('RGBA', (width, height), bg_color + (255,))
+              draw = ImageDraw.Draw(img, 'RGBA')
+
+              # Draw grid pattern
+              grid_size = 40
+              for x in range(0, width, grid_size):
+                  draw.line([(x, 0), (x, height)], fill=grid_color, width=1)
+              for y in range(0, height, grid_size):
+                  draw.line([(0, y), (width, y)], fill=grid_color, width=1)
+
+              # Draw circuit-like connections
+              for i in range(15):
+                  x1 = (i * width // 15) + (width // 30)
+                  y1 = height // 4 if i % 2 == 0 else 3 * height // 4
+                  x2 = x1 + width // 20
+                  y2 = y1
+
+                  # Horizontal line
+                  draw.line([(x1, y1), (x2, y2)], fill=grid_color, width=2)
+
+                  # Node circles
+                  r = 3
+                  draw.ellipse([x1-r, y1-r, x1+r, y1+r], fill=neon_blue)
+
+              # Draw glowing circles in corners
+              for corner in [(50, 50), (width-50, 50), (50, height-50), (width-50, height-50)]:
+                  for radius in range(30, 0, -3):
+                      alpha = int(30 - radius)
+                      draw.ellipse(
+                          [corner[0]-radius, corner[1]-radius,
+                           corner[0]+radius, corner[1]+radius],
+                          fill=neon_glow[:3] + (alpha,)
+                      )
+
+              # Draw text
+              try:
+                  # Try to use a modern font
+                  title_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf", 72)
+                  subtitle_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf", 28)
+              except:
+                  # Fallback to default
+                  title_font = ImageFont.load_default()
+                  subtitle_font = ImageFont.load_default()
+
+              # Main title
+              title = "QWAMOS"
+              title_bbox = draw.textbbox((0, 0), title, font=title_font)
+              title_width = title_bbox[2] - title_bbox[0]
+              title_height = title_bbox[3] - title_bbox[1]
+              title_x = (width - title_width) // 2
+              title_y = height // 2 - title_height - 20
+
+              # Draw glow effect for title
+              for offset in range(5, 0, -1):
+                  alpha = int((5 - offset) * 20)
+                  glow_color = neon_blue + (alpha,)
+                  for dx in [-offset, 0, offset]:
+                      for dy in [-offset, 0, offset]:
+                          draw.text((title_x + dx, title_y + dy), title,
+                                  fill=glow_color, font=title_font)
+
+              # Draw actual title
+              draw.text((title_x, title_y), title, fill=neon_blue, font=title_font)
+
+              # Subtitle
+              subtitle = "Qubes+Whonix Advanced Mobile OS"
+              subtitle_bbox = draw.textbbox((0, 0), subtitle, font=subtitle_font)
+              subtitle_width = subtitle_bbox[2] - subtitle_bbox[0]
+              subtitle_x = (width - subtitle_width) // 2
+              subtitle_y = title_y + title_height + 30
+
+              draw.text((subtitle_x, subtitle_y), subtitle, fill=accent_color, font=subtitle_font)
+
+              # Draw decorative lines
+              line_y = subtitle_y + 50
+              line_margin = 100
+              draw.line([(line_margin, line_y), (width - line_margin, line_y)],
+                       fill=neon_blue, width=2)
+
+              # Add small tech details
+              detail_font = subtitle_font
+              details = "⚡ Post-Quantum Crypto  •  VM Isolation  •  Network Anonymization ⚡"
+              detail_bbox = draw.textbbox((0, 0), details, font=detail_font)
+              detail_width = detail_bbox[2] - detail_bbox[0]
+              detail_x = (width - detail_width) // 2
+              detail_y = line_y + 20
+
+              draw.text((detail_x, detail_y), details, fill=(150, 150, 200), font=detail_font)
+
+              # Save image
+              img.save(output_path, 'PNG', optimize=True)
+              print(f"Banner created: {output_path}")
+              print(f"Dimensions: {width}x{height}")
+              return True
+
+          if __name__ == "__main__":
+              try:
+                  success = create_banner()
+                  sys.exit(0 if success else 1)
+              except Exception as e:
+                  print(f"Error creating banner: {e}", file=sys.stderr)
+                  import traceback
+                  traceback.print_exc()
+                  sys.exit(1)
+          PYSCRIPT
+
+          chmod +x scripts/generate_banner.py
+
+          # Run banner generation
+          mkdir -p scripts
+          python3 scripts/generate_banner.py
+
+          if [ -f assets/banner.png ]; then
+            echo "banner_created=true" >> $GITHUB_OUTPUT
+            echo "Banner generated successfully"
+            ls -lh assets/banner.png
+          else
+            echo "banner_created=false" >> $GITHUB_OUTPUT
+            echo "Failed to generate banner"
+            exit 1
+          fi
+
+      # Job 2: Generate Badges
+      - name: Generate README badges
+        id: generate_badges
+        run: |
+          echo "Generating badges..."
+
+          # Get latest release version
+          VERSION="${{ steps.version.outputs.version }}"
+
+          # Create badges markdown
+          cat > assets/badges.md << 'BADGEFILE'
+          <!-- Auto-generated badges - DO NOT EDIT MANUALLY -->
+          <!-- Generated by .github/workflows/readme-banner.yml -->
+
+          [![Build Status](https://img.shields.io/github/actions/workflow/status/Dezirae-Stark/QWAMOS/jekyll.yml?branch=master&label=Build&logo=github&style=for-the-badge)](https://github.com/Dezirae-Stark/QWAMOS/actions/workflows/jekyll.yml)
+          [![Documentation](https://img.shields.io/github/actions/workflow/status/Dezirae-Stark/QWAMOS/doc-sync.yml?branch=master&label=Docs&logo=readthedocs&style=for-the-badge)](https://dezirae-stark.github.io/QWAMOS)
+          [![Security Scan](https://img.shields.io/badge/Security-Scanning-brightgreen?style=for-the-badge&logo=security)](https://github.com/Dezirae-Stark/QWAMOS/security)
+          [![License](https://img.shields.io/github/license/Dezirae-Stark/QWAMOS?style=for-the-badge&logo=gnu&color=blue)](https://github.com/Dezirae-Stark/QWAMOS/blob/master/LICENSE)
+          BADGEFILE
+
+          # Add version badge
+          echo "[![Version](https://img.shields.io/badge/Version-${VERSION}-purple?style=for-the-badge&logo=semver)](https://github.com/Dezirae-Stark/QWAMOS/releases)" >> assets/badges.md
+
+          # Add feature badges
+          cat >> assets/badges.md << 'BADGEFILE'
+          [![PQC Enabled](https://img.shields.io/badge/PQC-Kyber--1024-00d4ff?style=for-the-badge&logo=quantum&logoColor=white)](https://github.com/Dezirae-Stark/QWAMOS/tree/master/crypto/pq)
+          [![VM Isolation](https://img.shields.io/badge/VM-QEMU%20%7C%20KVM%20%7C%20Chroot-orange?style=for-the-badge&logo=virtualbox)](https://github.com/Dezirae-Stark/QWAMOS/blob/master/docs/VM_CONFIGURATIONS.md)
+          [![Network](https://img.shields.io/badge/Network-Tor%20%7C%20I2P-purple?style=for-the-badge&logo=torproject)](https://github.com/Dezirae-Stark/QWAMOS/blob/master/docs/WHONIX_GATEWAY_SETUP.md)
+          [![Platform](https://img.shields.io/badge/Platform-Android%2014%2B-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/Dezirae-Stark/QWAMOS)
+          [![Stars](https://img.shields.io/github/stars/Dezirae-Stark/QWAMOS?style=for-the-badge&logo=github)](https://github.com/Dezirae-Stark/QWAMOS/stargazers)
+          [![Forks](https://img.shields.io/github/forks/Dezirae-Stark/QWAMOS?style=for-the-badge&logo=github)](https://github.com/Dezirae-Stark/QWAMOS/network/members)
+          [![Issues](https://img.shields.io/github/issues/Dezirae-Stark/QWAMOS?style=for-the-badge&logo=github)](https://github.com/Dezirae-Stark/QWAMOS/issues)
+          [![Pull Requests](https://img.shields.io/github/issues-pr/Dezirae-Stark/QWAMOS?style=for-the-badge&logo=github)](https://github.com/Dezirae-Stark/QWAMOS/pulls)
+          [![Contributors](https://img.shields.io/github/contributors/Dezirae-Stark/QWAMOS?style=for-the-badge&logo=github)](https://github.com/Dezirae-Stark/QWAMOS/graphs/contributors)
+          [![Last Commit](https://img.shields.io/github/last-commit/Dezirae-Stark/QWAMOS?style=for-the-badge&logo=github)](https://github.com/Dezirae-Stark/QWAMOS/commits/master)
+
+          <!-- End auto-generated badges -->
+          BADGEFILE
+
+          echo "badges_created=true" >> $GITHUB_OUTPUT
+          echo "Badges generated successfully"
+          cat assets/badges.md
+
+      # Job 3: Patch README.md
+      - name: Update README.md with banner and badges
+        id: update_readme
+        run: |
+          echo "Updating README.md..."
+
+          if [ ! -f README.md ]; then
+            echo "README.md not found!"
+            exit 1
+          fi
+
+          # Create backup
+          cp README.md README.md.backup
+
+          # Create updated README
+          cat > README.new.md << 'HEADERSTART'
+          <!-- Banner auto-generated by .github/workflows/readme-banner.yml -->
+          <div align="center">
+
+          ![QWAMOS Banner](assets/banner.png)
+
+          HEADERSTART
+
+          # Add badges
+          cat assets/badges.md >> README.new.md
+
+          cat >> README.new.md << 'HEADEREND'
+
+          </div>
+
+          ---
+
+          HEADEREND
+
+          # Find where to insert (after any existing banner/badges or at start)
+          # Remove old banner/badges section if it exists
+          if grep -q "<!-- Banner auto-generated" README.md; then
+            # Remove old auto-generated section
+            sed '/<!-- Banner auto-generated/,/^---$/d' README.md > README.temp.md
+            cat README.new.md README.temp.md > README.md
+            rm README.temp.md
+          else
+            # No existing banner, prepend to README
+            cat README.new.md README.md > README.combined.md
+            mv README.combined.md README.md
+          fi
+
+          rm README.new.md
+
+          # Check if README changed
+          if diff -q README.md README.md.backup > /dev/null 2>&1; then
+            echo "No changes to README.md"
+            echo "readme_updated=false" >> $GITHUB_OUTPUT
+            mv README.md.backup README.md  # Restore
+          else
+            echo "README.md updated successfully"
+            echo "readme_updated=true" >> $GITHUB_OUTPUT
+            rm README.md.backup
+          fi
+
+      - name: Optimize banner image
+        if: steps.generate_banner.outputs.banner_created == 'true'
+        run: |
+          # Install optimization tools if available
+          if command -v optipng &> /dev/null; then
+            optipng -o7 assets/banner.png || true
+            echo "Banner optimized with optipng"
+          fi
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git add assets/banner.png assets/badges.md README.md
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "Changes detected"
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+
+            echo "=== Changed files ==="
+            git status --short
+          fi
+
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Create commit message
+          cat > /tmp/banner-commit-msg.txt << 'COMMITMSG'
+          docs: Auto-generate README banner and badges [skip-banner]
+
+          Automated branding update:
+          COMMITMSG
+
+          if [ "${{ steps.generate_banner.outputs.banner_created }}" == "true" ]; then
+            echo "- Generated new QWAMOS banner (1200x300px)" >> /tmp/banner-commit-msg.txt
+          fi
+
+          if [ "${{ steps.generate_badges.outputs.badges_created }}" == "true" ]; then
+            echo "- Updated README badges" >> /tmp/banner-commit-msg.txt
+          fi
+
+          if [ "${{ steps.update_readme.outputs.readme_updated }}" == "true" ]; then
+            echo "- Patched README.md with banner and badges" >> /tmp/banner-commit-msg.txt
+          fi
+
+          echo "" >> /tmp/banner-commit-msg.txt
+          echo "Triggered by: ${{ github.event_name }}" >> /tmp/banner-commit-msg.txt
+          echo "Version: ${{ steps.version.outputs.version }}" >> /tmp/banner-commit-msg.txt
+          echo "" >> /tmp/banner-commit-msg.txt
+          echo "Generated by README Banner & Badges Generator" >> /tmp/banner-commit-msg.txt
+
+          # Commit
+          git commit -F /tmp/banner-commit-msg.txt
+
+          # Push
+          echo "Pushing changes to master..."
+          git push origin master
+
+          echo "Banner and badges updated successfully!"
+
+      - name: Upload banner artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qwamos-banner
+          path: assets/banner.png
+          retention-days: 90
+        continue-on-error: true
+
+      - name: Job Summary
+        if: always()
+        run: |
+          echo "## 🎨 README Banner & Badges Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Workflow Run:** ${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### Generation Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ steps.generate_banner.outputs.banner_created }}" == "true" ]; then
+            echo "- ✅ Banner generated (1200x300px)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ⏭️  Banner generation skipped" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ steps.generate_badges.outputs.badges_created }}" == "true" ]; then
+            echo "- ✅ Badges generated (14 badges)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ⏭️  Badge generation skipped" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ steps.update_readme.outputs.readme_updated }}" == "true" ]; then
+            echo "- ✅ README.md updated" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ⏭️  README.md unchanged" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ steps.check_changes.outputs.has_changes }}" == "true" ]; then
+            echo "- ✅ Changes committed and pushed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ⏭️  No changes to commit" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "🤖 *Automated by README Banner & Badges Generator*" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f assets/banner.png ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Generated Banner Preview" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "![Banner Preview](../assets/banner.png)" >> $GITHUB_STEP_SUMMARY
+          fi
