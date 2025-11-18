@@ -60,8 +60,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Set up workspace
 WORKDIR /workspace
 
+# Remove EXTERNALLY-MANAGED marker to allow pip installs (safe in Docker containers)
+RUN rm -f /usr/lib/python*/EXTERNALLY-MANAGED
+
 # Install QWAMOS Python dependencies
-# Note: Using system pip without upgrade to avoid Debian externally-managed-environment issues
 RUN python3 -m pip install --no-cache-dir \
     # Cryptography
     cryptography \
