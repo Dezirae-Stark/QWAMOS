@@ -1115,6 +1115,11 @@ The following phases have been implemented and integrated:
 
 **Planning Documents:** `phases/phase12_kvm_acceleration/`
 
+**Testing:**
+- Hardware validation suite: `tests/kvm_hardware_suite/`
+- Differential tests implemented: `tests/differential_kvm_qemu/`
+- Hardware KVM results pending real device validation
+
 ---
 
 ### Phase XIII: PQC-Only Storage Subsystem

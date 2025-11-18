@@ -1709,6 +1709,21 @@ QWAMOS has a clear forward path with additional phases designed for expanded cap
 >
 > See [`device_validation_instructions.md`](tests/kvm_hardware_suite/device_validation_instructions.md) for deployment testing procedures.
 
+> **Differential Testing:**
+> A full differential harness compares QWAMOS behavior under QEMU vs real KVM.
+> See: [`tests/differential_kvm_qemu/`](tests/differential_kvm_qemu/)
+>
+> Differential test suite includes:
+> - **Workload Suite:** CPU, memory, I/O, and cryptographic stress tests
+> - **diff_runner.py:** Orchestrates tests under both QEMU (TCG) and KVM modes
+> - **comparison_engine.py:** Analyzes performance variance with security notes
+> - **Automated Reports:** JSON and Markdown differential analysis reports
+>
+> Variance thresholds:
+> - <10%: Equivalent performance
+> - 10-25%: Acceptable difference
+> - >25%: Significant deviation requiring investigation
+
 ---
 
 ## 🤝 Contributing
