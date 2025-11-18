@@ -157,12 +157,12 @@ USER qwamos
 # Set Java environment (using default JDK)
 ENV JAVA_HOME=/usr/lib/jvm/default-java
 
-# Verify installations
-RUN python3 --version && \
-    java -version && \
-    kotlinc -version && \
-    flutter --version && \
-    gradle --version && \
+# Verify installations (with verbose error reporting)
+RUN echo "Verifying Python..." && python3 --version && \
+    echo "Verifying Java..." && java -version && \
+    echo "Verifying Kotlin..." && kotlinc -version && \
+    echo "Verifying Flutter..." && flutter doctor --version && \
+    echo "Verifying Gradle..." && gradle --version && \
     echo "Build environment ready!"
 
 # Build QWAMOS modules
