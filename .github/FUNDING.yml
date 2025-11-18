@@ -1,6 +1,18 @@
-# QWAMOS Donation Links
-# These donation links accept anonymous cryptocurrency donations via Trocador AnonPay
+# QWAMOS Funding & Sponsorship
 
+# These are supported funding model platforms
+
+# GitHub Sponsors
+github: ["Dezirae-Stark"]
+
+# Patreon
+patreon: ""
+
+# Ko-fi
+ko_fi: ""
+
+# Custom funding links
 custom:
-  - 'https://trocador.app/anonpay?ticker_to=btc&network_to=Mainnet&address=bc1qjm7fnrk23m4esr2nq97aqugvecw2awxvp0rd2s&ref=sqKNYGZbRl&direct=True'
-  - 'https://trocador.app/anonpay?ticker_to=xmr&network_to=Mainnet&address=49CjxV4LcAMGyVe46N2hEAJJXJVQhAaSbepzistuJSKcG9ApC9RZmNNUbzpNxsmvmKHZX9N4SKBbTWk2NST7ozzVMAFsme7&ref=sqKNYGZbRl&direct=True&description=QWAMOS+Donations+'
+  - "https://firststerlingcapital.com/support"
+  - "https://trocador.app/anonpay?ticker_to=btc&network_to=Mainnet&address=bc1qjm7fnrk23m4esr2nq97aqugvecw2awxvp0rd2s&ref=sqKNYGZbRl&direct=True"
+  - "https://trocador.app/anonpay?ticker_to=xmr&network_to=Mainnet&address=49CjxV4LcAMGyVe46N2hEAJJXJVQhAaSbepzistuJSKcG9ApC9RZmNNUbzpNxsmvmKHZX9N4SKBbTWk2NST7ozzVMAFsme7&ref=sqKNYGZbRl&direct=True&description=QWAMOS+Donations"
