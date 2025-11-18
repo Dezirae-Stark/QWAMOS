@@ -18,4 +18,4 @@ This directory contains a synchronized copy of the QWAMOS Wiki for offline acces
 - [index](index.md)
 
 ---
-*Last synced: 2025-11-18 23:52:08 UTC*
+*Last synced: 2025-11-18 23:57:29 UTC*
