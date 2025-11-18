@@ -2,6 +2,7 @@
 """
 QWAMOS VM Manager
 Manages QEMU virtual machines with post-quantum security
+Phase XII: Now with KVM hardware acceleration support
 """
 
 import os
@@ -11,8 +12,19 @@ import subprocess
 import argparse
 from pathlib import Path
 
-# QWAMOS Paths
+# Add hypervisor module to path
 QWAMOS_ROOT = Path.home() / "QWAMOS"
+sys.path.insert(0, str(QWAMOS_ROOT / "hypervisor"))
+
+# Import KVM Manager (Phase XII)
+try:
+    from kvm_manager import KVMManager
+    KVM_AVAILABLE = True
+except ImportError:
+    KVM_AVAILABLE = False
+    print("⚠️  KVM Manager not found - using legacy mode")
+
+# QWAMOS Paths
 VMS_DIR = QWAMOS_ROOT / "vms"
 HYPERVISOR_DIR = QWAMOS_ROOT / "hypervisor"
 LOGS_DIR = HYPERVISOR_DIR / "logs"
@@ -25,6 +37,14 @@ class VMManager:
         self.vm_dir = VMS_DIR / vm_name
         self.config_file = self.vm_dir / "config.yaml"
         self.config = None
+
+        # Initialize KVM Manager (Phase XII)
+        if KVM_AVAILABLE:
+            self.kvm_manager = KVMManager()
+            self.kvm_enabled = self.kvm_manager.enabled
+        else:
+            self.kvm_manager = None
+            self.kvm_enabled = False
 
         # Ensure logs directory exists
         LOGS_DIR.mkdir(parents=True, exist_ok=True)
@@ -50,14 +70,31 @@ class VMManager:
         boot = self.config['boot']
         machine = self.config['machine']
 
-        cmd = [
-            "qemu-system-aarch64",
-            "-name", vm['name'],
-            "-machine", f"{machine['type']},accel={machine['accel']},gic-version={machine['gic_version']}",
-            "-cpu", hw['cpu']['model'],
-            "-smp", str(hw['cpu']['cores']),
-            "-m", str(hw['memory']['size']),
-        ]
+        # Phase XII: Use KVM Manager for optimal acceleration
+        if self.kvm_manager:
+            # Let KVM manager decide acceleration and CPU model
+            vm_config = {
+                "name": vm['name'],
+                "cpu": hw['cpu']['cores'],
+                "memory": str(hw['memory']['size']) + "M",
+            }
+            kvm_args = self.kvm_manager.generate_qemu_args(vm_config)
+
+            # Start with base command
+            cmd = ["qemu-system-aarch64", "-name", vm['name']]
+
+            # Add KVM-optimized args (accel, cpu, machine, smp, memory)
+            cmd.extend(kvm_args)
+        else:
+            # Legacy mode: use config directly
+            cmd = [
+                "qemu-system-aarch64",
+                "-name", vm['name'],
+                "-machine", f"{machine['type']},accel={machine['accel']},gic-version={machine['gic_version']}",
+                "-cpu", hw['cpu']['model'],
+                "-smp", str(hw['cpu']['cores']),
+                "-m", str(hw['memory']['size']),
+            ]
 
         # Boot configuration
         if os.path.exists(boot['kernel']):
@@ -127,6 +164,13 @@ class VMManager:
         """Start the VM"""
         print(f"Starting VM: {self.vm_name}")
 
+        # Phase XII: Display acceleration status
+        if self.kvm_manager:
+            if self.kvm_enabled:
+                print("🚀 KVM Hardware Acceleration: ENABLED")
+            else:
+                print("🐢 TCG Software Emulation: ENABLED (expect slower performance)")
+
         cmd = self.build_qemu_command()
 
         print(f"\nQEMU Command:")
@@ -145,6 +189,15 @@ class VMManager:
                 )
             print(f"✓ VM started in background (PID: {process.pid})")
             print(f"  Log: {log_file}")
+
+            # Phase XII: Apply CPU affinity if configured
+            if self.kvm_manager and 'cpu_affinity' in self.config.get('performance', {}):
+                policy = self.config['performance']['cpu_affinity']
+                self.kvm_manager.configure_vcpu_affinity(
+                    vm_pid=process.pid,
+                    vm_name=self.vm_name,
+                    vcpu_policy=policy
+                )
         else:
             # Interactive mode
             subprocess.run(cmd)
@@ -195,6 +248,12 @@ class VMManager:
         print(f"Disk:        {config['hardware']['disk']['primary']['size']}")
         print(f"Network:     {config['network']['mode']}")
         print(f"Autostart:   {config.get('autostart', False)}")
+
+        # Phase XII: Show acceleration status
+        if self.kvm_manager:
+            accel_status = "✅ KVM" if self.kvm_enabled else "⚠️  TCG (software)"
+            print(f"Acceleration: {accel_status}")
+
         print(f"{'='*60}\n")
 
 def list_vms():
