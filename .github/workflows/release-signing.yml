@@ -30,13 +30,15 @@ permissions:
 env:
   # GPG configuration
   GPG_KEY_ID: "QWAMOS Release Signing Key"
-  GNUPGHOME: "${{ runner.temp }}/gnupg"
 
 jobs:
   # Job 1: Sign Release Artifacts
   sign-release:
     name: Sign Release Artifacts
     runs-on: ubuntu-latest
+
+    env:
+      GNUPGHOME: /tmp/gnupg
 
     steps:
       - name: Checkout repository
