@@ -303,9 +303,27 @@ jobs:
           # Pull latest changes and rebase
           echo "Pulling latest changes..."
           git pull --rebase origin master || {
-            echo "Rebase failed, attempting to resolve..."
+            echo "Rebase failed, attempting merge with conflict resolution..."
             git rebase --abort
-            git pull --no-rebase origin master
+
+            # Try merge with strategy to prefer our changes (we're the source of truth for docs)
+            git pull --no-rebase --strategy-option=ours origin master || {
+              echo "Merge with strategy failed, resolving conflicts manually..."
+
+              # Accept our version for all conflicts (doc sync is authoritative)
+              git checkout --ours .
+              git add -A
+
+              # Check if there are any remaining conflicts
+              if git diff --name-only --diff-filter=U | grep -q .; then
+                echo "Error: Unable to resolve all conflicts automatically"
+                git status
+                exit 1
+              fi
+
+              # Complete the merge
+              git commit --no-edit || echo "No merge commit needed"
+            }
           }
 
           # Push changes
