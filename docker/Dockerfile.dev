@@ -54,31 +54,17 @@ RUN apt-get update && apt-get install -y \
     # Cryptography libraries
     libssl-dev \
     libsodium-dev \
-    # Development tools
+    # Development tools (minimal set)
     vim \
-    neovim \
     nano \
-    emacs-nox \
     less \
     htop \
     tree \
     jq \
-    tmux \
-    screen \
     sudo \
-    # Debuggers
+    # Debuggers (essential only)
     gdb \
-    lldb \
     strace \
-    ltrace \
-    valgrind \
-    # Documentation
-    man-db \
-    manpages-dev \
-    # Shell utilities
-    zsh \
-    fish \
-    bash-completion \
     && rm -rf /var/lib/apt/lists/*
 
 # Set up workspace
