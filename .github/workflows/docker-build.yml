@@ -1,0 +1,252 @@
+# Docker Build and Test Workflow
+# Builds QWAMOS inside Docker containers and runs full test suite
+
+name: Docker Build & Test
+
+on:
+  # Trigger on push to master
+  push:
+    branches:
+      - master
+    paths:
+      - 'docker/**'
+      - '**.py'
+      - '**.sh'
+      - 'requirements.txt'
+      - '.github/workflows/docker-build.yml'
+
+  # Trigger on pull requests
+  pull_request:
+    branches:
+      - master
+
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      run_full_build:
+        description: 'Run full build including VM templates'
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  # Job 1: Build Docker images
+  build-docker-images:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata for build image
+        id: meta-build
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}/build
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push build image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/Dockerfile.build
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta-build.outputs.tags }}
+          labels: ${{ steps.meta-build.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Extract metadata for dev image
+        id: meta-dev
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}/dev
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push dev image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/Dockerfile.dev
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta-dev.outputs.tags }}
+          labels: ${{ steps.meta-dev.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # Job 2: Run build script
+  run-build:
+    name: Run QWAMOS Build
+    needs: build-docker-images
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image (local)
+        run: |
+          docker build -f docker/Dockerfile.build -t qwamos/build:latest .
+
+      - name: Run build script
+        run: |
+          chmod +x docker/scripts/build.sh
+          bash docker/scripts/build.sh
+
+      - name: List build artifacts
+        run: |
+          echo "Build artifacts:"
+          ls -lR build_artifacts/ || echo "No artifacts found"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: qwamos-build-artifacts
+          path: build_artifacts/
+          retention-days: 30
+        continue-on-error: true
+
+  # Job 3: Run test script
+  run-tests:
+    name: Run QWAMOS Tests
+    needs: build-docker-images
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image (local)
+        run: |
+          docker build -f docker/Dockerfile.build -t qwamos/build:latest .
+
+      - name: Start build container
+        run: |
+          docker-compose -f docker/docker-compose.yml up -d qbuild
+          sleep 5
+
+      - name: Run test script
+        continue-on-error: true
+        run: |
+          chmod +x docker/scripts/test.sh
+          bash docker/scripts/test.sh
+
+      - name: Collect test results
+        if: always()
+        run: |
+          mkdir -p test-results
+          docker cp qwamos-build:/test-results/. test-results/ 2>/dev/null || true
+          docker logs qwamos-build > test-results/container.log 2>&1 || true
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results/
+          retention-days: 30
+
+      - name: Stop containers
+        if: always()
+        run: |
+          docker-compose -f docker/docker-compose.yml down
+
+  # Job 4: Security scan of Docker images
+  security-scan:
+    name: Security Scan Docker Images
+    needs: build-docker-images
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image (local)
+        run: |
+          docker build -f docker/Dockerfile.build -t qwamos/build:latest .
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'qwamos/build:latest'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+        continue-on-error: true
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+        continue-on-error: true
+
+  # Job 5: Create workflow summary
+  summary:
+    name: Workflow Summary
+    needs: [build-docker-images, run-build, run-tests, security-scan]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Create summary
+        run: |
+          echo "## 🐳 Docker Build & Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Workflow Run:** ${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### Job Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Build Docker Images | ${{ needs.build-docker-images.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Run Build | ${{ needs.run-build.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Run Tests | ${{ needs.run-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security Scan | ${{ needs.security-scan.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### Artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- 📦 Build Artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "- 📊 Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "- 🔒 Security Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "🤖 *Automated by Docker Build & Test Workflow*" >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,115 @@
+# QWAMOS Docker Compose Configuration
+# Orchestrates build and development containers
+
+version: '3.8'
+
+services:
+  # Build container - Production builds
+  qbuild:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.build
+    image: qwamos/build:latest
+    container_name: qwamos-build
+    volumes:
+      # Mount repository (read-only for builds)
+      - ..:/workspace:ro
+      # Mount build artifacts output
+      - build-artifacts:/build_artifacts
+      # Cache directories for faster builds
+      - gradle-cache:/home/qwamos/.gradle
+      - flutter-cache:/home/qwamos/.flutter
+    environment:
+      - QWAMOS_BUILD_ENV=docker
+      - PYTHONUNBUFFERED=1
+    working_dir: /workspace
+    command: /bin/bash -c "echo 'QWAMOS Build Container Ready' && tail -f /dev/null"
+    networks:
+      - qwamos-network
+
+  # Development container - Interactive development
+  qdev:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+    image: qwamos/dev:latest
+    container_name: qwamos-dev
+    volumes:
+      # Mount repository (read-write for development)
+      - ..:/workspace
+      # Mount build artifacts
+      - build-artifacts:/build_artifacts
+      # Cache directories
+      - gradle-cache:/home/qwamos/.gradle
+      - flutter-cache:/home/qwamos/.flutter
+      - pip-cache:/home/qwamos/.cache/pip
+      # VSCode Remote Development
+      - vscode-server:/home/qwamos/.vscode-server
+      # Git config (optional, comment out if not needed)
+      # - ~/.gitconfig:/home/qwamos/.gitconfig:ro
+      # SSH keys (optional, for git operations)
+      # - ~/.ssh:/home/qwamos/.ssh:ro
+    environment:
+      - QWAMOS_DEV_ENV=docker
+      - PYTHONUNBUFFERED=1
+      - DISPLAY=${DISPLAY:-:0}
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+    privileged: true  # Required for QEMU VM testing
+    ports:
+      # Common development ports
+      - "8080:8080"  # Web server
+      - "8000:8000"  # Alternative web server
+      - "5000:5000"  # Flask/API
+      - "3000:3000"  # React/Node
+      - "5037:5037"  # ADB
+    networks:
+      - qwamos-network
+    command: /bin/bash
+
+  # Test runner container
+  qtest:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.build
+    image: qwamos/build:latest
+    container_name: qwamos-test
+    volumes:
+      - ..:/workspace:ro
+      - test-results:/test-results
+    environment:
+      - QWAMOS_TEST_ENV=docker
+      - PYTHONUNBUFFERED=1
+    working_dir: /workspace
+    command: /bin/bash docker/scripts/test.sh
+    networks:
+      - qwamos-network
+    depends_on:
+      - qbuild
+
+volumes:
+  # Persistent build artifacts
+  build-artifacts:
+    driver: local
+
+  # Persistent test results
+  test-results:
+    driver: local
+
+  # Cache volumes for faster builds
+  gradle-cache:
+    driver: local
+
+  flutter-cache:
+    driver: local
+
+  pip-cache:
+    driver: local
+
+  vscode-server:
+    driver: local
+
+networks:
+  qwamos-network:
+    driver: bridge

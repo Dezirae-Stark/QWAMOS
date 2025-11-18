@@ -1,0 +1,185 @@
+# QWAMOS Build Container
+# Production build environment for QWAMOS components
+
+FROM debian:stable-slim
+
+LABEL maintainer="QWAMOS Team <qwamos@tutanota.com>"
+LABEL description="QWAMOS Build Environment"
+LABEL version="1.0"
+
+# Prevent interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=UTC
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    # Build essentials
+    build-essential \
+    cmake \
+    ninja-build \
+    pkg-config \
+    autoconf \
+    automake \
+    libtool \
+    # Python 3
+    python3 \
+    python3-pip \
+    python3-dev \
+    python3-venv \
+    # Version control
+    git \
+    git-lfs \
+    # Networking tools
+    curl \
+    wget \
+    ca-certificates \
+    gnupg \
+    # Compression utilities
+    tar \
+    gzip \
+    bzip2 \
+    xz-utils \
+    zip \
+    unzip \
+    # QEMU for VM testing
+    qemu-system-x86 \
+    qemu-system-arm \
+    qemu-user-static \
+    qemu-utils \
+    # Android build dependencies
+    openjdk-17-jdk \
+    openjdk-17-jre-headless \
+    # Kotlin (via SDKMAN later)
+    # Flutter dependencies
+    clang \
+    libgtk-3-dev \
+    liblzma-dev \
+    libstdc++-11-dev \
+    # Cryptography libraries
+    libssl-dev \
+    libsodium-dev \
+    # Additional tools
+    sudo \
+    vim \
+    nano \
+    less \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set up workspace
+WORKDIR /workspace
+
+# Install Python packages
+RUN pip3 install --no-cache-dir --upgrade \
+    pip \
+    setuptools \
+    wheel
+
+# Install QWAMOS Python dependencies
+RUN pip3 install --no-cache-dir \
+    # Cryptography
+    cryptography \
+    pycryptodome \
+    # Testing
+    pytest \
+    pytest-cov \
+    pytest-xdist \
+    # Linting
+    black \
+    pylint \
+    mypy \
+    bandit \
+    # Security scanning
+    safety \
+    pip-audit \
+    # Build tools
+    build \
+    twine
+
+# Install Kotlin
+ENV KOTLIN_VERSION=1.9.20
+RUN wget -q https://github.com/JetBrains/kotlin/releases/download/v${KOTLIN_VERSION}/kotlin-compiler-${KOTLIN_VERSION}.zip && \
+    unzip kotlin-compiler-${KOTLIN_VERSION}.zip -d /opt && \
+    rm kotlin-compiler-${KOTLIN_VERSION}.zip && \
+    ln -s /opt/kotlinc/bin/* /usr/local/bin/
+
+# Install Flutter SDK
+ENV FLUTTER_VERSION=3.16.0
+ENV FLUTTER_HOME=/opt/flutter
+ENV PATH="${FLUTTER_HOME}/bin:${PATH}"
+
+RUN git clone --depth 1 --branch ${FLUTTER_VERSION} https://github.com/flutter/flutter.git ${FLUTTER_HOME} && \
+    flutter --version && \
+    flutter config --no-analytics && \
+    flutter precache
+
+# Install Android SDK (minimal for builds)
+ENV ANDROID_HOME=/opt/android-sdk
+ENV PATH="${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools:${PATH}"
+
+RUN mkdir -p ${ANDROID_HOME}/cmdline-tools && \
+    wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip && \
+    unzip -q commandlinetools-linux-9477386_latest.zip -d ${ANDROID_HOME}/cmdline-tools && \
+    mv ${ANDROID_HOME}/cmdline-tools/cmdline-tools ${ANDROID_HOME}/cmdline-tools/latest && \
+    rm commandlinetools-linux-9477386_latest.zip
+
+# Accept Android licenses
+RUN yes | sdkmanager --licenses || true
+
+# Install required Android SDK components
+RUN sdkmanager --update && \
+    sdkmanager \
+    "platform-tools" \
+    "platforms;android-34" \
+    "build-tools;34.0.0" \
+    "ndk;25.2.9519653"
+
+# Install Gradle
+ENV GRADLE_VERSION=8.5
+ENV GRADLE_HOME=/opt/gradle
+ENV PATH="${GRADLE_HOME}/bin:${PATH}"
+
+RUN wget -q https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip && \
+    unzip -q gradle-${GRADLE_VERSION}-bin.zip -d /opt && \
+    mv /opt/gradle-${GRADLE_VERSION} ${GRADLE_HOME} && \
+    rm gradle-${GRADLE_VERSION}-bin.zip
+
+# Install liboqs (Post-Quantum Cryptography)
+RUN git clone --depth 1 --branch main https://github.com/open-quantum-safe/liboqs.git /tmp/liboqs && \
+    cd /tmp/liboqs && \
+    mkdir build && cd build && \
+    cmake -GNinja -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=/usr/local .. && \
+    ninja && \
+    ninja install && \
+    ldconfig && \
+    rm -rf /tmp/liboqs
+
+# Set up build user (non-root)
+RUN useradd -m -s /bin/bash qwamos && \
+    echo "qwamos ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Copy repository contents
+COPY --chown=qwamos:qwamos . /workspace
+
+# Create build output directory
+RUN mkdir -p /build_artifacts && \
+    chown -R qwamos:qwamos /build_artifacts
+
+# Switch to build user
+USER qwamos
+
+# Set Java environment
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+
+# Verify installations
+RUN python3 --version && \
+    java -version && \
+    kotlinc -version && \
+    flutter --version && \
+    gradle --version && \
+    echo "Build environment ready!"
+
+# Build QWAMOS modules
+RUN if [ -f requirements.txt ]; then pip3 install --user -r requirements.txt; fi
+
+# Default command
+CMD ["/bin/bash"]
