@@ -2,3 +2,8 @@
 	path = apps/simlar-qwamos
 	url = https://github.com/Dezirae-Stark/simlar-for-QWAMOS.git
 	branch = feature/qwamos-pq-secure-voice
+
+[submodule "crypto/pq/liboqs"]
+	path = crypto/pq/liboqs
+	url = https://github.com/open-quantum-safe/liboqs.git
+	branch = main
