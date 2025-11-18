@@ -1,0 +1,52 @@
+NAME                               VERSION         TYPE                             
+actions/cache                      v4              github-action                    
+actions/checkout                   v4              github-action  (+21 duplicates)  
+actions/configure-pages            v4              github-action                    
+actions/create-release             v1              github-action                    
+actions/deploy-pages               v4              github-action                    
+actions/download-artifact          v4              github-action  (+1 duplicate)    
+actions/github-script              v7              github-action                    
+actions/setup-java                 v4              github-action  (+1 duplicate)    
+actions/setup-node                 v4              github-action  (+2 duplicates)   
+actions/setup-python               v5              github-action  (+8 duplicates)   
+actions/upload-artifact            v4              github-action  (+9 duplicates)   
+actions/upload-pages-artifact      v3              github-action                    
+anchore/sbom-action/download-syft  v0.15.5         github-action                    
+aquasecurity/trivy-action          master          github-action                    
+bitcoinj-core                      007             java-archive                     
+busybox                            1.38.0          binary                           
+commons-codec                      1.10            java-archive                     
+commons-lang3                      3.7             java-archive                     
+docker/build-push-action           v5              github-action                    
+docker/login-action                v3              github-action                    
+docker/metadata-action             v5              github-action                    
+docker/setup-buildx-action         v3              github-action                    
+extlibj                            1.0.6-SNAPSHOT  java-archive                     
+github/codeql-action/analyze       v3              github-action                    
+github/codeql-action/analyze       v4              github-action                    
+github/codeql-action/autobuild     v4              github-action                    
+github/codeql-action/init          v3              github-action                    
+github/codeql-action/init          v4              github-action                    
+github/codeql-action/upload-sarif  v3              github-action                    
+gitleaks/gitleaks-action           v2              github-action                    
+gradle-wrapper                     4.10.2          java-archive                     
+gradle-wrapper                     4.5             java-archive                     
+gradle-wrapper                     UNKNOWN         java-archive                     
+httpclientandroidlib               1.2.1           java-archive                     
+jackson-databind                   2.13.0          java-archive                     
+jackson-datatype-jsr310            2.13.0          java-archive                     
+java-jwt                           3.18.2          java-archive                     
+json                               20240205        java-archive                     
+junit-jupiter                      5.8.2           java-archive                     
+kotlin-stdlib-jdk8                 1.3.41          java-archive                     
+kotlin-test                        1.3.41          java-archive                     
+logback-classic                    1.2.13          java-archive                     
+lycheeverse/lychee-action          v1              github-action  (+1 duplicate)    
+peter-evans/create-pull-request    v6              github-action                    
+qwamos_ui                          1.0.0+1         dart-pub                         
+ruby/setup-ruby                    v1              github-action                    
+rxjava                             2.2.15          java-archive                     
+softprops/action-gh-release        v1              github-action  (+1 duplicate)    
+softprops/action-gh-release        v2              github-action                    
+subosito/flutter-action            v2              github-action                    
+xmanager-protocol                  1.0.11          java-archive                     
