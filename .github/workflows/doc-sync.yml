@@ -1,0 +1,358 @@
+# Automated Documentation Sync Bot
+# Keeps documentation consistent between README.md, /docs, and Wiki
+
+name: Documentation Sync Bot
+
+on:
+  # Run on pushes to master branch
+  push:
+    branches:
+      - master
+    paths:
+      - 'README.md'
+      - 'docs/**'
+      - '.github/workflows/doc-sync.yml'
+
+  # Run on PR merges (same as push to master)
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      force_sync:
+        description: 'Force sync even if no changes detected'
+        required: false
+        type: boolean
+        default: false
+
+  # Daily cron job at 2 AM UTC
+  schedule:
+    - cron: '0 2 * * *'
+
+# Prevent concurrent runs to avoid conflicts
+concurrency:
+  group: doc-sync-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sync-documentation:
+    name: Sync Documentation
+    runs-on: ubuntu-latest
+
+    # Skip if commit message contains [skip-doc-sync] to prevent infinite loops
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'schedule' ||
+      (github.event_name == 'push' && !contains(github.event.head_commit.message, '[skip-doc-sync]')) ||
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+
+    permissions:
+      contents: write
+      pages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Checkout wiki
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}.wiki
+          path: wiki-repo
+          token: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true  # Wiki might not exist yet
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create docs directories
+        run: |
+          mkdir -p docs/wiki
+          echo "Created/verified docs/wiki directory"
+
+      # Job 1: Sync README → Docs
+      - name: Sync README to Docs
+        id: sync_readme
+        run: |
+          echo "=== Syncing README.md to docs/README.md ==="
+
+          if [ ! -f README.md ]; then
+            echo "❌ README.md not found, skipping"
+            echo "readme_synced=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Copy README.md to docs/
+          cp README.md docs/README.md
+
+          # Replace relative links with absolute GitHub URLs
+          # This ensures links work from the GitHub Pages site
+          REPO_URL="https://github.com/${{ github.repository }}"
+
+          # Replace relative markdown links like [text](./path) or [text](path.md)
+          sed -i -E "s|\]\(\./([^)]+)\)|\](${REPO_URL}/blob/master/\1)|g" docs/README.md
+          sed -i -E "s|\]\((?!http)([^)]+\.md)\)|\](${REPO_URL}/blob/master/\1)|g" docs/README.md
+
+          # Check if file changed
+          if git diff --quiet docs/README.md; then
+            echo "✅ No changes in docs/README.md"
+            echo "readme_synced=false" >> $GITHUB_OUTPUT
+          else
+            echo "📝 Changes detected in docs/README.md"
+            echo "readme_synced=true" >> $GITHUB_OUTPUT
+          fi
+
+      # Job 2: Sync Wiki → Docs
+      - name: Sync Wiki to Docs
+        id: sync_wiki
+        run: |
+          echo "=== Syncing Wiki to docs/wiki/ ==="
+
+          if [ ! -d wiki-repo ]; then
+            echo "⚠️  Wiki repository not found, skipping wiki sync"
+            echo "wiki_synced=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Track if changes occurred
+          CHANGES_MADE=false
+
+          # Copy all wiki markdown files to docs/wiki/
+          if [ -d wiki-repo ]; then
+            # Remove old wiki files in docs/wiki/ (except .gitkeep)
+            find docs/wiki/ -name "*.md" -delete 2>/dev/null || true
+
+            # Copy all markdown files
+            cp -r wiki-repo/*.md docs/wiki/ 2>/dev/null || true
+
+            # Convert Home.md to index.md if it exists
+            if [ -f docs/wiki/Home.md ]; then
+              mv docs/wiki/Home.md docs/wiki/index.md
+              echo "📄 Converted Home.md → index.md"
+            fi
+
+            # Fix wiki internal links
+            # Wiki uses [[Page Name]] syntax, convert to [Page Name](Page-Name.md)
+            for file in docs/wiki/*.md; do
+              if [ -f "$file" ]; then
+                # Convert [[Page Name]] to [Page Name](Page-Name.md)
+                sed -i -E 's/\[\[([^]]+)\]\]/[\1](\1.md)/g' "$file"
+                # Replace spaces with hyphens in link URLs
+                sed -i -E 's/\[([^]]+)\]\(([^)]+) ([^)]+)\)/[\1](\2-\3)/g' "$file"
+              fi
+            done
+
+            # Check if any wiki files changed
+            if ! git diff --quiet docs/wiki/; then
+              echo "📝 Wiki changes detected"
+              CHANGES_MADE=true
+            else
+              echo "✅ No wiki changes"
+            fi
+          fi
+
+          echo "wiki_synced=$CHANGES_MADE" >> $GITHUB_OUTPUT
+
+      # Job 3: Create wiki index page if missing
+      - name: Generate wiki index
+        run: |
+          if [ ! -f docs/wiki/index.md ] && [ -d docs/wiki ]; then
+            echo "Creating wiki index page..."
+
+            # Create frontmatter
+            echo "---" > docs/wiki/index.md
+            echo "layout: default" >> docs/wiki/index.md
+            echo "title: Wiki" >> docs/wiki/index.md
+            echo "nav_order: 100" >> docs/wiki/index.md
+            echo "has_children: true" >> docs/wiki/index.md
+            echo "permalink: /wiki/" >> docs/wiki/index.md
+            echo "---" >> docs/wiki/index.md
+            echo "" >> docs/wiki/index.md
+
+            # Add content
+            echo "# QWAMOS Wiki" >> docs/wiki/index.md
+            echo "" >> docs/wiki/index.md
+            echo "This section contains wiki pages synced from the GitHub Wiki." >> docs/wiki/index.md
+            echo "" >> docs/wiki/index.md
+            echo "## Available Pages" >> docs/wiki/index.md
+            echo "" >> docs/wiki/index.md
+
+            # List all wiki pages
+            for file in docs/wiki/*.md; do
+              if [ -f "$file" ] && [ "$(basename "$file")" != "index.md" ]; then
+                FILENAME=$(basename "$file" .md)
+                echo "- [$FILENAME]($FILENAME)" >> docs/wiki/index.md
+              fi
+            done
+
+            echo "✅ Created wiki index page"
+          fi
+
+      # Job 4: Validate internal links
+      - name: Setup Node.js for link validation
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate documentation links
+        id: validate_links
+        uses: lycheeverse/lychee-action@v1
+        with:
+          args: |
+            --accept 200,204,429
+            --timeout 10
+            --max-redirects 5
+            --exclude-mail
+            --exclude 'localhost'
+            --exclude '127.0.0.1'
+            --exclude 'example.com'
+            --exclude 'twitter.com'
+            --exclude 'x.com'
+            --exclude 'linkedin.com'
+            --exclude 'facebook.com'
+            --exclude 'trocador.app'
+            --no-progress
+            docs/**/*.md
+            README.md
+          fail: false  # Don't fail the workflow on broken links
+          output: lychee-report.md
+
+      - name: Process link validation results
+        if: always()
+        run: |
+          if [ -f lychee-report.md ]; then
+            echo "=== Link Validation Report ==="
+            cat lychee-report.md
+
+            # Count broken links
+            BROKEN_LINKS=$(grep -c "✗" lychee-report.md || echo "0")
+            echo "🔗 Found $BROKEN_LINKS broken links"
+
+            if [ "$BROKEN_LINKS" -gt "0" ]; then
+              echo "⚠️  Warning: Broken links detected. See report above."
+              # Create issue comment or notification here if needed
+            else
+              echo "✅ All links are valid"
+            fi
+          else
+            echo "⚠️  No link validation report generated"
+          fi
+
+      # Job 5: Auto-commit changes (idempotent)
+      - name: Check for changes
+        id: check_changes
+        run: |
+          # Check if there are any changes to commit
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "✅ No changes to commit"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "📝 Changes detected, will commit"
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+
+            # Show what changed
+            echo "=== Changed files ==="
+            git status --short
+          fi
+
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.has_changes == 'true' || github.event.inputs.force_sync == 'true'
+        run: |
+          # Add all documentation changes
+          git add docs/README.md docs/wiki/ README.md
+
+          # Create commit message file
+          cat > /tmp/commit-msg.txt << 'COMMITMSG'
+          docs: Sync documentation [skip-doc-sync]
+
+          Automated documentation sync performed:
+          COMMITMSG
+
+          if [ "${{ steps.sync_readme.outputs.readme_synced }}" == "true" ]; then
+            echo "- Synced README.md to docs/README.md" >> /tmp/commit-msg.txt
+          fi
+
+          if [ "${{ steps.sync_wiki.outputs.wiki_synced }}" == "true" ]; then
+            echo "- Synced Wiki pages to docs/wiki/" >> /tmp/commit-msg.txt
+          fi
+
+          echo "" >> /tmp/commit-msg.txt
+          echo "Triggered by: ${{ github.event_name }}" >> /tmp/commit-msg.txt
+          echo "Run: ${{ github.run_id }}" >> /tmp/commit-msg.txt
+          echo "" >> /tmp/commit-msg.txt
+          echo "Generated by Documentation Sync Bot" >> /tmp/commit-msg.txt
+
+          # Commit with [skip-doc-sync] to prevent infinite loops
+          git commit -F /tmp/commit-msg.txt || {
+            echo "Nothing to commit (git commit failed)"
+            exit 0
+          }
+
+          # Push changes
+          echo "Pushing changes to master..."
+          git push origin master
+
+          echo "Documentation sync complete!"
+
+      - name: Upload link validation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: link-validation-report
+          path: lychee-report.md
+          retention-days: 30
+        continue-on-error: true
+
+      # Summary
+      - name: Job Summary
+        if: always()
+        run: |
+          echo "## 📚 Documentation Sync Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Workflow Run:** ${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### Sync Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ steps.sync_readme.outputs.readme_synced }}" == "true" ]; then
+            echo "- ✅ README synced to docs/" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ⏭️  README unchanged" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ steps.sync_wiki.outputs.wiki_synced }}" == "true" ]; then
+            echo "- ✅ Wiki synced to docs/wiki/" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ⏭️  Wiki unchanged" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ steps.check_changes.outputs.has_changes }}" == "true" ]; then
+            echo "- ✅ Changes committed and pushed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ⏭️  No changes to commit" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Link Validation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f lychee-report.md ]; then
+            echo "See artifacts for detailed link validation report." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Link validation report not available." >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "🤖 *Automated by Documentation Sync Bot*" >> $GITHUB_STEP_SUMMARY
