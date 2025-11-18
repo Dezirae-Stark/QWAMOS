@@ -255,6 +255,7 @@ class TestVMNetworkIsolation:
         isolation.add_allowed_host("api.example.com")
 
         assert len(isolation.allowed_hosts) == 2
+        # lgtm[py/incomplete-url-substring-sanitization] - Checking set membership, not URL validation
         assert "example.com" in isolation.allowed_hosts
 
     def test_remove_allowed_host(self):

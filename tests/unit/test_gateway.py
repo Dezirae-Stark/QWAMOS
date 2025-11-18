@@ -194,6 +194,7 @@ class TestDNSCryptGateway:
         ip = dnscrypt.query("example.com")
         assert ip is not None
         assert len(ip) > 0
+        # lgtm[py/incomplete-url-substring-sanitization] - Checking set membership, not URL validation
         assert "example.com" in dnscrypt.queries
 
     def test_dnscrypt_query_fails_when_stopped(self):
