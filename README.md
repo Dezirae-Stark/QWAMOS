@@ -1697,6 +1697,18 @@ QWAMOS has a clear forward path with additional phases designed for expanded cap
 - **Secure Mesh Transport (Phase XVI) simulation:** Passed
 - **Pending:** Phase XII KVM hardware-accelerated tests on real ARM device
 
+> **Phase XII KVM Validation:**
+> Complete QEMU-based simulation successful.
+> Hardware testing pending using the **KVM Hardware Test Suite** (see [`tests/kvm_hardware_suite/`](tests/kvm_hardware_suite/)).
+>
+> Test suite includes:
+> - Hardware capability detection (`kvm_hardware_check.sh`)
+> - Performance benchmarking (`kvm_perf_benchmark.py`)
+> - VM boot validation (`vm_boot_test.py`)
+> - Comprehensive device reports and validation instructions
+>
+> See [`device_validation_instructions.md`](tests/kvm_hardware_suite/device_validation_instructions.md) for deployment testing procedures.
+
 ---
 
 ## 🤝 Contributing
