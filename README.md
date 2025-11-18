@@ -15,9 +15,9 @@
 
 **Current Status:** Phase 11 @ 100% (Flutter Hypervisor UI) - Internal feature-complete alpha; undergoing internal validation. External audits scheduled in future phases. | Phase 10 @ 100% (Advanced Hardware Security) | Phase 9 @ 100% (AI App Builder)
 
-**Last Updated:** 2025-11-05
+**Last Updated:** 2025-11-17
 
-**Version:** v1.0.0-alpha
+**Version:** v1.1.0
 [![Phase 11](https://img.shields.io/badge/Phase_11-100%25-brightgreen.svg)](ui/README.md)
 [![Phase 10](https://img.shields.io/badge/Phase_10-100%25-brightgreen.svg)](PHASE10_COMPLETION_SUMMARY.md)
 [![Phase 9](https://img.shields.io/badge/Phase_9-100%25-brightgreen.svg)](ai_app_builder/DEPLOYMENT_SUMMARY.md)
@@ -27,6 +27,11 @@
 [![Phase 5](https://img.shields.io/badge/Phase_5-95%25-yellow.svg)](docs/PHASE5_COMPLETION_SUMMARY.md)
 [![Phase 4](https://img.shields.io/badge/Phase_4-100%25-brightgreen.svg)](crypto/pq/TEST_RESULTS.md)
 [![Overall](https://img.shields.io/badge/Overall-99.5%25-brightgreen.svg)](#-build-progress)
+
+<!-- CI badges will activate once workflows generate them -->
+![CodeQL](https://github.com/Dezirae-Stark/QWAMOS/actions/workflows/codeql.yml/badge.svg)
+![SBOM](https://github.com/Dezirae-Stark/QWAMOS/actions/workflows/sbom.yml/badge.svg)
+![Forensic Audit](https://github.com/Dezirae-Stark/QWAMOS/actions/workflows/forensic-audit.yml/badge.svg)
 
 ---
 
@@ -69,6 +74,18 @@
 ## TL;DR
 
 **QWAMOS** is a ground-up mobile operating system that brings desktop-class security virtualization to smartphones. It addresses the fundamental vulnerability of modern mobile devices—monolithic operating systems where a single exploit can compromise everything—by implementing **VM-based compartmentalization** similar to Qubes OS and **mandatory network anonymization** similar to Whonix. Every app runs in its own virtual machine, all internet traffic is routed through Tor/I2P, and the entire stack is protected with **post-quantum cryptography** (Kyber-1024, ChaCha20-Poly1305, BLAKE3) to resist future quantum computer attacks. AI-driven threat detection with triple-LLM coordination (Kali GPT, Claude, ChatGPT) provides autonomous security monitoring, while ML-powered bootloader integrity verification defends against WikiLeaks Vault 7-style persistence attacks. QWAMOS is designed for government agencies, intelligence professionals, journalists, corporate executives, and high-value individuals who face nation-state-level adversaries and require uncompromising mobile security.
+
+---
+
+## Quick Comparison Snapshot
+
+| Feature               | QWAMOS | GrapheneOS | iOS Lockdown | Android Enterprise |
+|-----------------------|:------:|:----------:|:------------:|:------------------:|
+| VM Isolation          | **Full Qubes-like VMs** | Sandboxed apps only | No | No |
+| Post-Quantum Crypto   | **Kyber-1024 + ChaCha20** | No PQC | No PQC | No PQC |
+| Mandatory Tor/I2P     | **Yes** | Optional VPN | No | No |
+| Baseband Isolation    | **Dedicated Gateway VM** | Limited | No | No |
+| App Builder (AI)      | **Triple-AI On-Device** | No | No | No |
 
 ---
 
@@ -1641,6 +1658,20 @@ QWAMOS aims to make the tradeoff between security and usability as favorable as 
 
 ---
 
+## Roadmap (vNext)
+
+QWAMOS has a clear forward path with additional phases designed for expanded capability:
+
+- **Phase XII:** Full KVM acceleration on supported Android SoCs
+- **Phase XIII:** Complete PQC-only storage subsystem using Kyber-wrapped keys
+- **Phase XIV:** GPU isolation and passthrough control for graphics-hardened apps
+- **Phase XV:** OS-level AI Governor for adaptive energy, threat, and VM resource balancing
+- **Phase XVI:** Secure Cluster Mode (multi-phone mesh with PQC transport)
+
+These will be included in upcoming version increments and tagged releases.
+
+---
+
 ## 🤝 Contributing
 
 QWAMOS is an open-source project. Contributions welcome!
@@ -1737,9 +1768,19 @@ If you discover a security vulnerability in QWAMOS, please report it responsibly
 
 AGPL-3.0 - See [LICENSE](LICENSE) for details.
 
-QWAMOS © 2025 Dezirae Stark / First Sterling Capital, LLC  
-Licensed under AGPL-3.0 with additional clause:  
+QWAMOS © 2025 Dezirae Stark / First Sterling Capital, LLC
+Licensed under AGPL-3.0 with additional clause:
 Commercial resale or rebranding requires express written permission.
+
+### Why AGPL-3.0?
+
+QWAMOS uses **AGPL-3.0** to ensure:
+- The code can be openly audited for security.
+- No corporation can take the code private or proprietary.
+- Any modified or hosted version must remain open-source for community benefit.
+- The project stays protected from silent exploitation or rebranding.
+
+This preserves transparency, trust, and long-term community integrity.
 
 ### Corporate Structure
 

@@ -1,7 +1,7 @@
 # QWAMOS Project Status
 
-**Last Updated:** 2025-11-05 UTC
-**Version:** v1.0.0-alpha
+**Last Updated:** 2025-11-17 UTC
+**Version:** v1.1.0
 **Build Environment:** Termux on Android ARM64
 
 ---
@@ -1085,6 +1085,88 @@ Layer 6: ML Threat Detection Integration (Intelligence)
 **Total Commits:** 17+
 **Total Files:** 8,329+
 **Repository Size:** ~500 MB (after NDK removal)
+
+---
+
+## Future Phases (vNext)
+
+The following phases have been planned and initialized for future development:
+
+| Phase | Component | Status | Progress |
+|-------|-----------|--------|----------|
+| 12 | Full KVM Acceleration | 🔮 Planning Initialized | 0% |
+| 13 | PQC-Only Storage Subsystem | 🔮 Planning Initialized | 0% |
+| 14 | GPU Isolation Layer | 🔮 Planning Initialized | 0% |
+| 15 | AI Governor (Resource/Threat Balancing) | 🔮 Planning Initialized | 0% |
+| 16 | Secure Cluster Mode (Multi-Device Mesh) | 🔮 Planning Initialized | 0% |
+
+### Phase XII: Full KVM Acceleration
+
+**Overview:** Hardware-accelerated virtualization using ARM64 KVM extensions for near-native VM performance.
+
+**Expected Benefits:**
+- 80-95% native CPU performance (vs 40-60% with software emulation)
+- VM boot time reduced from 8-12s to <2s
+- 40-60% reduction in power consumption
+- Supports Snapdragon 8 Gen 3 and compatible SoCs
+
+**Planning Documents:** `phases/phase12_kvm_acceleration/`
+
+---
+
+### Phase XIII: PQC-Only Storage Subsystem
+
+**Overview:** Complete post-quantum encrypted storage using Kyber-1024 key encapsulation and ChaCha20-Poly1305 bulk encryption.
+
+**Expected Benefits:**
+- Quantum-resistant protection for all VM disk images
+- 30+ year forward secrecy for encrypted data
+- Per-VM key isolation (compromise of one VM doesn't affect others)
+- <10% performance overhead compared to unencrypted storage
+
+**Planning Documents:** `phases/phase13_pqc_storage/`
+
+---
+
+### Phase XIV: GPU Isolation Layer
+
+**Overview:** Secure GPU passthrough with Vulkan proxy for graphics-accelerated VMs while maintaining isolation.
+
+**Expected Benefits:**
+- Hardware-accelerated graphics for trusted VMs
+- GPU side-channel attack mitigation
+- SwiftShader fallback for untrusted VMs
+- Per-VM GPU memory isolation
+
+**Planning Documents:** `phases/phase14_gpu_isolation/`
+
+---
+
+### Phase XV: AI Governor for Adaptive Resource Management
+
+**Overview:** ML-powered governor that dynamically balances VM resources, threat response, and power consumption.
+
+**Expected Benefits:**
+- Adaptive CPU/memory allocation based on workload prediction
+- Threat-aware resource prioritization (boost security VMs during attacks)
+- 20-40% battery life improvement through intelligent scheduling
+- Thermal management optimization
+
+**Planning Documents:** `phases/phase15_ai_governor/`
+
+---
+
+### Phase XVI: Secure Cluster Mode
+
+**Overview:** Multi-device mesh networking with PQC-encrypted communication for distributed VMs and storage.
+
+**Expected Benefits:**
+- High availability through VM replication across devices
+- Distributed workload execution for computationally intensive tasks
+- Redundant storage with automatic failover
+- Collaborative threat detection across device cluster
+
+**Planning Documents:** `phases/phase16_secure_cluster_mode/`
 
 ---
 

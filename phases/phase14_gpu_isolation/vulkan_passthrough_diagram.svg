@@ -1,0 +1,31 @@
+<!-- Vulkan Passthrough Architecture Diagram (Placeholder) -->
+<!-- Actual SVG diagram to be created during implementation -->
+
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+  <text x="400" y="300" text-anchor="middle" font-size="20" fill="black">
+    Vulkan Passthrough Architecture Diagram
+  </text>
+  <text x="400" y="330" text-anchor="middle" font-size="16" fill="gray">
+    (Placeholder - Full diagram pending Phase XIV implementation)
+  </text>
+
+  <!-- Placeholder boxes -->
+  <rect x="50" y="50" width="200" height="100" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+  <text x="150" y="105" text-anchor="middle">VM Guest App</text>
+
+  <rect x="300" y="50" width="200" height="100" fill="#fff3e0" stroke="#f57c00" stroke-width="2"/>
+  <text x="400" y="105" text-anchor="middle">Vulkan Proxy</text>
+
+  <rect x="550" y="50" width="200" height="100" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2"/>
+  <text x="650" y="105" text-anchor="middle">Adreno GPU</text>
+
+  <!-- Placeholder arrows -->
+  <path d="M 250 100 L 300 100" stroke="black" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <path d="M 500 100 L 550 100" stroke="black" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="black"/>
+    </marker>
+  </defs>
+</svg>
