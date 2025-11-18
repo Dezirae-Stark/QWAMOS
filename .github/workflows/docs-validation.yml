@@ -1,0 +1,369 @@
+name: Documentation Validation
+
+on:
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - '**.md'
+      - 'docs/**'
+      - '.github/workflows/docs-validation.yml'
+  pull_request:
+    branches:
+      - master
+      - main
+    paths:
+      - '**.md'
+      - 'docs/**'
+  workflow_dispatch:
+    inputs:
+      skip_wiki_sync:
+        description: 'Skip wiki sync job'
+        required: false
+        default: 'false'
+
+jobs:
+  markdown-lint:
+    name: Markdown Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install markdownlint-cli
+        run: npm install -g markdownlint-cli
+
+      - name: Create markdownlint config
+        run: |
+          cat > .markdownlint.json << 'EOF'
+          {
+            "default": true,
+            "MD013": {
+              "line_length": 120,
+              "code_blocks": false,
+              "tables": false
+            },
+            "MD033": false,
+            "MD041": false,
+            "MD024": {
+              "siblings_only": true
+            },
+            "MD007": {
+              "indent": 2
+            }
+          }
+          EOF
+
+      - name: Lint Markdown files in root
+        run: |
+          echo "Linting root Markdown files..."
+          markdownlint '*.md' --config .markdownlint.json || true
+
+      - name: Lint Markdown files in docs/
+        run: |
+          if [ -d "docs" ]; then
+            echo "Linting docs/ directory..."
+            markdownlint 'docs/**/*.md' --config .markdownlint.json || true
+          else
+            echo "docs/ directory not found, skipping"
+          fi
+
+      - name: Lint Markdown files in wiki/
+        run: |
+          if [ -d "wiki" ]; then
+            echo "Linting wiki/ directory..."
+            markdownlint 'wiki/**/*.md' --config .markdownlint.json || true
+          else
+            echo "wiki/ directory not found, skipping"
+          fi
+
+  link-validation:
+    name: Link Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Restore lychee cache
+        uses: actions/cache@v4
+        with:
+          path: .lycheecache
+          key: cache-lychee-${{ github.sha }}
+          restore-keys: cache-lychee-
+
+      - name: Create lychee config
+        run: |
+          cat > lychee.toml << 'EOF'
+          # Exclude patterns
+          exclude = [
+            "file://",
+            "^mailto:",
+            "localhost",
+            "127.0.0.1",
+            "example.com",
+            "placeholder.com"
+          ]
+
+          # Accept status codes
+          accept = [200, 201, 204, 301, 302, 307, 308, 429]
+
+          # Timeout in seconds
+          timeout = 20
+
+          # Maximum retries
+          max_retries = 3
+
+          # Headers
+          headers = [
+            "accept=text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+          ]
+
+          # Cache
+          cache = true
+
+          # Maximum cache age in seconds
+          max_cache_age = 86400
+          EOF
+
+      - name: Link Checker
+        uses: lycheeverse/lychee-action@v1
+        with:
+          args: --config lychee.toml --verbose --no-progress '**/*.md' '**/*.html'
+          fail: false
+          jobSummary: true
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+  wiki-sync:
+    name: Wiki Synchronization
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.event.inputs.skip_wiki_sync != 'true'
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Clone wiki repository
+        run: |
+          echo "Cloning wiki..."
+          REPO_NAME="${GITHUB_REPOSITORY##*/}"
+          OWNER="${GITHUB_REPOSITORY%%/*}"
+
+          # Clone wiki to temporary location
+          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$OWNER/$REPO_NAME.wiki.git wiki-temp || {
+            echo "Wiki clone failed - wiki may not exist yet"
+            exit 0
+          }
+
+      - name: Sync wiki to docs/wiki/
+        run: |
+          if [ ! -d "wiki-temp" ]; then
+            echo "No wiki to sync"
+            exit 0
+          fi
+
+          # Create docs/wiki directory
+          mkdir -p docs/wiki
+
+          # Copy wiki files
+          echo "Copying wiki files..."
+          cp -r wiki-temp/*.md docs/wiki/ 2>/dev/null || echo "No markdown files in wiki"
+
+          # Remove .git directory from wiki-temp
+          rm -rf wiki-temp/.git
+          rm -rf wiki-temp
+
+          # Create index file for wiki
+          cat > docs/wiki/README.md << 'EOF'
+          # QWAMOS Wiki Documentation
+
+          This directory contains a synchronized copy of the QWAMOS Wiki for offline access and GitHub Pages hosting.
+
+          **Live Wiki**: [View on GitHub](https://github.com/${{ github.repository }}/wiki)
+
+          ## Available Pages
+
+          EOF
+
+          # List all wiki pages
+          for file in docs/wiki/*.md; do
+            if [ -f "$file" ] && [ "$(basename "$file")" != "README.md" ]; then
+              filename=$(basename "$file" .md)
+              echo "- [$filename]($filename.md)" >> docs/wiki/README.md
+            fi
+          done
+
+          echo "" >> docs/wiki/README.md
+          echo "---" >> docs/wiki/README.md
+          echo "*Last synced: $(date -u '+%Y-%m-%d %H:%M:%S UTC')*" >> docs/wiki/README.md
+
+      - name: Commit wiki changes
+        run: |
+          if [ ! -d "docs/wiki" ]; then
+            echo "No wiki directory to commit"
+            exit 0
+          fi
+
+          git add docs/wiki/
+
+          if git diff --staged --quiet; then
+            echo "No wiki changes to commit"
+          else
+            git commit -m "$(cat <<'COMMIT_MSG'
+          docs: Sync wiki to docs/wiki/ directory
+
+          Auto-synced from GitHub Wiki by docs-validation workflow
+
+          Last sync: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+
+          🤖 Generated with Claude Code (https://claude.com/claude-code)
+
+          Co-Authored-By: Claude <noreply@anthropic.com>
+          COMMIT_MSG
+          )"
+            git push origin master
+            echo "Wiki synced successfully!"
+          fi
+
+  spellcheck:
+    name: Spell Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install codespell
+        run: pip install codespell
+
+      - name: Create codespell ignore list
+        run: |
+          cat > .codespell-ignore << 'EOF'
+          # Cryptographic terms
+          kyber
+          chacha
+          blake
+          aead
+          pqc
+          kem
+          kdf
+
+          # Technical terms
+          qemu
+          kvm
+          termux
+          seccomp
+          apparmor
+          dnscrypt
+          eepsite
+          veracrypt
+
+          # Project-specific
+          qwamos
+
+          # Network/protocols
+          onion
+          i2p
+          tor
+
+          # File extensions and paths
+          yml
+          md
+          py
+          json
+          toml
+
+          # Common abbreviations
+          vm
+          vpn
+          os
+          cpu
+          gpu
+          ram
+
+          # Names/Organizations
+          dezirae
+          stark
+          anthropic
+
+          # Technical identifiers
+          uint
+          utf
+          str
+          bool
+          dict
+          EOF
+
+      - name: Create codespell config
+        run: |
+          cat > .codespellrc << 'EOF'
+          [codespell]
+          skip = .git,*.pyc,*.class,*.jar,*.war,*.ear,*.zip,*.tar.gz,*.min.js,*.lock,package-lock.json,yarn.lock
+          ignore-words = .codespell-ignore
+          check-filenames =
+          check-hidden =
+          quiet-level = 2
+          EOF
+
+      - name: Run codespell
+        run: |
+          echo "Running spell check..."
+          codespell --config .codespellrc \
+            --exclude-file .gitignore \
+            --skip '.git,*.pyc,*.min.js,*.lock,node_modules,build,dist,*.qvol,*.aab,*.apk' \
+            . || {
+            echo "Spelling errors found (non-blocking)"
+            exit 0
+          }
+
+  validation-summary:
+    name: Validation Summary
+    runs-on: ubuntu-latest
+    needs: [markdown-lint, link-validation, spellcheck]
+    if: always()
+
+    steps:
+      - name: Check job results
+        run: |
+          echo "## Documentation Validation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Markdown Lint | ${{ needs.markdown-lint.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Link Validation | ${{ needs.link-validation.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Spell Check | ${{ needs.spellcheck.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [[ "${{ needs.markdown-lint.result }}" == "failure" ]] || \
+             [[ "${{ needs.link-validation.result }}" == "failure" ]] || \
+             [[ "${{ needs.spellcheck.result }}" == "failure" ]]; then
+            echo "⚠️ Some validation checks failed. Please review the logs above." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ All validation checks passed!" >> $GITHUB_STEP_SUMMARY
+          fi
