@@ -200,6 +200,16 @@ RUN wget -qO- "https://github.com/koalaman/shellcheck/releases/download/stable/s
     cp /tmp/shellcheck-stable/shellcheck /usr/local/bin/ && \
     rm -rf /tmp/shellcheck-stable
 
+# Verify installations before user switch (as root)
+RUN echo "Verifying Python..." && python3 --version && \
+    echo "Verifying Java..." && java -version && \
+    echo "Verifying Kotlin..." && kotlinc -version && \
+    echo "Verifying Flutter..." && flutter --version && \
+    echo "Verifying Gradle..." && gradle --version && \
+    echo "Verifying Node.js..." && node --version && \
+    echo "Verifying npm..." && npm --version && \
+    echo "Development environment ready!"
+
 # Set up development user
 RUN useradd -m -s /bin/bash -G sudo qwamos && \
     echo "qwamos ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
@@ -217,18 +227,8 @@ RUN echo 'export PS1="\[\e[32m\]qwamos@docker\[\e[m\]:\[\e[34m\]\w\[\e[m\]\$ "' 
     echo 'alias gs="git status"' >> ~/.bashrc && \
     echo 'alias gd="git diff"' >> ~/.bashrc
 
-# Set Java environment
-ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-
-# Verify installations
-RUN python3 --version && \
-    java -version && \
-    kotlinc -version && \
-    flutter --version && \
-    gradle --version && \
-    node --version && \
-    npm --version && \
-    echo "Development environment ready!"
+# Set Java environment (using default JDK)
+ENV JAVA_HOME=/usr/lib/jvm/default-java
 
 # Expose common ports for development
 EXPOSE 8080 8000 5000 3000
