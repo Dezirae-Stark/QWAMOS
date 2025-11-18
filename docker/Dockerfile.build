@@ -140,6 +140,14 @@ RUN git clone --depth 1 --branch main https://github.com/open-quantum-safe/liboq
     ldconfig && \
     rm -rf /tmp/liboqs
 
+# Verify installations before user switch (as root)
+RUN echo "Verifying Python..." && python3 --version && \
+    echo "Verifying Java..." && java -version && \
+    echo "Verifying Kotlin..." && kotlinc -version && \
+    echo "Verifying Flutter..." && flutter doctor --version && \
+    echo "Verifying Gradle..." && gradle --version && \
+    echo "Build environment ready!"
+
 # Set up build user (non-root)
 RUN useradd -m -s /bin/bash qwamos && \
     echo "qwamos ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
@@ -156,14 +164,6 @@ USER qwamos
 
 # Set Java environment (using default JDK)
 ENV JAVA_HOME=/usr/lib/jvm/default-java
-
-# Verify installations (with verbose error reporting)
-RUN echo "Verifying Python..." && python3 --version && \
-    echo "Verifying Java..." && java -version && \
-    echo "Verifying Kotlin..." && kotlinc -version && \
-    echo "Verifying Flutter..." && flutter doctor --version && \
-    echo "Verifying Gradle..." && gradle --version && \
-    echo "Build environment ready!"
 
 # Build QWAMOS modules
 RUN if [ -f requirements.txt ]; then pip3 install --user -r requirements.txt; fi
