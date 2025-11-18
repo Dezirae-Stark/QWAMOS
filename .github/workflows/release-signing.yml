@@ -1,0 +1,529 @@
+# QWAMOS Release Signing Workflow
+# Automated GPG signing of release artifacts for authenticity verification
+
+name: Release Signing
+
+on:
+  # Trigger when a new release is created or published
+  release:
+    types:
+      - created
+      - published
+
+  # Manual trigger for re-signing releases
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag to sign (e.g., v1.0.0)'
+        required: true
+        type: string
+      force_resign:
+        description: 'Force re-signing even if signatures exist'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  packages: read
+
+env:
+  # GPG configuration
+  GPG_KEY_ID: "QWAMOS Release Signing Key"
+  GNUPGHOME: "${{ runner.temp }}/gnupg"
+
+jobs:
+  # Job 1: Sign Release Artifacts
+  sign-release:
+    name: Sign Release Artifacts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Determine release tag
+        id: get-tag
+        run: |
+          if [ "${{ github.event_name }}" == "release" ]; then
+            RELEASE_TAG="${{ github.event.release.tag_name }}"
+          else
+            RELEASE_TAG="${{ github.event.inputs.release_tag }}"
+          fi
+
+          echo "release_tag=${RELEASE_TAG}" >> $GITHUB_OUTPUT
+          echo "Release tag: ${RELEASE_TAG}"
+
+      - name: Create secure GPG home directory
+        run: |
+          echo "::group::Setting up GPG environment"
+
+          # Create secure temporary GPG home
+          mkdir -p "${{ env.GNUPGHOME }}"
+          chmod 700 "${{ env.GNUPGHOME }}"
+
+          # Configure GPG for non-interactive use
+          cat > "${{ env.GNUPGHOME }}/gpg.conf" <<EOF
+          # GPG Configuration for automated signing
+          use-agent
+          pinentry-mode loopback
+          no-tty
+          batch
+          yes
+
+          # Security settings
+          personal-digest-preferences SHA512 SHA384 SHA256
+          cert-digest-algo SHA512
+          default-preference-list SHA512 SHA384 SHA256 AES256 AES192 AES ZLIB BZIP2 ZIP Uncompressed
+
+          # Performance
+          s2k-digest-algo SHA512
+          s2k-cipher-algo AES256
+          EOF
+
+          cat > "${{ env.GNUPGHOME }}/gpg-agent.conf" <<EOF
+          # GPG Agent Configuration
+          allow-loopback-pinentry
+          default-cache-ttl 3600
+          max-cache-ttl 7200
+          EOF
+
+          chmod 600 "${{ env.GNUPGHOME }}/gpg.conf"
+          chmod 600 "${{ env.GNUPGHOME }}/gpg-agent.conf"
+
+          echo "✓ GPG environment configured"
+          echo "::endgroup::"
+
+      - name: Import GPG signing key
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          echo "::group::Importing GPG key"
+
+          if [ -z "$GPG_PRIVATE_KEY" ]; then
+            echo "::error::GPG_PRIVATE_KEY secret is not set"
+            exit 1
+          fi
+
+          if [ -z "$GPG_PASSPHRASE" ]; then
+            echo "::error::GPG_PASSPHRASE secret is not set"
+            exit 1
+          fi
+
+          # Import private key
+          echo "$GPG_PRIVATE_KEY" | gpg --import --batch --yes
+
+          # Get key fingerprint
+          KEY_FP=$(gpg --list-secret-keys --with-colons | grep fpr | head -1 | cut -d: -f10)
+          echo "KEY_FINGERPRINT=${KEY_FP}" >> $GITHUB_ENV
+
+          echo "✓ GPG key imported successfully"
+          echo "Key fingerprint: ${KEY_FP}"
+
+          # Test signing capability
+          echo "test" | gpg --clearsign --batch --yes --passphrase "$GPG_PASSPHRASE" --pinentry-mode loopback > /dev/null
+
+          if [ $? -eq 0 ]; then
+            echo "✓ GPG signing test successful"
+          else
+            echo "::error::GPG signing test failed"
+            exit 1
+          fi
+
+          echo "::endgroup::"
+
+      - name: Download release artifacts
+        id: download
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "::group::Downloading release artifacts"
+
+          RELEASE_TAG="${{ steps.get-tag.outputs.release_tag }}"
+          mkdir -p release-artifacts
+          cd release-artifacts
+
+          # Download all release assets
+          gh release download "$RELEASE_TAG" --repo "${{ github.repository }}" || {
+            echo "::warning::No release assets found for $RELEASE_TAG"
+            echo "has_artifacts=false" >> $GITHUB_OUTPUT
+            exit 0
+          }
+
+          # List downloaded files
+          echo "Downloaded artifacts:"
+          ls -lh
+
+          # Count artifacts (excluding existing signatures)
+          ARTIFACT_COUNT=$(find . -type f ! -name "*.asc" ! -name "*.sig" | wc -l)
+          echo "has_artifacts=true" >> $GITHUB_OUTPUT
+          echo "artifact_count=${ARTIFACT_COUNT}" >> $GITHUB_OUTPUT
+
+          echo "::endgroup::"
+
+      - name: Sign release artifacts
+        if: steps.download.outputs.has_artifacts == 'true'
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          echo "::group::Signing release artifacts"
+
+          cd release-artifacts
+          SIGNED_COUNT=0
+          SKIPPED_COUNT=0
+
+          # Find all files that need signing (exclude existing signatures)
+          for file in $(find . -type f ! -name "*.asc" ! -name "*.sig" ! -name "*.gpg"); do
+            filename=$(basename "$file")
+
+            # Check if signature already exists
+            if [ -f "${file}.asc" ] && [ "${{ github.event.inputs.force_resign }}" != "true" ]; then
+              echo "⊘ Skipping $filename (signature exists)"
+              ((SKIPPED_COUNT++))
+              continue
+            fi
+
+            echo "Signing: $filename"
+
+            # Create detached ASCII-armored signature
+            gpg --detach-sign \
+              --armor \
+              --batch \
+              --yes \
+              --passphrase "$GPG_PASSPHRASE" \
+              --pinentry-mode loopback \
+              --local-user "${{ env.KEY_FINGERPRINT }}" \
+              --output "${file}.asc" \
+              "$file"
+
+            if [ $? -eq 0 ]; then
+              echo "✓ Signed: $filename → ${filename}.asc"
+              ((SIGNED_COUNT++))
+
+              # Verify signature
+              gpg --verify "${file}.asc" "$file"
+
+              if [ $? -eq 0 ]; then
+                echo "✓ Verified: ${filename}.asc"
+              else
+                echo "::error::Verification failed for ${filename}.asc"
+                exit 1
+              fi
+            else
+              echo "::error::Failed to sign $filename"
+              exit 1
+            fi
+          done
+
+          echo ""
+          echo "Signing Summary:"
+          echo "  Signed: $SIGNED_COUNT"
+          echo "  Skipped: $SKIPPED_COUNT"
+
+          echo "signed_count=${SIGNED_COUNT}" >> $GITHUB_OUTPUT
+
+          echo "::endgroup::"
+
+      - name: Generate signature manifest
+        if: steps.download.outputs.has_artifacts == 'true'
+        run: |
+          echo "::group::Generating signature manifest"
+
+          cd release-artifacts
+
+          # Create manifest file
+          cat > SIGNATURES_MANIFEST.txt <<EOF
+          QWAMOS Release Signature Manifest
+          ==================================
+
+          Release: ${{ steps.get-tag.outputs.release_tag }}
+          Date: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          Signed by: ${{ env.KEY_FINGERPRINT }}
+          Repository: ${{ github.repository }}
+
+          Signed Artifacts:
+          EOF
+
+          # List all signatures with checksums
+          for sig in *.asc; do
+            if [ -f "$sig" ]; then
+              original="${sig%.asc}"
+              if [ -f "$original" ]; then
+                echo "" >> SIGNATURES_MANIFEST.txt
+                echo "File: $original" >> SIGNATURES_MANIFEST.txt
+                echo "  SHA256: $(sha256sum "$original" | cut -d' ' -f1)" >> SIGNATURES_MANIFEST.txt
+                echo "  Signature: $sig" >> SIGNATURES_MANIFEST.txt
+              fi
+            fi
+          done
+
+          # Add GPG public key info
+          cat >> SIGNATURES_MANIFEST.txt <<EOF
+
+          GPG Public Key:
+          ===============
+          EOF
+
+          gpg --armor --export "${{ env.KEY_FINGERPRINT }}" >> SIGNATURES_MANIFEST.txt
+
+          cat >> SIGNATURES_MANIFEST.txt <<EOF
+
+          Verification Instructions:
+          ==========================
+
+          1. Import the GPG public key:
+             gpg --import SIGNATURES_MANIFEST.txt
+
+          2. Verify a signature:
+             gpg --verify <file>.asc <file>
+
+          3. Example:
+             gpg --verify qwamos-1.0.0.tar.gz.asc qwamos-1.0.0.tar.gz
+
+          For more information, see:
+          https://github.com/${{ github.repository }}/wiki/Release-Verification
+          EOF
+
+          echo "✓ Signature manifest generated"
+          cat SIGNATURES_MANIFEST.txt
+
+          echo "::endgroup::"
+
+      - name: Upload signatures to release
+        if: steps.download.outputs.has_artifacts == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "::group::Uploading signatures to release"
+
+          cd release-artifacts
+          RELEASE_TAG="${{ steps.get-tag.outputs.release_tag }}"
+
+          # Upload all signature files
+          for sig in *.asc; do
+            if [ -f "$sig" ]; then
+              echo "Uploading: $sig"
+              gh release upload "$RELEASE_TAG" "$sig" --repo "${{ github.repository }}" --clobber
+
+              if [ $? -eq 0 ]; then
+                echo "✓ Uploaded: $sig"
+              else
+                echo "::warning::Failed to upload $sig"
+              fi
+            fi
+          done
+
+          # Upload signature manifest
+          if [ -f "SIGNATURES_MANIFEST.txt" ]; then
+            echo "Uploading: SIGNATURES_MANIFEST.txt"
+            gh release upload "$RELEASE_TAG" "SIGNATURES_MANIFEST.txt" --repo "${{ github.repository }}" --clobber
+            echo "✓ Uploaded: SIGNATURES_MANIFEST.txt"
+          fi
+
+          echo "::endgroup::"
+
+      - name: Update signatures directory
+        if: steps.download.outputs.has_artifacts == 'true'
+        run: |
+          echo "::group::Updating signatures directory"
+
+          RELEASE_TAG="${{ steps.get-tag.outputs.release_tag }}"
+
+          # Create signatures directory structure
+          mkdir -p signatures/latest
+          mkdir -p "signatures/releases/${RELEASE_TAG}"
+
+          # Copy signatures to release-specific directory
+          cp release-artifacts/*.asc "signatures/releases/${RELEASE_TAG}/" 2>/dev/null || true
+          cp release-artifacts/SIGNATURES_MANIFEST.txt "signatures/releases/${RELEASE_TAG}/" 2>/dev/null || true
+
+          # Update latest signatures
+          cp release-artifacts/*.asc signatures/latest/ 2>/dev/null || true
+          cp release-artifacts/SIGNATURES_MANIFEST.txt signatures/latest/ 2>/dev/null || true
+
+          # Create index file for latest
+          cat > signatures/latest/README.md <<EOF
+          # Latest Release Signatures
+
+          This directory contains GPG signatures for the latest QWAMOS release.
+
+          **Release:** ${RELEASE_TAG}
+          **Date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+
+          ## Files
+
+          EOF
+
+          ls -1 signatures/latest/*.asc | while read sig; do
+            echo "- \`$(basename "$sig")\`" >> signatures/latest/README.md
+          done
+
+          cat >> signatures/latest/README.md <<EOF
+
+          ## Verification
+
+          To verify a release artifact:
+
+          \`\`\`bash
+          # Import GPG public key
+          gpg --import SIGNATURES_MANIFEST.txt
+
+          # Verify signature
+          gpg --verify <file>.asc <file>
+          \`\`\`
+
+          See [Release Verification Guide](../../wiki/Release-Verification) for details.
+          EOF
+
+          echo "✓ Signatures directory updated"
+
+          echo "::endgroup::"
+
+      - name: Commit signatures to repository
+        if: steps.download.outputs.has_artifacts == 'true'
+        run: |
+          echo "::group::Committing signatures"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add signatures/
+
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: Update release signatures for ${{ steps.get-tag.outputs.release_tag }}
+
+          Automated GPG signatures for release artifacts.
+
+          Release: ${{ steps.get-tag.outputs.release_tag }}
+          Signed: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          Fingerprint: ${{ env.KEY_FINGERPRINT }}
+
+          🤖 Generated by Release Signing Workflow"
+
+            git push origin master
+            echo "✓ Signatures committed and pushed"
+          fi
+
+          echo "::endgroup::"
+
+      - name: Export public key
+        run: |
+          echo "::group::Exporting public key"
+
+          mkdir -p public-keys
+
+          # Export ASCII-armored public key
+          gpg --armor --export "${{ env.KEY_FINGERPRINT }}" > public-keys/qwamos-release-key.asc
+
+          # Export key information
+          cat > public-keys/KEY_INFO.txt <<EOF
+          QWAMOS Release Signing Key
+          ==========================
+
+          Fingerprint: ${{ env.KEY_FINGERPRINT }}
+
+          This key is used to sign QWAMOS release artifacts.
+
+          Import this key:
+            gpg --import qwamos-release-key.asc
+
+          Verify a signature:
+            gpg --verify <file>.asc <file>
+
+          Trust this key:
+            gpg --edit-key ${{ env.KEY_FINGERPRINT }}
+            trust
+            5 (ultimate trust)
+            quit
+
+          For security, verify this key fingerprint through multiple channels.
+          EOF
+
+          echo "✓ Public key exported"
+
+          echo "::endgroup::"
+
+      - name: Upload public key as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gpg-public-key
+          path: public-keys/
+          retention-days: 90
+
+      - name: Secure cleanup of GPG keys
+        if: always()
+        run: |
+          echo "::group::Secure cleanup"
+
+          # Kill GPG agent
+          gpgconf --kill gpg-agent 2>/dev/null || true
+
+          # Securely delete GPG home directory
+          if [ -d "${{ env.GNUPGHOME }}" ]; then
+            # Overwrite files before deletion
+            find "${{ env.GNUPGHOME }}" -type f -exec shred -vfz -n 3 {} \; 2>/dev/null || true
+
+            # Remove directory
+            rm -rf "${{ env.GNUPGHOME }}"
+
+            echo "✓ GPG keys securely deleted"
+          fi
+
+          # Clear environment variables
+          unset GPG_PRIVATE_KEY
+          unset GPG_PASSPHRASE
+
+          echo "✓ Secure cleanup completed"
+          echo "::endgroup::"
+
+  # Job 2: Signing Summary
+  signing-summary:
+    name: Signing Summary
+    needs: sign-release
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Create workflow summary
+        run: |
+          echo "## 🔏 Release Signing Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Release:** ${{ needs.sign-release.outputs.release_tag || github.event.release.tag_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ${{ needs.sign-release.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### What was signed?" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All release artifacts have been signed with GPG and signatures uploaded." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### Verification" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+          echo "# Download release and signatures" >> $GITHUB_STEP_SUMMARY
+          echo "gh release download ${{ needs.sign-release.outputs.release_tag || github.event.release.tag_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "# Import public key" >> $GITHUB_STEP_SUMMARY
+          echo "gpg --import SIGNATURES_MANIFEST.txt" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "# Verify signature" >> $GITHUB_STEP_SUMMARY
+          echo "gpg --verify <file>.asc <file>" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### Security Notes" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ GPG keys securely deleted after signing" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Signatures committed to \`signatures/latest/\`" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Release-specific signatures in \`signatures/releases/\`" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Signature manifest includes public key" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "🔒 *QWAMOS Release Signing System*" >> $GITHUB_STEP_SUMMARY
