@@ -137,24 +137,22 @@ RUN wget -q https://github.com/JetBrains/kotlin/releases/download/v${KOTLIN_VERS
     ln -s /opt/kotlinc/bin/* /usr/local/bin/
 
 # Install Kotlin Language Server
-RUN git clone https://github.com/fwcd/kotlin-language-server.git /tmp/kotlin-language-server && \
-    cd /tmp/kotlin-language-server && \
-    ./gradlew :server:installDist && \
-    mkdir -p /opt/kotlin-language-server && \
-    cp -r server/build/install/server/* /opt/kotlin-language-server/ && \
-    ln -s /opt/kotlin-language-server/bin/kotlin-language-server /usr/local/bin/ && \
-    rm -rf /tmp/kotlin-language-server
+# Note: Commented out due to build timeouts - can be installed manually if needed
+# RUN git clone https://github.com/fwcd/kotlin-language-server.git /tmp/kotlin-language-server && \
+#     cd /tmp/kotlin-language-server && \
+#     ./gradlew :server:installDist && \
+#     mkdir -p /opt/kotlin-language-server && \
+#     cp -r server/build/install/server/* /opt/kotlin-language-server/ && \
+#     ln -s /opt/kotlin-language-server/bin/kotlin-language-server /usr/local/bin/ && \
+#     rm -rf /tmp/kotlin-language-server
 
 # Install Flutter SDK
-ENV FLUTTER_VERSION=3.16.0
 ENV FLUTTER_HOME=/opt/flutter
 ENV PATH="${FLUTTER_HOME}/bin:${PATH}"
 
-RUN git clone --depth 1 --branch ${FLUTTER_VERSION} https://github.com/flutter/flutter.git ${FLUTTER_HOME} && \
+RUN git clone --depth 1 --branch stable https://github.com/flutter/flutter.git ${FLUTTER_HOME} && \
     flutter --version && \
-    flutter config --no-analytics && \
-    flutter precache && \
-    flutter doctor
+    flutter config --no-analytics
 
 # Install Android SDK
 ENV ANDROID_HOME=/opt/android-sdk
