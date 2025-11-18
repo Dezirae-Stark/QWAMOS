@@ -41,9 +41,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xz-utils \
     zip \
     unzip \
-    # QEMU for VM testing
-    qemu-system-x86 \
-    qemu-system-arm \
+    # QEMU for VM testing (user-mode only for build container)
     qemu-user-static \
     qemu-utils \
     # Android build dependencies
