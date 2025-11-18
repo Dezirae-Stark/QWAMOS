@@ -28,6 +28,14 @@
 [![Phase 4](https://img.shields.io/badge/Phase_4-100%25-brightgreen.svg)](crypto/pq/TEST_RESULTS.md)
 [![Overall](https://img.shields.io/badge/Overall-99.5%25-brightgreen.svg)](#-build-progress)
 
+---
+
+### 🎬 Watch QWAMOS in Action
+
+![QWAMOS Promotional Demo](assets/demo-video/QWAMOS_promo.gif)
+
+**[📥 Download full video (4.2MB MP4)](https://github.com/Dezirae-Stark/QWAMOS/raw/master/assets/demo-video/QWAMOS_promo.mp4)** for higher quality playback
+
 </div>
 
 ---
