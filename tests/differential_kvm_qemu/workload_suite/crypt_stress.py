@@ -57,8 +57,8 @@ class CryptoStressWorkload:
         sk_seed = hashlib.sha3_512(b"kyber_sk" + seed).digest()
 
         # Expand to full key sizes
-        public_key = pk_seed * (1568 // 64 + 1)[:1568]
-        secret_key = sk_seed * (3168 // 64 + 1)[:3168]
+        public_key = (pk_seed * (1568 // 64 + 1))[:1568]
+        secret_key = (sk_seed * (3168 // 64 + 1))[:3168]
 
         return public_key, secret_key
 
