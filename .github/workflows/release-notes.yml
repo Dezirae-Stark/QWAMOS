@@ -59,27 +59,6 @@ jobs:
           path: release-notes/QWAMOS_${{ steps.version.outputs.version }}.md
           retention-days: 90
 
-      - name: Commit release notes to repository
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          # Create release-notes branch if it doesn't exist
-          git fetch origin release-notes || git checkout -b release-notes
-          git checkout release-notes || git checkout -b release-notes
-
-          # Copy release notes from main/master
-          git checkout ${GITHUB_REF#refs/heads/} -- release-notes/
-
-          # Commit if there are changes
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git add release-notes/
-            git commit -m "chore: Auto-generated release notes for ${{ steps.version.outputs.version }}"
-            git push origin release-notes
-          fi
-
       - name: Create Pull Request
         if: github.event_name == 'push' || github.event_name == 'create'
         uses: peter-evans/create-pull-request@v6
@@ -87,6 +66,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: release-notes
           base: ${{ github.ref_name }}
+          commit-message: "chore: Auto-generated release notes for ${{ steps.version.outputs.version }}"
           title: "📝 Release Notes for ${{ steps.version.outputs.version }}"
           body: |
             ## Automated Release Notes
@@ -109,6 +89,8 @@ jobs:
             documentation
             automated
           assignees: Dezirae-Stark
+          add-paths: |
+            release-notes/*.md
 
       - name: Create GitHub Release (on tag)
         if: startsWith(github.ref, 'refs/tags/v')
