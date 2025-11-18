@@ -96,10 +96,12 @@ ENV FLUTTER_VERSION=3.16.0
 ENV FLUTTER_HOME=/opt/flutter
 ENV PATH="${FLUTTER_HOME}/bin:${PATH}"
 
-RUN git clone --depth 1 --branch ${FLUTTER_VERSION} https://github.com/flutter/flutter.git ${FLUTTER_HOME} && \
+RUN git clone --depth 1 --branch stable https://github.com/flutter/flutter.git ${FLUTTER_HOME} && \
+    cd ${FLUTTER_HOME} && \
+    git checkout ${FLUTTER_VERSION} && \
     flutter --version && \
     flutter config --no-analytics && \
-    flutter precache
+    flutter precache --no-android --no-ios --linux
 
 # Install Android SDK (minimal for builds)
 ENV ANDROID_HOME=/opt/android-sdk
