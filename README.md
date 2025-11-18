@@ -223,27 +223,13 @@ QWAMOS continuously monitors network traffic, file system changes, and system ca
 
 Experience the future of mobile security with QWAMOS - a Qubes + Whonix-inspired Android OS featuring post-quantum encryption, VM isolation, and AI-powered threat detection.
 
-<!-- Demo Video -->
-<video width="800" controls>
-  <source src="./assets/demo-video/QWAMOS_promo.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+<!-- Demo Video - Click to Play -->
+[![QWAMOS Promotional Video](./assets/screenshots/demo_preview.gif)](https://github.com/Dezirae-Stark/QWAMOS/raw/master/assets/demo-video/QWAMOS_promo.mp4)
 
-<p><i>🎥 Official QWAMOS promotional video showcasing system architecture and security features</i></p>
+**🎥 [Click to watch the official QWAMOS promotional video](https://github.com/Dezirae-Stark/QWAMOS/raw/master/assets/demo-video/QWAMOS_promo.mp4)** (4.2MB MP4)
+_Showcases system architecture, post-quantum encryption, VM isolation, and security features_
 
----
-
-### 📸 Preview Animation
-
-<picture>
-  <source srcset="./assets/demo-animation/qwamos-demo.webp" type="image/webp">
-  <img src="./assets/screenshots/demo_preview.gif"
-       alt="QWAMOS Demo Animation showing VM isolation dashboard, post-quantum encryption indicators, and AI threat detection interface"
-       width="800"
-       autoplay loop muted playsinline />
-</picture>
-
-<p><i><a href="./assets/demo-animation/qwamos-demo.html"><b>View full interactive demo</b></a></i></p>
+**💡 Tip:** Click the preview image above or the link to download and play the full promotional video
 
 ### ✨ Demo Highlights
 
