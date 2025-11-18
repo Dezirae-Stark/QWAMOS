@@ -1,0 +1,140 @@
+name: Generate Release Notes
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  create:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate-release-notes:
+    name: Generate Release Notes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for git log
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Determine version
+        id: version
+        run: |
+          if [ -f VERSION ]; then
+            VERSION=$(cat VERSION | tr -d '\n')
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "📦 Version: $VERSION"
+          else
+            echo "❌ VERSION file not found"
+            exit 1
+          fi
+
+      - name: Generate release notes
+        run: |
+          chmod +x tools/release_notes_generator.py
+          python3 tools/release_notes_generator.py --repo . --output release-notes
+
+      - name: Display generated release notes
+        run: |
+          echo "📄 Generated release notes:"
+          cat release-notes/QWAMOS_${{ steps.version.outputs.version }}.md
+
+      - name: Upload release notes artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-notes-${{ steps.version.outputs.version }}
+          path: release-notes/QWAMOS_${{ steps.version.outputs.version }}.md
+          retention-days: 90
+
+      - name: Commit release notes to repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Create release-notes branch if it doesn't exist
+          git fetch origin release-notes || git checkout -b release-notes
+          git checkout release-notes || git checkout -b release-notes
+
+          # Copy release notes from main/master
+          git checkout ${GITHUB_REF#refs/heads/} -- release-notes/
+
+          # Commit if there are changes
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git add release-notes/
+            git commit -m "chore: Auto-generated release notes for ${{ steps.version.outputs.version }}"
+            git push origin release-notes
+          fi
+
+      - name: Create Pull Request
+        if: github.event_name == 'push' || github.event_name == 'create'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: release-notes
+          base: ${{ github.ref_name }}
+          title: "📝 Release Notes for ${{ steps.version.outputs.version }}"
+          body: |
+            ## Automated Release Notes
+
+            This PR adds auto-generated release notes for **${{ steps.version.outputs.version }}**.
+
+            ### Generated Files
+            - `release-notes/QWAMOS_${{ steps.version.outputs.version }}.md`
+
+            ### Review Checklist
+            - [ ] Verify all commits are properly categorized
+            - [ ] Check phase updates section is accurate
+            - [ ] Validate checksums
+            - [ ] Confirm version provenance
+
+            ---
+
+            _This PR was automatically created by the Release Notes workflow._
+          labels: |
+            documentation
+            automated
+          assignees: Dezirae-Stark
+
+      - name: Create GitHub Release (on tag)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: release-notes/QWAMOS_${{ steps.version.outputs.version }}.md
+          files: |
+            release-notes/QWAMOS_${{ steps.version.outputs.version }}.md
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Summary
+        run: |
+          echo "## 📋 Release Notes Generation Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**File:** \`release-notes/QWAMOS_${{ steps.version.outputs.version }}.md\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Actions Taken" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Generated release notes from commit history" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Uploaded artifact for download" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Committed to release-notes branch" >> $GITHUB_STEP_SUMMARY
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            echo "- ✅ Created GitHub Release" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ✅ Created Pull Request" >> $GITHUB_STEP_SUMMARY
+          fi

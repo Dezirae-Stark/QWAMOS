@@ -1288,6 +1288,18 @@ bash ~/QWAMOS/security/gateway_vm/firewall/rules-strict.sh
 - **[QUICK_START.md](security/QUICK_START.md)** - 3-minute quick reference
 - **[PHASE3_AUDIT_REPORT.md](PHASE3_AUDIT_REPORT.md)** - Phase 3 completion audit
 
+### Release Notes ⭐ **NEW**
+
+All release notes are automatically generated and stored under [`release-notes/`](release-notes/).
+
+Each release includes:
+- Categorized commit history (Features, Fixes, Security, Documentation, Testing)
+- Phase integration updates (XII-XVI status)
+- Security checksums (SHA256)
+- Version provenance (commit hash, tag, branch)
+
+**Latest:** [`release-notes/QWAMOS_v1.2.0.md`](release-notes/QWAMOS_v1.2.0.md)
+
 ### Security Governance & Compliance ⭐ **NEW**
 - **[QWAMOS_SLSA_Roadmap.md](docs/QWAMOS_SLSA_Roadmap.md)** - Supply-chain Levels for Software Artifacts (SLSA) Level 3/4 compliance roadmap
 - **[QWAMOS_Hardening_Standard.md](docs/QWAMOS_Hardening_Standard.md)** - Baseline configuration & operational security controls
