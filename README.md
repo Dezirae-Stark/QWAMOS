@@ -1813,7 +1813,7 @@ QWAMOS is developed and maintained by **First Sterling Capital, LLC**, under AGP
 ---
 
 © 2025 First Sterling Capital, LLC · Author: Dezirae Stark
-Version 1.0.0 · [Contact](mailto:clockwork.halo@tutanota.de)
+Version 1.1.0 · [Contact](mailto:clockwork.halo@tutanota.de)
 
 ---
 
