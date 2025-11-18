@@ -1,16 +1,13 @@
 # QWAMOS Documentation - Jekyll Gemfile
-# Dependencies for GitHub Pages and Just the Docs theme
+# Dependencies for Jekyll with Just the Docs theme
 
 source "https://rubygems.org"
 
-# Jekyll version compatible with GitHub Pages
+# Jekyll version
 gem "jekyll", "~> 4.3.0"
 
 # Just the Docs theme
 gem "just-the-docs", "~> 0.7.0"
-
-# GitHub Pages gem (includes many plugins)
-gem "github-pages", group: :jekyll_plugins
 
 # Required plugins
 group :jekyll_plugins do
@@ -19,6 +16,9 @@ group :jekyll_plugins do
   gem "jekyll-sitemap", "~> 1.4"
   gem "jekyll-github-metadata", "~> 2.15"
 end
+
+# Additional gems for GitHub Pages compatibility
+gem "webrick", "~> 1.8"
 
 # Windows and JRuby compatibility
 platforms :mingw, :x64_mingw, :mswin, :jruby do
