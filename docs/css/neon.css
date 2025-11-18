@@ -1,0 +1,461 @@
+/* QWAMOS - Neon Effects & Shaders */
+
+/* Neon Text Glow */
+.neon-text {
+  text-shadow:
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    0 0 20px currentColor,
+    0 0 40px currentColor;
+  animation: neonPulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes neonPulse {
+  from {
+    text-shadow:
+      0 0 5px currentColor,
+      0 0 10px currentColor,
+      0 0 20px currentColor,
+      0 0 40px currentColor;
+  }
+  to {
+    text-shadow:
+      0 0 10px currentColor,
+      0 0 20px currentColor,
+      0 0 40px currentColor,
+      0 0 80px currentColor;
+  }
+}
+
+/* Neon Border */
+.neon-border {
+  border: 2px solid var(--neon-blue);
+  box-shadow:
+    0 0 5px var(--neon-blue),
+    0 0 10px var(--neon-blue),
+    0 0 20px var(--neon-blue),
+    inset 0 0 5px var(--neon-blue);
+  animation: borderPulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes borderPulse {
+  from {
+    box-shadow:
+      0 0 5px var(--neon-blue),
+      0 0 10px var(--neon-blue),
+      0 0 20px var(--neon-blue),
+      inset 0 0 5px var(--neon-blue);
+  }
+  to {
+    box-shadow:
+      0 0 10px var(--neon-blue),
+      0 0 20px var(--neon-blue),
+      0 0 40px var(--neon-blue),
+      inset 0 0 10px var(--neon-blue);
+  }
+}
+
+/* Glowing Box */
+.glow-box {
+  position: relative;
+  background: var(--bg-panel);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+}
+
+.glow-box::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple), var(--neon-magenta), var(--neon-cyan));
+  border-radius: var(--radius-lg);
+  z-index: -1;
+  opacity: 0.5;
+  filter: blur(10px);
+  animation: glowRotate 3s linear infinite;
+}
+
+@keyframes glowRotate {
+  0% {
+    filter: blur(10px) hue-rotate(0deg);
+  }
+  100% {
+    filter: blur(10px) hue-rotate(360deg);
+  }
+}
+
+/* Scanline Effect */
+.scanlines {
+  position: relative;
+  overflow: hidden;
+}
+
+.scanlines::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15) 0px,
+    transparent 1px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 3px
+  );
+  pointer-events: none;
+  z-index: 10;
+  animation: scanlineMove 10s linear infinite;
+}
+
+@keyframes scanlineMove {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* Holographic Effect */
+.holographic {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 243, 255, 0.1) 0%,
+    rgba(185, 77, 255, 0.1) 50%,
+    rgba(255, 0, 255, 0.1) 100%
+  );
+  background-size: 200% 200%;
+  animation: holographicShift 5s ease infinite;
+}
+
+@keyframes holographicShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Glitch Effect */
+.glitch {
+  position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+}
+
+.glitch::before {
+  color: var(--neon-cyan);
+  animation: glitchTop 1s linear infinite;
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+}
+
+.glitch::after {
+  color: var(--neon-magenta);
+  animation: glitchBottom 1.5s linear infinite;
+  clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+}
+
+@keyframes glitchTop {
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-2px);
+  }
+  40% {
+    transform: translateX(2px);
+  }
+  60% {
+    transform: translateX(-2px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes glitchBottom {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(2px);
+  }
+  50% {
+    transform: translateX(-2px);
+  }
+  75% {
+    transform: translateX(2px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Plasma Background */
+.plasma-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.plasma-bg::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at 30% 50%,
+    rgba(0, 243, 255, 0.3) 0%,
+    transparent 50%
+  ),
+  radial-gradient(
+    circle at 70% 50%,
+    rgba(185, 77, 255, 0.3) 0%,
+  transparent 50%
+  );
+  animation: plasmaMove 10s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes plasmaMove {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(10%, -10%) rotate(120deg);
+  }
+  66% {
+    transform: translate(-10%, 10%) rotate(240deg);
+  }
+}
+
+/* Neon Loading Spinner */
+.neon-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(0, 243, 255, 0.2);
+  border-top-color: var(--neon-blue);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  box-shadow: 0 0 20px var(--neon-blue);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Data Stream Effect */
+.data-stream {
+  position: relative;
+  overflow: hidden;
+}
+
+.data-stream::after {
+  content: '01010101010101010101010101010101010101010101';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: rgba(0, 243, 255, 0.1);
+  letter-spacing: 2px;
+  animation: streamScroll 15s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+  word-wrap: break-word;
+  line-height: 1.5;
+}
+
+@keyframes streamScroll {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+/* Matrix Rain */
+.matrix-rain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.05;
+}
+
+/* Neon Underline */
+.neon-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.neon-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+  box-shadow: 0 0 10px var(--neon-blue);
+  animation: neonUnderlinePulse 2s ease-in-out infinite;
+}
+
+@keyframes neonUnderlinePulse {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Cyber Grid */
+.cyber-grid {
+  background-image:
+    linear-gradient(rgba(0, 243, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 243, 255, 0.1) 1px, transparent 1px);
+  background-size: 30px 30px;
+  position: relative;
+}
+
+.cyber-grid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, transparent 0%, rgba(10, 10, 15, 0.8) 100%);
+  pointer-events: none;
+}
+
+/* Quantum Particle Effect */
+@keyframes particle {
+  0% {
+    transform: translate(0, 0) scale(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(1);
+    opacity: 0;
+  }
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--neon-blue);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--neon-blue);
+  animation: particle 3s ease-out infinite;
+  pointer-events: none;
+}
+
+/* Chromatic Aberration */
+.chromatic {
+  position: relative;
+}
+
+.chromatic::before,
+.chromatic::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.chromatic::before {
+  background: var(--neon-cyan);
+  transform: translateX(-2px);
+  opacity: 0.3;
+}
+
+.chromatic::after {
+  background: var(--neon-magenta);
+  transform: translateX(2px);
+  opacity: 0.3;
+}
+
+/* Neon Divider */
+.neon-divider {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+  box-shadow: 0 0 10px var(--neon-blue);
+  margin: var(--spacing-lg) 0;
+}
+
+/* Classified Dossier Overlay */
+.classified-overlay {
+  position: relative;
+}
+
+.classified-overlay::before {
+  content: 'CLASSIFIED';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 12px;
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  transform: rotate(15deg);
+  z-index: 10;
+  border: 2px solid rgba(255, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+/* Redacted Text */
+.redacted {
+  background: black;
+  color: transparent;
+  user-select: none;
+  position: relative;
+  display: inline-block;
+}
+
+.redacted::selection {
+  background: black;
+  color: transparent;
+}

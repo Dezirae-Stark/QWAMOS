@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation - QWAMOS</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/neon.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <div class="logo">QWAMOS</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="features.html">Features</a></li>
+        <li><a href="docs.html" class="active">Documentation</a></li>
+        <li><a href="investor.html">Investors</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="download.html">Download</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="mobile-menu-toggle"><span></span><span></span><span></span></div>
+    </div>
+  </nav>
+
+  <section class="hero" style="min-height: 50vh;">
+    <div class="hero-content">
+      <h1 class="neon-text">Documentation</h1>
+      <p class="hero-description">Complete technical reference</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="glass-panel mb-4 animate-on-scroll">
+        <h2 class="neon-underline">Architecture Overview</h2>
+        <pre style="background: rgba(0,0,0,0.5); padding: 1.5rem; border-radius: 8px; overflow-x: auto; color: var(--neon-cyan); line-height: 1.8;">
+┌─────────────────────────────────────────┐
+│         Android Application Layer        │
+├─────────────────────────────────────────┤
+│         QWAMOS Security Manager          │
+│  ┌───────────┬──────────┬─────────────┐ │
+│  │   Kyber   │ ChaCha20 │   BLAKE3    │ │
+│  │   KEM     │ Poly1305 │   Hash      │ │
+│  └───────────┴──────────┴─────────────┘ │
+├─────────────────────────────────────────┤
+│       Virtualization Layer (QEMU)        │
+│  ┌──────┬──────┬──────┬──────┬──────┐  │
+│  │ VM 1 │ VM 2 │ VM 3 │ VM 4 │ VM 5 │  │
+│  └──────┴──────┴──────┴──────┴──────┘  │
+├─────────────────────────────────────────┤
+│      PRoot Containers / Chroot Jails     │
+├─────────────────────────────────────────┤
+│    Network Gateway (InviZible Pro)       │
+│  ┌──────┬──────┬──────────┬──────────┐ │
+│  │ Tor  │ I2P  │ DNSCrypt │   VPN    │ │
+│  └──────┴──────┴──────────┴──────────┘ │
+├─────────────────────────────────────────┤
+│      Debian ARM64 Userland + KVM         │
+├─────────────────────────────────────────┤
+│   Hardened Android Kernel (Linux 6.x)    │
+└─────────────────────────────────────────┘
+        </pre>
+      </div>
+
+      <div class="glass-panel mb-4 animate-on-scroll">
+        <h2 class="neon-underline">Build Instructions</h2>
+        <h4 style="margin-top: 1.5rem; color: var(--neon-cyan);">Prerequisites</h4>
+        <pre style="background: rgba(0,0,0,0.5); padding: 1rem; border-radius: 8px; overflow-x: auto; color: var(--neon-cyan);">
+# Install Termux from F-Droid
+pkg update && pkg upgrade
+pkg install git python nodejs-lts openjdk-17 gradle
+        </pre>
+
+        <h4 style="margin-top: 1.5rem; color: var(--neon-cyan);">Clone and Build</h4>
+        <pre style="background: rgba(0,0,0,0.5); padding: 1rem; border-radius: 8px; overflow-x: auto; color: var(--neon-cyan);">
+git clone https://github.com/Dezirae-Stark/QWAMOS
+cd QWAMOS
+./scripts/setup.sh
+./scripts/build.sh
+        </pre>
+      </div>
+
+      <div class="glass-panel mb-4 animate-on-scroll">
+        <h2 class="neon-underline">Configuration</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem;">Key configuration files:</p>
+        <ul style="color: var(--text-secondary); line-height: 2;">
+          <li><code>/etc/qwamos/crypto.conf</code> - Cryptography settings</li>
+          <li><code>/etc/qwamos/vm.conf</code> - Virtual machine policies</li>
+          <li><code>/etc/qwamos/network.conf</code> - Gateway routing rules</li>
+          <li><code>/etc/qwamos/panic.conf</code> - Emergency wipe triggers</li>
+        </ul>
+      </div>
+
+      <div class="glass-panel animate-on-scroll">
+        <h2 class="neon-underline">API Reference</h2>
+        <p style="color: var(--text-secondary);">Full API documentation available on <a href="https://github.com/Dezirae-Stark/QWAMOS/tree/master/docs" target="_blank" style="color: var(--neon-blue);">GitHub</a></p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2024 First Sterling Capital, LLC. Created by Dezirae Stark.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/nav.js"></script>
+  <script src="js/animations.js"></script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Features - QWAMOS</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/neon.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <div class="logo">QWAMOS</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="features.html" class="active">Features</a></li>
+        <li><a href="docs.html">Documentation</a></li>
+        <li><a href="investor.html">Investors</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="download.html">Download</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="mobile-menu-toggle"><span></span><span></span><span></span></div>
+    </div>
+  </nav>
+
+  <section class="hero" style="min-height: 50vh;">
+    <div class="hero-content">
+      <h1 class="neon-text">Advanced Features</h1>
+      <p class="hero-description">Military-grade security architecture for mobile devices</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="glass-panel mb-4 animate-on-scroll">
+        <h2 class="neon-underline">🖥️ QEMU/PRoot/Chroot Hybrid VM Stack</h2>
+        <p>QWAMOS implements a three-tier virtualization architecture:</p>
+        <ul style="color: var(--text-secondary); line-height: 2; margin-top: 1rem;">
+          <li><strong>QEMU Layer:</strong> Full system emulation with KVM acceleration for high-security VMs</li>
+          <li><strong>PRoot Layer:</strong> Lightweight containerization for app-level isolation</li>
+          <li><strong>Chroot Jails:</strong> Process-level sandboxing for minimal overhead</li>
+          <li><strong>Debian ARM64:</strong> Full userland environment with apt package management</li>
+          <li><strong>Android HAL:</strong> Native integration with Android hardware abstraction</li>
+        </ul>
+      </div>
+
+      <div class="glass-panel mb-4 animate-on-scroll">
+        <h2 class="neon-underline">🔐 Post-Quantum Cryptography Engine</h2>
+        <p>Future-proof encryption using NIST-approved quantum-resistant algorithms:</p>
+        <ul style="color: var(--text-secondary); line-height: 2; margin-top: 1rem;">
+          <li><strong>Kyber-1024:</strong> Post-quantum key encapsulation mechanism (KEM)</li>
+          <li><strong>Dilithium:</strong> Quantum-safe digital signatures</li>
+          <li><strong>ChaCha20-Poly1305:</strong> Authenticated encryption (AEAD)</li>
+          <li><strong>BLAKE3:</strong> Cryptographic hashing at 10 GB/s</li>
+          <li><strong>Argon2id:</strong> Memory-hard password derivation</li>
+        </ul>
+      </div>
+
+      <div class="glass-panel mb-4 animate-on-scroll">
+        <h2 class="neon-underline">📱 Baseband Isolation Model</h2>
+        <p>Complete cellular modem isolation prevents baseband attacks:</p>
+        <ul style="color: var(--text-secondary); line-height: 2; margin-top: 1rem;">
+          <li><strong>Hardware Killswitch:</strong> Physical disconnect from cellular radio</li>
+          <li><strong>Firewall Rules:</strong> Per-VM cellular data policies</li>
+          <li><strong>IMSI Protection:</strong> Prevents SIM tracking and tower spoofing</li>
+          <li><strong>Baseband Logging:</strong> Monitor all modem communications</li>
+          <li><strong>Emergency Override:</strong> Instant modem shutdown via panic gesture</li>
+        </ul>
+      </div>
+
+      <div class="glass-panel mb-4 animate-on-scroll">
+        <h2 class="neon-underline">🔥 Panic Wipe Gestures</h2>
+        <p>Instant cryptographic data destruction:</p>
+        <ul style="color: var(--text-secondary); line-height: 2; margin-top: 1rem;">
+          <li><strong>Triple-Tap Power:</strong> Quick wipe trigger</li>
+          <li><strong>Custom Gestures:</strong> Configurable multi-touch patterns</li>
+          <li><strong>Dead Man's Switch:</strong> Auto-wipe on timeout</li>
+          <li><strong>Duress PIN:</strong> Alternate PIN triggers hidden wipe</li>
+          <li><strong>LUKS Destruction:</strong> Secure key erasure in milliseconds</li>
+        </ul>
+      </div>
+
+      <div class="glass-panel mb-4 animate-on-scroll">
+        <h2 class="neon-underline">🛡️ Per-VM Firewalls & Loggers</h2>
+        <p>Granular network control for each virtual machine:</p>
+        <ul style="color: var(--text-secondary); line-height: 2; margin-top: 1rem;">
+          <li><strong>Netfilter Rules:</strong> Kernel-level packet filtering per VM</li>
+          <li><strong>DNS Filtering:</strong> Block tracking domains at DNS layer</li>
+          <li><strong>Port Restrictions:</strong> Whitelist allowed services</li>
+          <li><strong>Traffic Logging:</strong> Full pcap capture for forensics</li>
+          <li><strong>IDS Integration:</strong> Snort/Suricata intrusion detection</li>
+        </ul>
+      </div>
+
+      <div class="glass-panel mb-4 animate-on-scroll">
+        <h2 class="neon-underline">🌐 InviZible Pro Gateway Integration</h2>
+        <p>All network traffic routed through privacy gateways:</p>
+        <ul style="color: var(--text-secondary); line-height: 2; margin-top: 1rem;">
+          <li><strong>Tor Integration:</strong> SOCKS5 proxy on 9050, control on 9051</li>
+          <li><strong>I2P Router:</strong> Anonymous peer-to-peer networking</li>
+          <li><strong>DNSCrypt:</strong> Encrypted DNS queries to prevent surveillance</li>
+          <li><strong>VPN Fallback:</strong> WireGuard for Tor-over-VPN</li>
+          <li><strong>Circuit Isolation:</strong> Separate Tor streams per VM</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2024 First Sterling Capital, LLC. Created by Dezirae Stark.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/nav.js"></script>
+  <script src="js/animations.js"></script>
+</body>
+</html>

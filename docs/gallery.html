@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery - QWAMOS</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/neon.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <div class="logo">QWAMOS</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="features.html">Features</a></li>
+        <li><a href="docs.html">Documentation</a></li>
+        <li><a href="investor.html">Investors</a></li>
+        <li><a href="gallery.html" class="active">Gallery</a></li>
+        <li><a href="download.html">Download</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="mobile-menu-toggle"><span></span><span></span><span></span></div>
+    </div>
+  </nav>
+
+  <section class="hero" style="min-height: 50vh;">
+    <div class="hero-content">
+      <h1 class="neon-text">Gallery</h1>
+      <p class="hero-description">Visual demonstrations of QWAMOS capabilities</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title animate-on-scroll">Sora AI-Generated Demonstrations</h2>
+      <p class="section-subtitle animate-on-scroll">Conceptual visualizations of QWAMOS security architecture</p>
+
+      <div class="grid grid-2" style="gap: 2rem;">
+        <div class="glass-panel neon-border animate-on-scroll">
+          <video controls muted playsinline style="width: 100%; border-radius: 8px;">
+            <source src="assets/sora/QWAMOS_promo_optimized.mp4" type="video/mp4">
+          </video>
+          <h3 style="margin-top: 1rem; color: var(--neon-cyan);">QWAMOS Promo</h3>
+          <p style="color: var(--text-secondary);">Main promotional video showcasing core features</p>
+        </div>
+
+        <div class="glass-panel neon-border animate-on-scroll">
+          <video controls muted playsinline style="width: 100%; border-radius: 8px;">
+            <source src="assets/sora/raw-1.mp4" type="video/mp4">
+          </video>
+          <h3 style="margin-top: 1rem; color: var(--neon-cyan);">Quantum Crypto</h3>
+          <p style="color: var(--text-secondary);">Visualization of post-quantum encryption</p>
+        </div>
+
+        <div class="glass-panel neon-border animate-on-scroll">
+          <video controls muted playsinline style="width: 100%; border-radius: 8px;">
+            <source src="assets/sora/raw-5.mp4" type="video/mp4">
+          </video>
+          <h3 style="margin-top: 1rem; color: var(--neon-cyan);">VM Isolation</h3>
+          <p style="color: var(--text-secondary);">Multi-layer virtualization architecture</p>
+        </div>
+
+        <div class="glass-panel neon-border animate-on-scroll">
+          <video controls muted playsinline style="width: 100%; border-radius: 8px;">
+            <source src="assets/sora/raw-8.mp4" type="video/mp4">
+          </video>
+          <h3 style="margin-top: 1rem; color: var(--neon-cyan);">Network Routing</h3>
+          <p style="color: var(--text-secondary);">Anonymous traffic through Tor/I2P</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2024 First Sterling Capital, LLC. Created by Dezirae Stark.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/nav.js"></script>
+  <script src="js/animations.js"></script>
+</body>
+</html>

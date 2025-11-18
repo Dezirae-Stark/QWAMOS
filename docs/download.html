@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Download - QWAMOS</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/neon.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <div class="logo">QWAMOS</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="features.html">Features</a></li>
+        <li><a href="docs.html">Documentation</a></li>
+        <li><a href="investor.html">Investors</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="download.html" class="active">Download</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="mobile-menu-toggle"><span></span><span></span><span></span></div>
+    </div>
+  </nav>
+
+  <section class="hero" style="min-height: 50vh;">
+    <div class="hero-content">
+      <h1 class="neon-text">Download QWAMOS</h1>
+      <p class="hero-description">Get the latest release</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="glass-panel text-center mb-4 animate-on-scroll">
+        <h2>Latest Release: v1.0.0-alpha</h2>
+        <p style="color: var(--text-secondary); margin: 1rem 0;">Released: 2024-01-01</p>
+        <div class="btn-group" style="margin-top: 2rem;">
+          <a href="https://github.com/Dezirae-Stark/QWAMOS/releases" class="btn btn-primary" target="_blank">Download from GitHub Releases</a>
+        </div>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="glass-panel animate-on-scroll">
+          <h3 class="neon-underline">Installation Methods</h3>
+          <h4 style="margin-top: 1.5rem;">Method 1: Direct APK</h4>
+          <pre style="background: rgba(0,0,0,0.5); padding: 1rem; border-radius: 8px; overflow-x: auto; color: var(--neon-cyan);">
+# Enable unknown sources in Android settings
+adb install qwamos-release-v1.0.0.apk
+          </pre>
+
+          <h4 style="margin-top: 1.5rem;">Method 2: Termux Build</h4>
+          <pre style="background: rgba(0,0,0,0.5); padding: 1rem; border-radius: 8px; overflow-x: auto; color: var(--neon-cyan);">
+pkg install git
+git clone https://github.com/Dezirae-Stark/QWAMOS
+cd QWAMOS
+./scripts/build.sh
+          </pre>
+        </div>
+
+        <div class="glass-panel animate-on-scroll">
+          <h3 class="neon-underline">SHA-256 Checksums</h3>
+          <p style="color: var(--text-secondary); margin-bottom: 1rem;">Verify integrity before installation:</p>
+          <pre style="background: rgba(0,0,0,0.5); padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; color: var(--neon-cyan);">
+qwamos-release-v1.0.0.apk:
+abc123def456789...
+          </pre>
+
+          <h4 style="margin-top: 1.5rem;">Verify Checksum</h4>
+          <pre style="background: rgba(0,0,0,0.5); padding: 1rem; border-radius: 8px; overflow-x: auto; color: var(--neon-cyan);">
+sha256sum qwamos-release-v1.0.0.apk
+          </pre>
+        </div>
+      </div>
+
+      <div class="glass-panel mt-4 animate-on-scroll">
+        <h3 class="neon-underline">System Requirements</h3>
+        <ul style="color: var(--text-secondary); line-height: 2;">
+          <li>Android 8.0 (API 26) or higher</li>
+          <li>ARM64 (aarch64) processor</li>
+          <li>Minimum 4GB RAM (8GB recommended)</li>
+          <li>10GB free storage</li>
+          <li>Root access (optional but recommended)</li>
+          <li>Termux installed for full features</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2024 First Sterling Capital, LLC. Created by Dezirae Stark.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/nav.js"></script>
+  <script src="js/animations.js"></script>
+</body>
+</html>
