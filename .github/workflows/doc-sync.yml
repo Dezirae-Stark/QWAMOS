@@ -98,8 +98,12 @@ jobs:
           REPO_URL="https://github.com/${{ github.repository }}"
 
           # Replace relative markdown links like [text](./path) or [text](path.md)
+          # First: Replace ./path links
           sed -i -E "s|\]\(\./([^)]+)\)|\](${REPO_URL}/blob/master/\1)|g" docs/README.md
-          sed -i -E "s|\]\((?!http)([^)]+\.md)\)|\](${REPO_URL}/blob/master/\1)|g" docs/README.md
+          # Second: Replace relative .md links (but not URLs)
+          sed -i -E "s|\]\(([^/:)]+\.md)\)|\](${REPO_URL}/blob/master/\1)|g" docs/README.md
+          # Third: Replace paths with / but not http(s)://
+          sed -i -E "s|\]\((/[^)]+)\)|\](${REPO_URL}/blob/master\1)|g" docs/README.md
 
           # Check if file changed
           if git diff --quiet docs/README.md; then
