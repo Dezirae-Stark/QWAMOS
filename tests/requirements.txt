@@ -1,0 +1,38 @@
+# QWAMOS Test Dependencies
+
+# Testing framework
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-timeout>=2.1.0
+pytest-xdist>=3.3.1
+pytest-mock>=3.11.1
+
+# Code coverage
+coverage[toml]>=7.3.0
+
+# Mocking and fixtures
+faker>=19.3.0
+factory-boy>=3.3.0
+
+# Async testing
+pytest-asyncio>=0.21.1
+
+# Network testing
+pytest-httpserver>=1.0.8
+requests-mock>=1.11.0
+
+# Performance testing
+pytest-benchmark>=4.0.0
+
+# Reporting
+pytest-html>=3.2.0
+pytest-json-report>=1.5.0
+
+# Linting (for test code quality)
+pylint>=2.17.0
+flake8>=6.1.0
+black>=23.7.0
+
+# Type checking
+mypy>=1.5.0
+types-requests>=2.31.0

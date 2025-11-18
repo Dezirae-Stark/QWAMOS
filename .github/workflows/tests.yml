@@ -1,0 +1,256 @@
+name: QWAMOS Test Suite
+
+on:
+  push:
+    branches: [master, main, develop]
+    paths:
+      - 'tests/**'
+      - 'android/**'
+      - 'crypto/**'
+      - 'gateway/**'
+      - 'hypervisor/**'
+      - '.github/workflows/tests.yml'
+  pull_request:
+    branches: [master, main, develop]
+  workflow_dispatch:
+  schedule:
+    # Run tests every day at 2 AM UTC
+    - cron: '0 2 * * *'
+
+env:
+  PYTHON_VERSION: '3.11'
+  JAVA_VERSION: '17'
+
+jobs:
+  python-unit-tests:
+    name: Python Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r tests/requirements.txt
+
+      - name: Run unit tests
+        run: |
+          cd tests
+          pytest unit/ \
+            -v \
+            --cov=. \
+            --cov-report=xml \
+            --cov-report=html \
+            --junitxml=results/junit-unit.xml
+
+      - name: Upload unit test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-unit-test-results
+          path: tests/results/junit-unit.xml
+
+      - name: Upload coverage reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-coverage-report
+          path: tests/coverage/
+
+  python-integration-tests:
+    name: Python Integration Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r tests/requirements.txt
+
+      - name: Run integration tests
+        run: |
+          cd tests
+          pytest integration/ \
+            -v \
+            --cov=. \
+            --cov-report=xml \
+            --junitxml=results/junit-integration.xml
+
+      - name: Upload integration test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-integration-test-results
+          path: tests/results/junit-integration.xml
+
+  android-tests:
+    name: Android Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x android/gradlew
+        working-directory: .
+
+      - name: Run Android unit tests
+        run: |
+          cd android
+          ./gradlew test --stacktrace
+
+      - name: Upload Android test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-test-results
+          path: android/app/build/test-results/
+
+      - name: Upload Android test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-test-reports
+          path: android/app/build/reports/tests/
+
+  coverage-report:
+    name: Generate Coverage Report
+    needs: [python-unit-tests, python-integration-tests]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download coverage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: python-coverage-report
+          path: coverage/
+
+      - name: Display coverage summary
+        run: |
+          if [ -f coverage/coverage.xml ]; then
+            echo "Coverage report found"
+            # Display coverage percentage
+            if command -v coverage &> /dev/null; then
+              coverage report
+            fi
+          else
+            echo "No coverage report found"
+          fi
+
+      - name: Upload combined coverage to Codecov
+        uses: codecov/codecov-action@v4
+        if: hashFiles('coverage/coverage.xml') != ''
+        with:
+          files: coverage/coverage.xml
+          flags: unittests
+          name: qwamos-coverage
+          fail_ci_if_error: false
+
+  test-summary:
+    name: Test Summary
+    needs: [python-unit-tests, python-integration-tests, android-tests]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Download all test results
+        uses: actions/download-artifact@v4
+        with:
+          path: test-results/
+
+      - name: Generate test summary
+        run: |
+          echo "# QWAMOS Test Suite Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Test Execution Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Check if test results exist
+          if [ -d "test-results" ]; then
+            echo "✅ Test artifacts collected" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Artifacts:" >> $GITHUB_STEP_SUMMARY
+            echo "- Python unit test results" >> $GITHUB_STEP_SUMMARY
+            echo "- Python integration test results" >> $GITHUB_STEP_SUMMARY
+            echo "- Android test results" >> $GITHUB_STEP_SUMMARY
+            echo "- Coverage reports" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ No test results found" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Job Status" >> $GITHUB_STEP_SUMMARY
+          echo "- Python Unit Tests: ${{ needs.python-unit-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Python Integration Tests: ${{ needs.python-integration-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Android Tests: ${{ needs.android-tests.result }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Check for test failures
+        run: |
+          if [ "${{ needs.python-unit-tests.result }}" != "success" ] || \
+             [ "${{ needs.python-integration-tests.result }}" != "success" ] || \
+             [ "${{ needs.android-tests.result }}" != "success" ]; then
+            echo "::error::One or more test suites failed"
+            exit 1
+          fi
+
+  lint-tests:
+    name: Lint Test Code
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install linting tools
+        run: |
+          pip install pylint flake8 black mypy
+
+      - name: Run Black formatter check
+        run: |
+          black --check tests/ || true
+
+      - name: Run Flake8
+        run: |
+          flake8 tests/ --count --select=E9,F63,F7,F82 --show-source --statistics || true
+
+      - name: Run Pylint
+        run: |
+          pylint tests/ --exit-zero || true
+
+      - name: Run MyPy type checking
+        run: |
+          mypy tests/ --ignore-missing-imports || true
