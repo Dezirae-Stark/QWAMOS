@@ -28,7 +28,6 @@ RUN apt-get update && apt-get install -y \
     python3-venv \
     # Version control
     git \
-    git-lfs \
     tig \
     # Networking tools
     curl \
@@ -44,21 +43,14 @@ RUN apt-get update && apt-get install -y \
     xz-utils \
     zip \
     unzip \
-    # QEMU for VM testing
-    qemu-system-x86 \
-    qemu-system-arm \
-    qemu-user-static \
-    qemu-utils \
     # Android development
-    openjdk-17-jdk \
-    openjdk-17-jre-headless \
+    default-jdk \
+    default-jre-headless \
     android-tools-adb \
     android-tools-fastboot \
     # Flutter dependencies
     clang \
-    libgtk-3-dev \
     liblzma-dev \
-    libstdc++-11-dev \
     # Cryptography libraries
     libssl-dev \
     libsodium-dev \
