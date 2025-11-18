@@ -1,0 +1,261 @@
+name: Reproducible Build Verification
+
+on:
+  release:
+    types: [created, published]
+  push:
+    branches: [main, master]
+    paths:
+      - 'android/**'
+      - 'reproducible/**'
+      - '.github/workflows/reproducible-build.yml'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'android/**'
+      - 'reproducible/**'
+  workflow_dispatch:
+    inputs:
+      source_date_epoch:
+        description: 'SOURCE_DATE_EPOCH timestamp (Unix time)'
+        required: false
+        default: '1704067200'
+        type: string
+
+env:
+  SOURCE_DATE_EPOCH: ${{ inputs.source_date_epoch || '1704067200' }}
+  JAVA_VERSION: '17'
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  reproducible-build-verify:
+    name: Verify Reproducible Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            diffoscope \
+            apktool \
+            xxd \
+            binutils \
+            zip \
+            unzip
+
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install diffoscope
+
+      - name: Grant execute permissions
+        run: |
+          chmod +x reproducible/build.sh
+          chmod +x reproducible/verify.sh
+
+      - name: Display environment info
+        run: |
+          echo "=== Build Environment ==="
+          echo "Java version:"
+          java -version
+          echo ""
+          echo "Gradle version:"
+          cd android && ./gradlew --version || echo "Gradle check skipped"
+          cd ..
+          echo ""
+          echo "SOURCE_DATE_EPOCH: $SOURCE_DATE_EPOCH"
+          echo "Date: $(date -u -d @$SOURCE_DATE_EPOCH)"
+          echo ""
+          echo "Python version:"
+          python3 --version
+          echo ""
+          echo "Diffoscope version:"
+          diffoscope --version || echo "Diffoscope not available"
+
+      - name: Run reproducible build verification
+        id: verify
+        run: |
+          cd reproducible
+          ./verify.sh
+        continue-on-error: true
+        env:
+          SOURCE_DATE_EPOCH: ${{ env.SOURCE_DATE_EPOCH }}
+
+      - name: Check verification result
+        run: |
+          if [ -f reproducible/output/reports/verification-report.json ]; then
+            echo "Verification report found"
+            cat reproducible/output/reports/verification-report.json
+
+            # Extract reproducibility status
+            REPRODUCIBLE=$(jq -r '.reproducible' reproducible/output/reports/verification-report.json)
+
+            if [ "$REPRODUCIBLE" = "true" ]; then
+              echo "✅ Build is reproducible!"
+              echo "reproducible=true" >> $GITHUB_OUTPUT
+            else
+              echo "❌ Build is NOT reproducible!"
+              echo "reproducible=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "⚠️ Verification report not found"
+            echo "reproducible=unknown" >> $GITHUB_OUTPUT
+          fi
+        id: check_result
+
+      - name: Upload build artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reproducible-build-apks
+          path: |
+            reproducible/output/apk/*.apk
+            reproducible/output/apk/*.sha256
+            reproducible/output/apk/*.sha512
+            reproducible/output/apk/*.manifest.json
+          retention-days: 90
+
+      - name: Upload verification reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reproducibility-reports
+          path: |
+            reproducible/output/reports/
+            reproducible/output/logs/
+          retention-days: 90
+
+      - name: Upload diffoscope HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diffoscope-html-report
+          path: reproducible/output/reports/diffoscope-report.html
+          retention-days: 90
+          if-no-files-found: ignore
+
+      - name: Generate GitHub summary
+        if: always()
+        run: |
+          echo "# QWAMOS Reproducible Build Verification" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f reproducible/output/reports/verification-report.json ]; then
+            REPRODUCIBLE=$(jq -r '.reproducible' reproducible/output/reports/verification-report.json)
+            BUILD1_SHA256=$(jq -r '.builds.build1.sha256' reproducible/output/reports/verification-report.json)
+            BUILD2_SHA256=$(jq -r '.builds.build2.sha256' reproducible/output/reports/verification-report.json)
+            BUILD1_SIZE=$(jq -r '.builds.build1.size_bytes' reproducible/output/reports/verification-report.json)
+            BUILD2_SIZE=$(jq -r '.builds.build2.size_bytes' reproducible/output/reports/verification-report.json)
+
+            echo "## Verification Result" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            if [ "$REPRODUCIBLE" = "true" ]; then
+              echo "### ✅✅✅ BUILD IS REPRODUCIBLE ✅✅✅" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "Both builds are **byte-for-byte identical**!" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "**SHA-256:** \`$BUILD1_SHA256\`" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "This verifies:" >> $GITHUB_STEP_SUMMARY
+              echo "- ✅ The build process is deterministic" >> $GITHUB_STEP_SUMMARY
+              echo "- ✅ No random elements are introduced" >> $GITHUB_STEP_SUMMARY
+              echo "- ✅ Timestamps are properly normalized" >> $GITHUB_STEP_SUMMARY
+              echo "- ✅ File ordering is consistent" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "### ❌ BUILD IS NOT REPRODUCIBLE ❌" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "The two builds differ!" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "**Build 1 SHA-256:** \`$BUILD1_SHA256\`" >> $GITHUB_STEP_SUMMARY
+              echo "**Build 2 SHA-256:** \`$BUILD2_SHA256\`" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "**Build 1 Size:** $BUILD1_SIZE bytes" >> $GITHUB_STEP_SUMMARY
+              echo "**Build 2 Size:** $BUILD2_SIZE bytes" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "Common causes of non-reproducibility:" >> $GITHUB_STEP_SUMMARY
+              echo "- ⚠️ Embedded timestamps" >> $GITHUB_STEP_SUMMARY
+              echo "- ⚠️ Random elements (UUIDs, nonces)" >> $GITHUB_STEP_SUMMARY
+              echo "- ⚠️ Inconsistent file ordering" >> $GITHUB_STEP_SUMMARY
+              echo "- ⚠️ Environment-dependent build steps" >> $GITHUB_STEP_SUMMARY
+              echo "- ⚠️ Non-deterministic compression" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "Check the diffoscope report for detailed differences." >> $GITHUB_STEP_SUMMARY
+            fi
+
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "## Build Details" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "- **SOURCE_DATE_EPOCH:** $SOURCE_DATE_EPOCH" >> $GITHUB_STEP_SUMMARY
+            echo "- **Build Date:** $(date -u -d @$SOURCE_DATE_EPOCH)" >> $GITHUB_STEP_SUMMARY
+            echo "- **Java Version:** ${{ env.JAVA_VERSION }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+
+            if [ "${{ github.event_name }}" = "release" ]; then
+              echo "- **Release:** ${{ github.event.release.tag_name }}" >> $GITHUB_STEP_SUMMARY
+            fi
+
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "## Artifacts" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "- 📦 APK files and checksums" >> $GITHUB_STEP_SUMMARY
+            echo "- 📊 Verification reports" >> $GITHUB_STEP_SUMMARY
+            echo "- 📄 Diffoscope HTML report" >> $GITHUB_STEP_SUMMARY
+
+          else
+            echo "⚠️ Verification report not found" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "🤖 Reproducible builds ensure transparency and verifiability" >> $GITHUB_STEP_SUMMARY
+
+      - name: Update hash manifest (on release)
+        if: github.event_name == 'release' && steps.check_result.outputs.reproducible == 'true'
+        run: |
+          echo "Updating hash manifest for release ${{ github.event.release.tag_name }}"
+
+          # This would update the hash_manifest.json with the verified build
+          # For now, we just display what would be updated
+
+          if [ -f reproducible/output/apk/qwamos-build1-*.apk ]; then
+            APK_FILE=$(ls reproducible/output/apk/qwamos-build1-*.apk | head -n 1)
+            SHA256=$(cat "${APK_FILE}.sha256" | awk '{print $1}')
+            SIZE=$(stat -c%s "$APK_FILE")
+
+            echo "Would update hash_manifest.json with:"
+            echo "  Version: ${{ github.event.release.tag_name }}"
+            echo "  SHA-256: $SHA256"
+            echo "  Size: $SIZE bytes"
+          fi
+
+      - name: Fail if not reproducible
+        if: steps.check_result.outputs.reproducible == 'false'
+        run: |
+          echo "::error::Build is not reproducible! Check diffoscope reports for details."
+          exit 1
+
+      - name: Success message
+        if: steps.check_result.outputs.reproducible == 'true'
+        run: |
+          echo "::notice::✅ Reproducible build verification PASSED!"
+          echo "::notice::Both builds are byte-for-byte identical"

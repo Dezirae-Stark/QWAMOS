@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "description": "QWAMOS Reproducible Build Hash Manifest - Expected checksums for verified reproducible builds",
+  "manifest_version": "1.0.0",
+  "project": "QWAMOS",
+  "repository": "https://github.com/Dezirae-Stark/QWAMOS",
+  "last_updated": "2024-01-01T00:00:00Z",
+  "builds": [
+    {
+      "version": "1.0.0",
+      "version_code": 1,
+      "release_date": "2024-01-01",
+      "source_date_epoch": 1704067200,
+      "git_commit": "",
+      "git_tag": "v1.0.0",
+      "apk": {
+        "name": "qwamos-release-v1.0.0.apk",
+        "size_bytes": 0,
+        "checksums": {
+          "sha256": "",
+          "sha512": "",
+          "md5": ""
+        }
+      },
+      "build_environment": {
+        "gradle_version": "8.0",
+        "android_gradle_plugin": "8.0.0",
+        "kotlin_version": "1.9.0",
+        "java_version": "17",
+        "build_tools_version": "33.0.0",
+        "compile_sdk": 33,
+        "min_sdk": 26,
+        "target_sdk": 33
+      },
+      "reproducibility": {
+        "verified": false,
+        "verification_date": null,
+        "verified_by": null,
+        "verification_notes": ""
+      },
+      "signing": {
+        "signature_sha256": "",
+        "certificate_fingerprint": "",
+        "signed": false
+      }
+    }
+  ],
+  "verification_instructions": {
+    "description": "How to verify QWAMOS reproducible builds",
+    "steps": [
+      "1. Clone the QWAMOS repository: git clone https://github.com/Dezirae-Stark/QWAMOS.git",
+      "2. Checkout the specific release tag: git checkout v1.0.0",
+      "3. Navigate to reproducible directory: cd QWAMOS/reproducible",
+      "4. Run the build script: ./build.sh 1",
+      "5. Run the verification script: ./verify.sh",
+      "6. Compare the generated SHA-256 hash with the hash in this manifest",
+      "7. If hashes match, the build is reproducible"
+    ],
+    "requirements": [
+      "Linux or macOS operating system",
+      "Android SDK and NDK installed",
+      "Java 17 or higher",
+      "Gradle 8.0 or higher",
+      "Python 3.8+ with diffoscope (optional but recommended)"
+    ]
+  },
+  "known_issues": {
+    "timestamp_sources": [
+      "ZIP entry timestamps may vary if not normalized",
+      "BuildConfig.TIMESTAMP if not using SOURCE_DATE_EPOCH",
+      "Signing metadata timestamps (if signed)"
+    ],
+    "non_deterministic_elements": [
+      "Random UUIDs in resource files",
+      "Gradle metadata files (may include timestamps)",
+      "Native library build IDs"
+    ],
+    "workarounds": [
+      "Set SOURCE_DATE_EPOCH environment variable",
+      "Use --no-daemon --no-build-cache flags",
+      "Disable parallel builds with org.gradle.parallel=false",
+      "Normalize ZIP timestamps with strip-nondeterminism tool"
+    ]
+  },
+  "security_notes": {
+    "verification_importance": "Reproducible builds allow independent verification that the distributed APK was built from the published source code without hidden modifications.",
+    "supply_chain_protection": "By verifying reproducibility, users can detect supply chain attacks or backdoors inserted during the build process.",
+    "trust_model": "Multiple independent parties can build the APK and verify they get identical binaries, establishing trust without relying on a single build authority."
+  },
+  "external_references": {
+    "reproducible_builds_project": "https://reproducible-builds.org/",
+    "android_reproducible_builds": "https://developer.android.com/studio/build/reproducible-builds",
+    "diffoscope": "https://diffoscope.org/",
+    "source_date_epoch": "https://reproducible-builds.org/docs/source-date-epoch/"
+  }
+}
