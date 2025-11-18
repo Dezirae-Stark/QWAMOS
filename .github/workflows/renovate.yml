@@ -1,0 +1,124 @@
+name: Renovate Dependency Updates
+
+on:
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Renovate log level'
+        required: false
+        default: 'info'
+        type: choice
+        options:
+          - debug
+          - info
+          - warn
+          - error
+      dryRun:
+        description: 'Dry run (no changes will be made)'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  RENOVATE_PLATFORM: github
+  RENOVATE_REPOSITORIES: ${{ github.repository }}
+  LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
+  RENOVATE_DRY_RUN: ${{ inputs.dryRun || false }}
+
+jobs:
+  renovate:
+    name: Run Renovate Bot
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Self-hosted Renovate
+        uses: renovatebot/github-action@v40.1.12
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          configurationFile: renovate.json
+        env:
+          # Renovate configuration
+          RENOVATE_PLATFORM: github
+          RENOVATE_REPOSITORIES: ${{ github.repository }}
+          RENOVATE_BASE_BRANCHES: master,main
+          RENOVATE_GIT_AUTHOR: 'Renovate Bot <bot@renovateapp.com>'
+          RENOVATE_USERNAME: 'renovate[bot]'
+
+          # Logging
+          LOG_LEVEL: ${{ env.LOG_LEVEL }}
+          RENOVATE_LOG_FILE: renovate-log.json
+          RENOVATE_LOG_FILE_LEVEL: debug
+
+          # Dry run mode
+          RENOVATE_DRY_RUN: ${{ env.RENOVATE_DRY_RUN }}
+
+          # GitHub token for API access
+          GITHUB_COM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # Renovate behavior
+          RENOVATE_ONBOARDING: false
+          RENOVATE_REQUIRE_CONFIG: required
+          RENOVATE_AUTODISCOVER: false
+          RENOVATE_FORCE: '{"schedule": null}'
+
+          # Performance
+          RENOVATE_PERSISTENT_CACHE: true
+          RENOVATE_OPTIMIZE_FOR_DISABLED: true
+
+          # Security
+          RENOVATE_ALLOW_SCRIPTS: false
+          RENOVATE_ALLOW_POST_UPGRADE_COMMAND_TEMPLATING: false
+          RENOVATE_TRUST_LEVEL: high
+
+          # Limits
+          RENOVATE_PR_HOURLY_LIMIT: 2
+          RENOVATE_PR_CONCURRENT_LIMIT: 5
+          RENOVATE_BRANCH_CONCURRENT_LIMIT: 10
+
+          # Dependency dashboard
+          RENOVATE_DEPENDENCY_DASHBOARD: true
+          RENOVATE_DEPENDENCY_DASHBOARD_TITLE: 'QWAMOS Dependency Dashboard'
+
+      - name: Upload Renovate logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: renovate-logs
+          path: |
+            renovate-log.json
+            renovate-debug.log
+          retention-days: 30
+          if-no-files-found: ignore
+
+      - name: Check Renovate status
+        if: always()
+        run: |
+          echo "## Renovate Bot Execution Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Repository**: ${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Run ID**: ${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Triggered by**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Log level**: ${{ env.LOG_LEVEL }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dry run**: ${{ env.RENOVATE_DRY_RUN }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f renovate-log.json ]; then
+            echo "✅ Renovate completed successfully" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Log Summary" >> $GITHUB_STEP_SUMMARY
+            echo '```json' >> $GITHUB_STEP_SUMMARY
+            cat renovate-log.json | jq '.[] | select(.level == "error" or .level == "warn")' | head -20 >> $GITHUB_STEP_SUMMARY || true
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ Renovate log not found" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "🤖 Automated dependency management by Renovate Bot" >> $GITHUB_STEP_SUMMARY
