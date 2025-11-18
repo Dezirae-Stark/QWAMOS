@@ -392,7 +392,7 @@ jobs:
           fi
 
       - name: Run Ghidra headless analysis
-        if: env.GHIDRA_HOME != ''
+        if: steps.check_binaries.outputs.binaries_found == 'true' && env.GHIDRA_HOME != ''
         run: |
           echo "=== Ghidra Headless Analysis ===" | tee ${REPORTS_DIR}/ghidra/ghidra-report.txt
 
@@ -550,4 +550,17 @@ jobs:
       - name: Post analysis summary
         if: always()
         run: |
-          cat ${REPORTS_DIR}/ANALYSIS_SUMMARY.md >> $GITHUB_STEP_SUMMARY
+          if [ -f "${REPORTS_DIR}/ANALYSIS_SUMMARY.md" ]; then
+            cat ${REPORTS_DIR}/ANALYSIS_SUMMARY.md >> $GITHUB_STEP_SUMMARY
+          else
+            echo "# QWAMOS Static Binary Analysis - No Binaries Found" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ **No binaries were available for analysis.**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "This can happen when:" >> $GITHUB_STEP_SUMMARY
+            echo "- The Android project doesn't have gradlew (project not initialized)" >> $GITHUB_STEP_SUMMARY
+            echo "- No Python entry points were found to compile" >> $GITHUB_STEP_SUMMARY
+            echo "- Native builds were skipped or failed" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Static binary analysis will run when binaries are available." >> $GITHUB_STEP_SUMMARY
+          fi
