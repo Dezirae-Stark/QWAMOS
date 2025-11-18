@@ -242,6 +242,14 @@ jobs:
           Co-Authored-By: Claude <noreply@anthropic.com>
           COMMIT_MSG
           )"
+
+            # Pull latest changes before pushing
+            git pull --rebase origin master || {
+              echo "Rebase failed, attempting merge..."
+              git rebase --abort
+              git pull --no-rebase origin master
+            }
+
             git push origin master
             echo "Wiki synced successfully!"
           fi

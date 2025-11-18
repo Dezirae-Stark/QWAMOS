@@ -70,7 +70,7 @@ jobs:
 
       - name: Build Android binaries
         run: |
-          if [ -d "android" ]; then
+          if [ -d "android" ] && [ -f "android/gradlew" ]; then
             cd android
             chmod +x gradlew
             ./gradlew assembleDebug assembleRelease || true
@@ -86,6 +86,8 @@ jobs:
               fi
             done
             cd ../../..
+          else
+            echo "Skipping Android build: android/gradlew not found"
           fi
 
       - name: Build Python binaries
