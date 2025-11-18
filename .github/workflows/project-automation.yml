@@ -1,0 +1,512 @@
+# QWAMOS GitHub Projects Automation Workflow
+# Automatically manages project board based on issue and PR events
+
+name: Project Board Automation
+
+on:
+  # Issue events
+  issues:
+    types:
+      - opened
+      - reopened
+      - closed
+      - assigned
+      - labeled
+      - unlabeled
+
+  # Pull request events
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - closed
+      - ready_for_review
+      - review_requested
+      - converted_to_draft
+
+  # Pull request review events
+  pull_request_review:
+    types:
+      - submitted
+
+  # Push events (for commit references)
+  push:
+    branches:
+      - master
+      - develop
+      - 'feature/**'
+      - 'hotfix/**'
+
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      sync_all:
+        description: 'Sync all issues and PRs to project board'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  repository-projects: write
+
+env:
+  # Project board configuration
+  PROJECT_NAME: "QWAMOS Development"
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  # Job 1: Handle Issue Events
+  issue-automation:
+    name: Issue Automation
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install PyGithub requests pyyaml
+
+      - name: Handle new issue (Inbox)
+        if: github.event.action == 'opened'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log('Moving new issue to Inbox column');
+            core.info('Issue #${{ github.event.issue.number }} opened - adding to Inbox');
+
+            // Add comment
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '🤖 This issue has been added to the project board in the **Inbox** column for triage.'
+            });
+
+      - name: Handle security-labeled issue
+        if: github.event.action == 'labeled' && contains(fromJSON('["security", "vulnerability", "cve"]'), github.event.label.name)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log('Moving security issue to Security Review Required');
+            core.info('Issue #${{ github.event.issue.number }} labeled as security - moving to Security Review');
+
+            // Add security team as assignee
+            await github.rest.issues.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              assignees: ['${{ github.repository_owner }}']
+            });
+
+            // Add comment
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '🔒 **Security Review Required**\n\nThis issue has been flagged for security review and moved to the Security Review column.\n\nSecurity team has been notified.'
+            });
+
+      - name: Handle blocked-labeled issue
+        if: github.event.action == 'labeled' && contains(fromJSON('["blocked", "on-hold"]'), github.event.label.name)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log('Moving blocked issue to Blocked column');
+            core.info('Issue #${{ github.event.issue.number }} labeled as blocked');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '⚠️ This issue has been moved to the **Blocked** column. Please update the issue when it can be unblocked.'
+            });
+
+      - name: Handle issue assignment (In Progress)
+        if: github.event.action == 'assigned'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log('Moving assigned issue to In Progress');
+            core.info('Issue #${{ github.event.issue.number }} assigned - moving to In Progress');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '🚀 Issue assigned to @${{ github.event.assignee.login }} - moved to **In Progress**.'
+            });
+
+      - name: Handle closed issue (Completed)
+        if: github.event.action == 'closed'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log('Moving closed issue to Completed');
+            core.info('Issue #${{ github.event.issue.number }} closed - moving to Completed');
+
+            // Only move to completed if not labeled as wontfix, duplicate, etc.
+            const issue = context.payload.issue;
+            const labels = issue.labels.map(l => l.name);
+            const excludeLabels = ['wontfix', 'duplicate', 'invalid'];
+
+            if (!labels.some(l => excludeLabels.includes(l))) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: '✅ Issue closed - moved to **Completed** column.'
+              });
+            }
+
+  # Job 2: Handle Pull Request Events
+  pr-automation:
+    name: Pull Request Automation
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || github.event_name == 'pull_request_review'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Handle new PR (Under Review)
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log('Moving new PR to Under Review');
+            core.info('PR #${{ github.event.pull_request.number }} opened - adding to Under Review');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '🔍 Pull request opened - added to **Under Review** column.\n\nPlease ensure:\n- All CI checks pass\n- Code is reviewed by at least one maintainer\n- No merge conflicts exist'
+            });
+
+      - name: Handle PR ready for review
+        if: github.event_name == 'pull_request' && github.event.action == 'ready_for_review'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log('Moving PR to Under Review (ready for review)');
+            core.info('PR #${{ github.event.pull_request.number }} ready for review');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '👀 Pull request marked as ready for review - moved to **Under Review**.'
+            });
+
+      - name: Handle PR approval (Ready for Merge)
+        if: github.event_name == 'pull_request_review' && github.event.review.state == 'approved'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log('Moving approved PR to Ready for Merge');
+            core.info('PR #${{ github.event.pull_request.number }} approved');
+
+            // Check if all checks passed
+            const { data: checks } = await github.rest.checks.listForRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.payload.pull_request.head.sha
+            });
+
+            const allChecksPassed = checks.check_runs.every(check =>
+              check.conclusion === 'success' || check.conclusion === 'skipped'
+            );
+
+            if (allChecksPassed) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: '✅ Pull request approved and all checks passed - moved to **Ready for Merge**.\n\nThis PR is ready to be merged.'
+              });
+
+              // Add ready-to-merge label
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: ['ready-to-merge']
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: '⚠️ Pull request approved but some checks are still pending or failed. Waiting for all checks to pass before moving to Ready for Merge.'
+              });
+            }
+
+      - name: Handle PR merged (Completed)
+        if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log('Moving merged PR to Completed');
+            core.info('PR #${{ github.event.pull_request.number }} merged - moving to Completed');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '🎉 Pull request merged - moved to **Completed** column.\n\nThank you for your contribution!'
+            });
+
+            // Close linked issues
+            const prBody = context.payload.pull_request.body || '';
+            const issueRefs = prBody.match(/(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+#(\d+)/gi);
+
+            if (issueRefs) {
+              for (const ref of issueRefs) {
+                const issueNumber = parseInt(ref.match(/\d+/)[0]);
+                console.log(`Closing linked issue #${issueNumber}`);
+
+                try {
+                  await github.rest.issues.update({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: issueNumber,
+                    state: 'closed'
+                  });
+
+                  await github.rest.issues.createComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: issueNumber,
+                    body: `Closed by merged PR #${{ github.event.pull_request.number }}`
+                  });
+                } catch (error) {
+                  console.log(`Could not close issue #${issueNumber}: ${error.message}`);
+                }
+              }
+            }
+
+      - name: Handle draft PR (In Progress)
+        if: github.event_name == 'pull_request' && github.event.action == 'converted_to_draft'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log('Moving draft PR to In Progress');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '🚧 Pull request converted to draft - moved to **In Progress**.'
+            });
+
+            // Add WIP label
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['wip']
+            });
+
+  # Job 3: Handle Commit References
+  commit-automation:
+    name: Commit Reference Automation
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 10
+
+      - name: Extract issue references from commits
+        id: extract-refs
+        run: |
+          echo "Analyzing commits for issue references..."
+
+          # Get commit messages
+          git log --format="%H %s %b" -10 > commits.txt
+
+          # Extract issue numbers
+          grep -oE "#[0-9]+" commits.txt | sort -u | sed 's/#//' > issue_refs.txt || true
+
+          if [ -s issue_refs.txt ]; then
+            echo "Found issue references:"
+            cat issue_refs.txt
+            echo "has_refs=true" >> $GITHUB_OUTPUT
+          else
+            echo "No issue references found"
+            echo "has_refs=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Move referenced issues to In Progress
+        if: steps.extract-refs.outputs.has_refs == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const issueRefs = fs.readFileSync('issue_refs.txt', 'utf8').trim().split('\n');
+
+            for (const issueNumber of issueRefs) {
+              if (!issueNumber) continue;
+
+              console.log(`Processing issue #${issueNumber}`);
+
+              try {
+                // Get issue details
+                const { data: issue } = await github.rest.issues.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: parseInt(issueNumber)
+                });
+
+                // Only move if issue is open and not in Completed
+                if (issue.state === 'open') {
+                  const commitSha = context.sha.substring(0, 7);
+
+                  await github.rest.issues.createComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: parseInt(issueNumber),
+                    body: `🔨 Work in progress - referenced in commit ${commitSha}\n\nMoved to **In Progress** column.`
+                  });
+
+                  console.log(`Moved issue #${issueNumber} to In Progress`);
+                }
+              } catch (error) {
+                console.log(`Could not process issue #${issueNumber}: ${error.message}`);
+              }
+            }
+
+  # Job 4: Sync All Items (Manual)
+  sync-all:
+    name: Sync All Issues and PRs
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.sync_all == 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Sync all open issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log('Syncing all open issues to project board...');
+
+            // Get all open issues
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              per_page: 100
+            });
+
+            console.log(`Found ${issues.length} open issues`);
+
+            for (const issue of issues) {
+              // Skip pull requests
+              if (issue.pull_request) continue;
+
+              const labels = issue.labels.map(l => l.name);
+
+              // Determine column based on labels and state
+              let column = 'Inbox';
+
+              if (labels.includes('security') || labels.includes('vulnerability')) {
+                column = 'Security Review Required';
+              } else if (labels.includes('blocked') || labels.includes('on-hold')) {
+                column = 'Blocked';
+              } else if (issue.assignee || labels.includes('in-progress')) {
+                column = 'In Progress';
+              }
+
+              console.log(`Issue #${issue.number}: ${column}`);
+            }
+
+      - name: Sync all open PRs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log('Syncing all open pull requests to project board...');
+
+            // Get all open PRs
+            const prs = await github.paginate(github.rest.pulls.list, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              per_page: 100
+            });
+
+            console.log(`Found ${prs.length} open pull requests`);
+
+            for (const pr of prs) {
+              // Get PR reviews
+              const { data: reviews } = await github.rest.pulls.listReviews({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.number
+              });
+
+              const approved = reviews.some(r => r.state === 'APPROVED');
+              const labels = pr.labels.map(l => l.name);
+
+              // Determine column
+              let column = 'Under Review';
+
+              if (pr.draft) {
+                column = 'In Progress';
+              } else if (approved && labels.includes('ready-to-merge')) {
+                column = 'Ready for Merge';
+              } else if (labels.includes('blocked')) {
+                column = 'Blocked';
+              }
+
+              console.log(`PR #${pr.number}: ${column}`);
+            }
+
+  # Job 5: Automation Summary
+  automation-summary:
+    name: Automation Summary
+    needs: [issue-automation, pr-automation, commit-automation]
+    runs-on: ubuntu-latest
+    if: always() && github.event_name != 'workflow_dispatch'
+
+    steps:
+      - name: Create summary
+        run: |
+          echo "## 🤖 Project Board Automation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Event:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Action:** ${{ github.event.action }}" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ github.event_name }}" == "issues" ]; then
+            echo "**Issue:** #${{ github.event.issue.number }}" >> $GITHUB_STEP_SUMMARY
+            echo "**Title:** ${{ github.event.issue.title }}" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ github.event_name }}" == "pull_request" ] || [ "${{ github.event_name }}" == "pull_request_review" ]; then
+            echo "**PR:** #${{ github.event.pull_request.number }}" >> $GITHUB_STEP_SUMMARY
+            echo "**Title:** ${{ github.event.pull_request.title }}" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Automation Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Issue Automation | ${{ needs.issue-automation.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| PR Automation | ${{ needs.pr-automation.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Commit Automation | ${{ needs.commit-automation.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "🤖 *QWAMOS Project Board Automation*" >> $GITHUB_STEP_SUMMARY

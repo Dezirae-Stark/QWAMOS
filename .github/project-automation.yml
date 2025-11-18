@@ -1,0 +1,404 @@
+# QWAMOS GitHub Projects Automation Configuration
+# Automated project board management for issues and pull requests
+
+# Project Board Structure
+# Columns define the workflow stages for issues and PRs
+columns:
+  - name: Inbox
+    id: inbox
+    description: Newly created issues awaiting triage
+    automation:
+      # New issues automatically go to Inbox
+      - trigger: issue_opened
+        action: move_card
+      # Reopened issues return to Inbox
+      - trigger: issue_reopened
+        action: move_card
+
+  - name: In Progress
+    id: in_progress
+    description: Issues actively being worked on
+    automation:
+      # Issue assigned to someone moves to In Progress
+      - trigger: issue_assigned
+        action: move_card
+      # Commits referencing issue number move it to In Progress
+      - trigger: commit_references_issue
+        action: move_card
+      # PR created for an issue moves it to In Progress
+      - trigger: pull_request_opened_for_issue
+        action: move_card
+
+  - name: Under Review
+    id: under_review
+    description: Pull requests awaiting review
+    automation:
+      # New PRs go to Under Review
+      - trigger: pull_request_opened
+        action: move_card
+      # PRs marked as ready for review
+      - trigger: pull_request_ready_for_review
+        action: move_card
+      # Review requested
+      - trigger: pull_request_review_requested
+        action: move_card
+
+  - name: Ready for Merge
+    id: ready_for_merge
+    description: PRs approved and ready to merge
+    automation:
+      # PR approved by reviewer
+      - trigger: pull_request_approved
+        action: move_card
+        conditions:
+          - all_checks_passed: true
+          - approvals_count_min: 1
+      # PR marked as approved
+      - trigger: pull_request_review_approved
+        action: move_card
+
+  - name: Completed
+    id: completed
+    description: Closed issues and merged PRs
+    automation:
+      # Issue closed
+      - trigger: issue_closed
+        action: move_card
+        conditions:
+          - not_labeled: ["blocked", "wontfix", "duplicate"]
+      # PR merged
+      - trigger: pull_request_merged
+        action: move_card
+      # Issue resolved
+      - trigger: issue_labeled
+        label: "resolved"
+        action: move_card
+
+  - name: Blocked
+    id: blocked
+    description: Issues or PRs that are blocked
+    automation:
+      # Issue labeled as blocked
+      - trigger: issue_labeled
+        label: "blocked"
+        action: move_card
+      # PR labeled as blocked
+      - trigger: pull_request_labeled
+        label: "blocked"
+        action: move_card
+      # Issue labeled as on-hold
+      - trigger: issue_labeled
+        label: "on-hold"
+        action: move_card
+
+  - name: Security Review Required
+    id: security_review
+    description: Security-sensitive issues requiring special review
+    automation:
+      # Issue labeled as security
+      - trigger: issue_labeled
+        label: "security"
+        action: move_card
+      # Issue labeled as vulnerability
+      - trigger: issue_labeled
+        label: "vulnerability"
+        action: move_card
+      # PR labeled as security
+      - trigger: pull_request_labeled
+        label: "security"
+        action: move_card
+      # Issue labeled as cve
+      - trigger: issue_labeled
+        label: "cve"
+        action: move_card
+
+# Label-based Automation Rules
+label_automation:
+  # Security labels trigger security column
+  security:
+    - "security"
+    - "vulnerability"
+    - "cve"
+    - "security-fix"
+    - "pqc"
+    - "cryptography"
+    column: security_review
+
+  # Blocked labels trigger blocked column
+  blocked:
+    - "blocked"
+    - "on-hold"
+    - "waiting-for-response"
+    - "needs-more-info"
+    column: blocked
+
+  # Work-in-progress labels
+  in_progress:
+    - "in-progress"
+    - "wip"
+    - "working-on-it"
+    column: in_progress
+
+  # Completed/resolved labels
+  completed:
+    - "resolved"
+    - "fixed"
+    - "completed"
+    - "done"
+    column: completed
+
+# Priority-based Automation
+priority_automation:
+  # Critical issues get special handling
+  critical:
+    labels: ["critical", "urgent", "p0"]
+    actions:
+      - add_label: "needs-immediate-attention"
+      - assign_to_team: "core-maintainers"
+      - notify: true
+
+  # High priority issues
+  high:
+    labels: ["high-priority", "p1"]
+    actions:
+      - add_label: "high-priority"
+      - notify: true
+
+# Issue Type Automation
+issue_type_automation:
+  bug:
+    labels: ["bug", "defect", "error"]
+    actions:
+      - add_label: "needs-triage"
+      - template: "bug_report"
+
+  feature:
+    labels: ["enhancement", "feature-request", "new-feature"]
+    actions:
+      - add_label: "needs-discussion"
+      - template: "feature_request"
+
+  documentation:
+    labels: ["documentation", "docs"]
+    actions:
+      - add_label: "good-first-issue"
+      - template: "documentation"
+
+# Pull Request Automation
+pull_request_automation:
+  # Draft PRs
+  draft:
+    trigger: pull_request_draft
+    actions:
+      - add_label: "wip"
+      - column: in_progress
+
+  # Review requested
+  review_requested:
+    trigger: pull_request_review_requested
+    actions:
+      - column: under_review
+      - notify_reviewers: true
+
+  # Changes requested
+  changes_requested:
+    trigger: pull_request_changes_requested
+    actions:
+      - add_label: "changes-requested"
+      - column: in_progress
+
+  # Approved
+  approved:
+    trigger: pull_request_approved
+    conditions:
+      - checks_passed: true
+      - conflicts_resolved: true
+    actions:
+      - add_label: "ready-to-merge"
+      - column: ready_for_merge
+
+  # Merged
+  merged:
+    trigger: pull_request_merged
+    actions:
+      - remove_label: ["wip", "changes-requested", "ready-to-merge"]
+      - add_label: "merged"
+      - column: completed
+      - close_linked_issues: true
+
+# Stale Item Management
+stale_automation:
+  # Stale issues (no activity for 60 days)
+  issues:
+    days_inactive: 60
+    actions:
+      - add_label: "stale"
+      - add_comment: "This issue has been inactive for 60 days and may be closed."
+
+  # Stale PRs (no activity for 30 days)
+  pull_requests:
+    days_inactive: 30
+    actions:
+      - add_label: "stale"
+      - add_comment: "This PR has been inactive for 30 days. Please update or close."
+
+  # Close stale items after additional 14 days
+  close_after:
+    days: 14
+    exclude_labels: ["security", "critical", "pinned"]
+
+# Commit Reference Automation
+commit_automation:
+  # Detect issue references in commits
+  patterns:
+    - "fixes #(\\d+)"
+    - "closes #(\\d+)"
+    - "resolves #(\\d+)"
+    - "implements #(\\d+)"
+    - "addresses #(\\d+)"
+    - "refs #(\\d+)"
+    - "references #(\\d+)"
+    - "relates to #(\\d+)"
+
+  # Actions when commit references issue
+  actions:
+    - column: in_progress
+    - add_comment: "Work in progress - referenced in commit {commit_sha}"
+    - link_commit_to_issue: true
+
+# Auto-assignment Rules
+assignment_automation:
+  # VM-related issues
+  vm:
+    labels: ["vm", "qemu", "proot", "chroot", "virtualization"]
+    assign_to: "@vm-team"
+
+  # Cryptography issues
+  crypto:
+    labels: ["pqc", "cryptography", "security", "liboqs"]
+    assign_to: "@crypto-team"
+
+  # Gateway/networking issues
+  gateway:
+    labels: ["gateway", "tor", "i2p", "networking", "vpn"]
+    assign_to: "@network-team"
+
+  # Documentation issues
+  docs:
+    labels: ["documentation", "docs", "wiki"]
+    assign_to: "@docs-team"
+
+  # Build/CI issues
+  build:
+    labels: ["build", "ci", "docker", "github-actions"]
+    assign_to: "@build-team"
+
+# Notification Settings
+notifications:
+  # Notify on critical issues
+  critical_issues:
+    enabled: true
+    channels: ["slack", "email"]
+    recipients: ["core-maintainers"]
+
+  # Notify on security issues
+  security_issues:
+    enabled: true
+    channels: ["slack", "email", "security-channel"]
+    recipients: ["security-team", "core-maintainers"]
+
+  # Notify on PR approval
+  pr_approved:
+    enabled: true
+    channels: ["slack"]
+    recipients: ["pr-author", "reviewers"]
+
+# Integration Settings
+integrations:
+  # Slack integration
+  slack:
+    enabled: false
+    webhook_url: "${SLACK_WEBHOOK_URL}"
+    channels:
+      default: "#qwamos-dev"
+      security: "#qwamos-security"
+      critical: "#qwamos-urgent"
+
+  # Discord integration
+  discord:
+    enabled: false
+    webhook_url: "${DISCORD_WEBHOOK_URL}"
+
+  # Email notifications
+  email:
+    enabled: true
+    smtp_server: "${SMTP_SERVER}"
+    from: "qwamos-bot@tutanota.com"
+
+# Project Settings
+settings:
+  # Auto-create project if it doesn't exist
+  auto_create_project: true
+  project_name: "QWAMOS Development"
+  project_description: "Main development board for QWAMOS project"
+
+  # Close completed items after 30 days
+  auto_archive_completed:
+    enabled: true
+    days: 30
+
+  # Require issue template
+  require_issue_template: true
+
+  # Require PR template
+  require_pr_template: true
+
+  # Lock closed issues after 60 days
+  lock_closed_issues:
+    enabled: true
+    days: 60
+
+# Custom Workflow Rules
+workflows:
+  # Security workflow
+  security_review:
+    triggers:
+      - label: "security"
+      - label: "vulnerability"
+    steps:
+      - column: security_review
+      - add_label: "needs-security-review"
+      - assign: "@security-team"
+      - notify: "security-team"
+      - require_approvals: 2
+      - require_checks: ["security-scan", "vulnerability-scan"]
+
+  # Emergency hotfix workflow
+  hotfix:
+    triggers:
+      - label: "hotfix"
+      - label: "critical"
+    steps:
+      - add_label: "priority:critical"
+      - column: in_progress
+      - assign: "@core-maintainers"
+      - notify: ["slack", "email"]
+      - fast_track_review: true
+
+  # Feature development workflow
+  feature:
+    triggers:
+      - label: "enhancement"
+      - label: "feature-request"
+    steps:
+      - add_label: "needs-discussion"
+      - column: inbox
+      - require_rfc: true
+      - notify: "maintainers"
+
+# Notes:
+# - This configuration is used by .github/workflows/project-automation.yml
+# - Requires GitHub Projects (beta) or Projects Classic
+# - Uses GitHub GraphQL API for automation
+# - Supports environment variables for sensitive data
+# - Can be extended with custom webhooks and integrations
