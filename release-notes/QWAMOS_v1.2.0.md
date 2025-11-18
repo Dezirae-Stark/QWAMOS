@@ -9,26 +9,77 @@
 
 ## Summary
 
-Integrated advanced roadmap phases (XII-XVI) with PQC storage, GPU isolation, AI governor, and secure cluster mode. Enhanced security infrastructure with additional CI workflows and hardening.
+Integrated advanced roadmap phases (XII-XVI) with PQC storage, GPU isolation, AI governor, and secure cluster mode. Enhanced security infrastructure with additional CI workflows and hardening. Added 15 new features. Fixed 30 bugs.
 
 ---
 
 ## 🆕 Added
 
-_No changes in this category._
+- **`13e9c4d`** Add professional QWAMOS website with GitHub Pages
+- **`ce3f5c6`** Add reproducible build verification framework
+- **`496795e`** Add Renovate bot for automated dependency updates
+- **`c541dc8`** Add automated static binary analysis workflow
+- **`cb544f7`** Add comprehensive automated testing framework
+- **`195ccb2`** Add automated SBOM generation system
+- **`a1fae1b`** Add secure automated GPG release signing system
+- **`da509dd`** Add comprehensive GitHub Projects automation system
+- **`6ef2270`** Add comprehensive linting and formatting infrastructure
+- **`9bdf9e5`** Add comprehensive Docker-based build system
+- **`f14b5ca`** Add comprehensive nightly security scan and test suite
+- **`f8cba6a`** Add VM template automation system
+- **`2dcab5b`** Add automated README banner and badges generator
+- **`2be2e5d`** Add automated documentation sync bot
+- **`a56bf30`** Add comprehensive GitHub Issue Templates
 
 
 ---
 
 ## 🐛 Fixed
 
-_No changes in this category._
+- **`222f23f`** Complete implementation of graceful binary handling in static analysis
+- **`5025c89`** Handle missing binaries gracefully in static binary analysis
+- **`24bffe1`** Move tool verification before user switch in Dockerfile.dev
+- **`9306fc2`** Reduce Dockerfile.dev package footprint to prevent disk space issues
+- **`063be42`** Fix additional workflow failures (docs-validation and static-analysis)
+- **`76a82d0`** Disable Kotlin Language Server and fix Flutter in Dockerfile.dev
+- **`33f9178`** Fix multiple GitHub Actions workflow failures
+- **`0dd116d`** Apply pip fixes to Dockerfile.dev
+- **`3fcaa1a`** Apply same package fixes to Dockerfile.dev as Dockerfile.build
+- **`30b3f84`** Run tool verification as root before user switch
+- **`be9e253`** Add verbose output to tool verification
+- **`10ee8c7`** Remove --config flag from Syft commands in SBOM workflow
+- **`64d89a2`** Simplify Flutter installation for build container
+- **`2ae7a52`** Correct Flutter installation to use stable branch
+- **`082a297`** Replace sed negative lookahead with standard regex
+- **`6021c3e`** Remove EXTERNALLY-MANAGED marker for pip installs
+- **`e083641`** Remove README.md from doc-sync commit stage
+- **`93a9ec1`** Skip pip upgrade to avoid externally-managed-environment errors
+- **`bd7fc08`** Use python3 -m pip with fallback for compatibility
+- **`5a02612`** Move GNUPGHOME to job-level env in release-signing workflow
+- **`ed7203c`** Add --break-system-packages flag for pip in Debian 12+
+- **`c4c1266`** Use default-jdk instead of openjdk-17 in build container
+- **`6f5cf31`** Remove git-lfs and libgtk-3-dev from build container
+- **`751637a`** Remove QEMU packages from build container
+- **`ff09bda`** Correct QEMU package names in Docker build
+- **`e1faad4`** Remove unavailable libstdc++-11-dev package from Docker build
+- **`41aad03`** Update Jekyll configuration for GitHub Pages deployment
+- **`cec1786`** Add missing liboqs submodule URL to .gitmodules
+- **`c5b00ea`** Corrected syntax error in crypt_stress.py Kyber key generation
+- **`daa31ae`** Release notes workflow - remove conflicting branch creation step
 
 
 ---
 
 ## 🔒 Security
 
+- **`063be42`** Fix additional workflow failures (docs-validation and static-analysis)
+- **`33f9178`** Fix multiple GitHub Actions workflow failures
+- **`c541dc8`** Add automated static binary analysis workflow
+- **`10ee8c7`** Remove --config flag from Syft commands in SBOM workflow
+- **`5a02612`** Move GNUPGHOME to job-level env in release-signing workflow
+- **`7db0464`** ci: Add comprehensive documentation validation workflow
+- **`daa31ae`** Release notes workflow - remove conflicting branch creation step
+- **`934ac1f`** Added automated Release Notes generator, workflow, and README integration.
 - **`e1a565d`** Fix forensic-audit workflow - allow legitimate binaries
 - **`f703e6b`** Fix nightly workflow - remove missing forensic_audit.sh dependency
 - **`397ed19`** Fix CodeQL C/C++ build and Verify Signed Commits workflow
@@ -48,6 +99,37 @@ _No changes in this category._
 
 ## 📚 Documentation
 
+- **`d0c85d5`** Sync wiki to docs/wiki/ directory
+- **`a9fd7d3`** Sync documentation [skip-doc-sync]
+- **`7ef5bea`** Sync wiki to docs/wiki/ directory
+- **`d4ce622`** Sync wiki to docs/wiki/ directory
+- **`e889d70`** Sync documentation [skip-doc-sync]
+- **`e083641`** Remove README.md from doc-sync commit stage
+- **`ed1fd10`** Sync wiki to docs/wiki/ directory
+- **`9a58540`** Add GPG release signing setup guide
+- **`f9d8e1b`** Sync wiki to docs/wiki/ directory
+- **`5d3339b`** Sync wiki to docs/wiki/ directory
+- **`0664a6e`** Sync wiki to docs/wiki/ directory
+- **`81e793a`** Sync wiki to docs/wiki/ directory
+- **`2156c3e`** Add comprehensive QWAMOS Maintainer Handbook
+- **`8c3588c`** Sync wiki to docs/wiki/ directory
+- **`f840306`** Sync wiki to docs/wiki/ directory
+- **`2dcab5b`** Add automated README banner and badges generator
+- **`24db002`** Sync wiki to docs/wiki/ directory
+- **`54bd977`** Sync wiki to docs/wiki/ directory
+- **`4b864c8`** Set up GitHub Pages with Jekyll and Just the Docs theme
+- **`7190f89`** Sync wiki to docs/wiki/ directory
+- **`90633f9`** Add Contributor Covenant Code of Conduct v2.1
+- **`ca54ada`** Sync wiki to docs/wiki/ directory
+- **`b6d3de3`** Update comprehensive SECURITY.md policy
+- **`e1cbf8f`** Sync wiki to docs/wiki/ directory
+- **`f4658ea`** Sync wiki to docs/wiki/ directory
+- **`3052b4e`** Add comprehensive GitHub repository setup summary
+- **`2d31d9c`** Sync wiki to docs/wiki/ directory
+- **`0bf8859`** Sync wiki to docs/wiki/ directory
+- **`8c01a91`** Add comprehensive CONTRIBUTING.md guide
+- **`ef9ef0a`** Sync wiki to docs/wiki/ directory
+- **`934ac1f`** Added automated Release Notes generator, workflow, and README integration.
 - **`528fa87`** Updated README, roadmap status, version bump, and documentation to reflect integrated Phases XII–XVI; KVM pending hardware validation.
 - **`6583809`** Update version reference in README footer to v1.1.0
 - **`21a7f80`** Add autoplaying promotional demo at top of README
@@ -97,6 +179,8 @@ _No changes in this category._
 **Pending:**
 - Phase XII KVM hardware-accelerated tests on real ARM device
 
+- **`ec06b0d`** Added differential QEMU vs KVM test harness for Phase XII validation.
+- **`588f858`** Added KVM hardware test suite for Phase XII real-device validation.
 - **`e54f031`** Phase XVI: Secure Cluster Mode - 100% FRAMEWORK COMPLETE 🌐
 - **`c9071ab`** Phase XV: AI Governor for Adaptive Resource Management - 100% COMPLETE 🤖
 - **`793330d`** Phase XIV: GPU Isolation and Passthrough - 100% COMPLETE 🎮
@@ -120,12 +204,12 @@ _No changes in this category._
 
 **README.md:**
 ```
-03b47392563db4b6595b9b6e3d67fde78feffe81f568facac404d267c7512954
+b6d614932f77369d4a3227ed6632e563dd457df12dfb38df16f6b68d63751f18
 ```
 
 **PROJECT_STATUS.md:**
 ```
-14f48995195e836bd1a10c696c2c44a69d53690ecce7e9a4eb1a51e1b108e18d
+4370951c68f0c618b4c0baca0fc4726b526cc971e5ad7c07d3bf5d24751b50f0
 ```
 
 ---
@@ -133,9 +217,9 @@ _No changes in this category._
 ## 📋 Version Provenance
 
 - **Version:** v1.2.0
-- **Commit:** `528fa870567bd82c2bf1c663ee16d1169b3c3632`
+- **Commit:** `222f23ffdc87539838f4d3eedbfa88604b78d608`
 - **Branch:** `master`
-- **Build Date:** 2025-11-18 00:51:23 UTC
+- **Build Date:** 2025-11-18 23:49:56 UTC
 
 ---
 
