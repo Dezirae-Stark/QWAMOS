@@ -1,0 +1,51 @@
+vm:
+  name: test-gpu-vm
+  type: linux
+  description: Test VM with GPU acceleration (Phase XIV)
+
+machine:
+  type: virt
+  accel: tcg
+  gic_version: 3
+
+hardware:
+  cpu:
+    model: cortex-a57
+    cores: 2
+  memory:
+    size: 512
+  disk:
+    primary:
+      path: /data/data/com.termux/files/home/QWAMOS/vms/test-gpu-vm/disk.qcow2
+      size: 2G
+  graphics:
+    type: virtio-vga
+
+# Phase XIV: GPU Configuration
+gpu:
+  enabled: true
+  access_mode: virtio  # Options: virtio, passthrough, software, none
+  vram_limit_mb: 512
+  priority: 75
+  allow_vulkan: true
+  allow_compute: false
+
+network:
+  mode: nat
+  device: virtio-net-pci
+  mac: 52:54:00:12:34:60
+  nat_rules:
+    - protocol: tcp
+      host_port: 2226
+      guest_port: 22
+
+boot:
+  kernel: /data/data/com.termux/files/home/QWAMOS/bootloader/vmlinuz
+  initrd: /data/data/com.termux/files/home/QWAMOS/bootloader/initrd.img
+  cmdline: "console=ttyAMA0 root=/dev/vda rw"
+
+autostart: false
+
+qemu_extra_args:
+  - "-serial"
+  - "mon:stdio"

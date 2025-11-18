@@ -4,6 +4,7 @@ QWAMOS VM Manager
 Manages QEMU virtual machines with post-quantum security
 Phase XII: KVM hardware acceleration support
 Phase XIII: Post-quantum encrypted storage support
+Phase XIV: GPU isolation and passthrough support
 """
 
 import os
@@ -36,6 +37,14 @@ except ImportError:
     PQC_STORAGE_AVAILABLE = False
     print("⚠️  PQC Storage not found - encryption disabled")
 
+# Import GPU Manager (Phase XIV)
+try:
+    from gpu_manager import GPUManager, GPUAccessMode
+    GPU_AVAILABLE = True
+except ImportError:
+    GPU_AVAILABLE = False
+    print("⚠️  GPU Manager not found - GPU passthrough disabled")
+
 # QWAMOS Paths
 VMS_DIR = QWAMOS_ROOT / "vms"
 HYPERVISOR_DIR = QWAMOS_ROOT / "hypervisor"
@@ -65,6 +74,14 @@ class VMManager:
         else:
             self.pqc_keystore = None
             self.pqc_storage_enabled = False
+
+        # Initialize GPU Manager (Phase XIV)
+        if GPU_AVAILABLE:
+            self.gpu_manager = GPUManager()
+            self.gpu_enabled = True
+        else:
+            self.gpu_manager = None
+            self.gpu_enabled = False
 
         # Ensure logs directory exists
         LOGS_DIR.mkdir(parents=True, exist_ok=True)
@@ -156,6 +173,36 @@ class VMManager:
         # Graphics
         if hw.get('graphics', {}).get('type'):
             cmd.extend(["-device", hw['graphics']['type']])
+
+        # Phase XIV: GPU Configuration
+        if self.gpu_manager and self.gpu_enabled:
+            gpu_config = self.config.get('gpu', {})
+            if gpu_config.get('enabled', False):
+                # Allocate GPU resources to this VM
+                access_mode_str = gpu_config.get('access_mode', 'virtio')
+                vram_limit = gpu_config.get('vram_limit_mb', 512)
+                priority = gpu_config.get('priority', 50)
+
+                # Map config string to GPUAccessMode enum
+                access_mode_map = {
+                    'virtio': GPUAccessMode.VIRTIO,
+                    'passthrough': GPUAccessMode.PASSTHROUGH,
+                    'software': GPUAccessMode.SOFTWARE,
+                    'none': GPUAccessMode.NONE
+                }
+                access_mode = access_mode_map.get(access_mode_str, GPUAccessMode.VIRTIO)
+
+                # Allocate GPU
+                self.gpu_manager.allocate_gpu(
+                    vm_name=self.vm_name,
+                    access_mode=access_mode,
+                    vram_limit_mb=vram_limit,
+                    priority=priority
+                )
+
+                # Get QEMU GPU arguments
+                gpu_args = self.gpu_manager.get_vm_gpu_args(self.vm_name)
+                cmd.extend(gpu_args)
 
         # Extra args
         extra_args = self.config.get('qemu_extra_args', [])
@@ -269,6 +316,15 @@ class VMManager:
             else:
                 print("🐢 TCG Software Emulation: ENABLED (expect slower performance)")
 
+        # Phase XIV: Display GPU status
+        if self.gpu_manager and self.gpu_enabled:
+            gpu_config = self.config.get('gpu', {})
+            if gpu_config.get('enabled', False):
+                access_mode = gpu_config.get('access_mode', 'virtio')
+                print(f"🎮 GPU Access: {access_mode.upper()}")
+                if self.gpu_manager.capabilities.vulkan_supported:
+                    print(f"   Vulkan: ✅ {self.gpu_manager.capabilities.vulkan_version or 'available'}")
+
         cmd = self.build_qemu_command()
 
         print(f"\nQEMU Command:")
@@ -366,6 +422,24 @@ class VMManager:
                 print(f"Encryption:   🔒 ENABLED (legacy)")
             else:
                 print(f"Encryption:   ❌ DISABLED")
+
+        # Phase XIV: Show GPU status
+        if self.gpu_manager and self.gpu_enabled:
+            gpu_config = config.get('gpu', {})
+            if gpu_config.get('enabled', False):
+                access_mode = gpu_config.get('access_mode', 'virtio')
+                vram_limit = gpu_config.get('vram_limit_mb', 512)
+                print(f"GPU:          🎮 {access_mode.upper()}")
+                print(f"  VRAM Limit: {vram_limit} MB")
+                print(f"  Device:     {self.gpu_manager.capabilities.device_name}")
+                if self.gpu_manager.capabilities.vulkan_supported:
+                    print(f"  Vulkan:     ✅ {self.gpu_manager.capabilities.vulkan_version or 'available'}")
+                if self.gpu_manager.capabilities.opengl_version:
+                    print(f"  OpenGL:     ✅ {self.gpu_manager.capabilities.opengl_version}")
+            else:
+                print(f"GPU:          ❌ DISABLED")
+        else:
+            print(f"GPU:          ⚠️  GPU Manager not available")
 
         print(f"{'='*60}\n")
 
