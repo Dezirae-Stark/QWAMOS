@@ -28,7 +28,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-venv \
     # Version control
     git \
-    git-lfs \
     # Networking tools
     curl \
     wget \
@@ -47,7 +46,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     # Kotlin (via SDKMAN later)
     # Flutter dependencies
     clang \
-    libgtk-3-dev \
     liblzma-dev \
     # Cryptography libraries
     libssl-dev \
