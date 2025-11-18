@@ -77,27 +77,29 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Extract metadata for dev image
-        id: meta-dev
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ github.repository }}/dev
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=sha,prefix={{branch}}-
-            type=raw,value=latest,enable={{is_default_branch}}
+      # Dev image build temporarily disabled due to GitHub Actions disk space constraints
+      # TODO: Re-enable once image size is optimized or runner disk space increased
+      # - name: Extract metadata for dev image
+      #   id: meta-dev
+      #   uses: docker/metadata-action@v5
+      #   with:
+      #     images: ghcr.io/${{ github.repository }}/dev
+      #     tags: |
+      #       type=ref,event=branch
+      #       type=ref,event=pr
+      #       type=sha,prefix={{branch}}-
+      #       type=raw,value=latest,enable={{is_default_branch}}
 
-      - name: Build and push dev image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: docker/Dockerfile.dev
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta-dev.outputs.tags }}
-          labels: ${{ steps.meta-dev.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      # - name: Build and push dev image
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     context: .
+      #     file: docker/Dockerfile.dev
+      #     push: ${{ github.event_name != 'pull_request' }}
+      #     tags: ${{ steps.meta-dev.outputs.tags }}
+      #     labels: ${{ steps.meta-dev.outputs.labels }}
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
 
   # Job 2: Run build script
   run-build:
