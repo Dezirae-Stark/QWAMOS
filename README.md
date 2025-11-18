@@ -35,9 +35,11 @@
 ## 🔗 Navigation
 
 - [TL;DR](#tldr)
-- [Investor Summary](#investor-summary)
+- [Getting Started (Quickstart)](#getting-started-quickstart)
+- [Is QWAMOS Right for You?](#is-qwamos-right-for-you)
 - [User-Friendly Overview](#user-friendly-overview)
-- [Screenshots & Demo Animation](#screenshots--demo-animation)
+- [Demo & Screenshots](#demo--screenshots)
+- [Investor Summary](#investor-summary)
 - [Developer / Engineering Documentation](#developer--engineering-documentation)
   - [Executive Summary](#executive-summary)
   - [Project Overview](#-project-overview)
@@ -70,6 +72,180 @@
 
 ➡️ [INSTALLATION.md](./INSTALLATION.md)
 ➡️ [OPS_GUIDE.md](./OPS_GUIDE.md)
+
+---
+
+## Is QWAMOS Right for You?
+
+QWAMOS is ideal if you:
+- Handle sensitive communications (journalist, activist, attorney, investigator, contractor)
+- Travel in hostile jurisdictions or through adversarial border checkpoints
+- Need strong separation between work, personal, and high-risk apps
+- Require post-quantum encryption and compartmentalization by design
+
+QWAMOS may not be ideal if you:
+- Depend on Google Play Services or typical consumer Android workflows
+- Want a mainstream, commercial, stable-for-everyone UI/UX experience
+- Are unfamiliar with virtualization-based operating systems
+
+---
+
+## User-Friendly Overview
+
+### What is QWAMOS?
+
+Imagine if your smartphone worked like a high-security government facility: instead of one big building where anyone with a keycard can wander anywhere, you have **separate buildings for separate tasks**. One building handles internet connections (heavily guarded, all visitors screened). Another building is where you do your work (no internet connection at all—totally isolated). A third building is a panic room that can be instantly locked down if something goes wrong.
+
+**That's QWAMOS.** It's a mobile operating system that treats every app like a potential security risk and puts it in its own **virtual machine (VM)**—a completely isolated software environment. Even if one app gets hacked, the attacker is trapped in that VM and can't access your other apps, files, or data.
+
+On top of this, QWAMOS uses **post-quantum encryption**—the kind of cryptography that's designed to resist attacks from quantum computers, which will make today's encryption obsolete within the next decade. And every time you connect to the internet, your traffic is automatically routed through **Tor and I2P anonymity networks**, hiding your identity and location from surveillance.
+
+---
+
+### AI Privacy
+
+- **Kali GPT** runs fully on-device with zero network access.
+- **Claude / ChatGPT** run through Tor with automatic token sanitization.
+- All cloud AI runs inside isolated VMs with enforced firewall boundaries.
+
+---
+
+### What You Can Do with QWAMOS
+
+- **Send truly private messages**: Your messaging app runs in an isolated VM, encrypted with post-quantum crypto, routed through Tor. Even nation-state adversaries can't intercept or decrypt your communications.
+
+- **Browse the web anonymously**: All internet traffic automatically routes through Tor/I2P. Websites, ISPs, and governments can't track your browsing or correlate your activities.
+
+- **Sandbox untrusted apps**: Install sketchy apps (games, utilities, experimental software) in disposable VMs. If they're malicious, they're trapped—can't access your contacts, photos, or other apps.
+
+- **Isolate banking and financial apps**: Keep your banking app in a dedicated "Vault VM" with zero network access except through the Gateway VM proxy. Even if malware infects another VM, your finances are untouchable.
+
+- **Create specialized workspaces**: One VM for work emails and documents, another for personal social media, another for sensitive research. Each workspace is cryptographically isolated.
+
+- **Use AI assistants securely**: QWAMOS includes three AI assistants (Kali GPT for security, Claude for general help, ChatGPT for brainstorming)—Kali GPT running **locally** on your device, others accessed via Tor. No unencrypted data ever leaves your phone.
+
+- **Emergency panic protection**: Triple-tap with five fingers, and QWAMOS instantly wipes all sensitive data, shuts down VMs, and kills network radios. Alternatively, enter a "duress PIN" to unlock a decoy profile with fake data.
+
+- **Defeat firmware-level attacks**: QWAMOS uses machine learning to verify that your bootloader hasn't been tampered with—even if an attacker has physical access to your device. This protects against "evil maid" attacks where adversaries modify your device's firmware.
+
+---
+
+### Key Benefits
+
+**🛡️ Post-Quantum Protection**
+Your data is encrypted with **Kyber-1024**, the encryption standard approved by NIST to resist quantum computer attacks. Even if adversaries record your encrypted traffic today, they won't be able to decrypt it in the future when quantum computers exist.
+
+**🔐 Each App in Its Own VM**
+Apps can't spy on each other, share data without your permission, or escalate privileges to compromise the operating system. It's like running each app on a physically separate phone.
+
+**🌐 Tor/I2P Routing for All Internet Traffic**
+Your IP address, location, and browsing habits are hidden from ISPs, governments, and websites. Network traffic is onion-routed through multiple encrypted hops.
+
+**⚡ Panic Gesture → Instant Wipe**
+If you're in danger (device seizure, coercion, border crossing), trigger the panic gesture to instantly destroy all decryption keys, wipe VMs, and power off radios. Unrecoverable, military-grade data destruction.
+
+**🔥 Local Firewall Per-VM**
+Every VM has its own firewall rules. The "Workstation VM" where you run apps has **zero direct internet access**—all requests must go through the "Gateway VM" (Tor proxy). This makes network-based attacks nearly impossible.
+
+**🚫 Zero Google Dependencies**
+No Google Play Services, no Google telemetry, no secret data transmission to Alphabet. QWAMOS is built on open-source components and can function completely offline or with alternative app stores.
+
+**🔒 Hardware Kill Switches**
+Physical or software switches to disable camera, microphone, cellular radio, GPS, Wi-Fi, and Bluetooth. When disabled, these components are powered off at the hardware level (not just software-toggled).
+
+**🤖 AI-Powered Threat Detection**
+QWAMOS continuously monitors network traffic, file system changes, and system calls using machine learning models. Anomalies (unusual DNS queries, rapid file encryption patterns, privilege escalation attempts) trigger automatic alerts and can isolate compromised VMs.
+
+---
+
+### How It Works: Simple Diagram
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     QWAMOS Mobile Device                     │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
+│  │   Dom0 VM    │  │  Gateway VM  │  │ Workstation  │      │
+│  │  (Control)   │  │  (Tor/I2P)   │  │      VM      │      │
+│  │              │  │              │  │              │      │
+│  │ • Firewall   │  │ • Tor        │  │ • Your apps  │      │
+│  │ • VM Manager │  │ • I2P        │  │ • Documents  │      │
+│  │ • Policies   │  │ • DNSCrypt   │  │ • Browser    │      │
+│  │              │  │              │  │ • NO network │      │
+│  └──────────────┘  └──────────────┘  └──────────────┘      │
+│        ▲                 ▲                   │              │
+│        │                 │                   │              │
+│        │         ┌───────┴────────┐          │              │
+│        └─────────│  KVM Hypervisor │──────────┘              │
+│                  └────────────────┘                         │
+│                          │                                  │
+│                  ┌───────▼───────┐                          │
+│                  │  Linux Kernel  │                          │
+│                  │  (6.6 LTS)     │                          │
+│                  └────────────────┘                         │
+│                          │                                  │
+│  ┌───────────────────────▼──────────────────────┐          │
+│  │   ARM TrustZone (StrongBox Keystore)         │          │
+│  │   + Snapdragon 8 Gen 3 Secure Boot           │          │
+│  └──────────────────────────────────────────────┘          │
+└─────────────────────────────────────────────────────────────┘
+         │                                        │
+    ┌────▼───┐                              ┌────▼───────┐
+    │ Camera │                              │   Radio    │
+    │  Mic   │ ◄───── Kill Switches ──────► │  (Modem)   │
+    └────────┘                              └────────────┘
+```
+
+**How this protects you:**
+
+1. **Internet Connection (Gateway VM):** Your workstation VM (where apps run) has NO direct internet access. All requests go through the Gateway VM, which routes everything through Tor/I2P. Even if malware infects an app, it can't "phone home" or leak your IP address.
+
+2. **App Isolation (Workstation VM):** Each app thinks it's the only app on the phone. Apps can't see each other's files, memory, or processes. A compromised banking app can't steal your Signal messages.
+
+3. **System Control (Dom0 VM):** The hypervisor enforces strict rules: "Workstation cannot talk to Dom0," "Gateway cannot access storage," etc. Even if an attacker exploits a VM, they're trapped.
+
+4. **Hardware Root of Trust (TrustZone):** Encryption keys are stored in ARM TrustZone secure enclave. The bootloader verifies that the kernel hasn't been tampered with before loading it. ML algorithms detect firmware-level persistence attacks.
+
+5. **Kill Switches:** If you're at a border crossing or in a coercive situation, flip the hardware kill switch (or trigger the panic gesture) to instantly power off radios, wipe encryption keys, and render the device forensically unrecoverable.
+
+---
+
+## Demo & Screenshots
+
+<div align="center">
+
+### 🎬 QWAMOS in Action
+
+Experience the future of mobile security with QWAMOS - a Qubes + Whonix-inspired Android OS featuring post-quantum encryption, VM isolation, and AI-powered threat detection.
+
+<!-- Autoplay Demo Animation -->
+<picture>
+  <source srcset="./assets/demo-animation/qwamos-demo.webp" type="image/webp">
+  <img src="./assets/screenshots/demo_preview.gif"
+       alt="QWAMOS Demo Animation showing VM isolation dashboard, post-quantum encryption indicators, and AI threat detection interface"
+       width="800"
+       autoplay loop muted playsinline />
+</picture>
+
+<p><i>🎥 <a href="./assets/demo-animation/qwamos-demo.html"><b>View full interactive demo</b></a></i></p>
+
+### ✨ Demo Highlights
+
+- 🔐 **VM Isolation** - Workstation, Vault, Kali, and Disposable VMs with real-time status monitoring
+- 🛡️ **Post-Quantum Crypto** - Kyber-1024 → ChaCha20-Poly1305 → BLAKE3 encryption chain visualization
+- 🤖 **AI-Powered Security** - Multi-AI threat detection (Kali GPT ↔ Claude ↔ ChatGPT) with live alerts
+- 🔒 **Real-Time Protection** - Live network packet analysis and automated threat response workflows
+
+<sup>Animation: HTML5/CSS3 | Resolution: 1920×1080 | Duration: 10s | [Source Code](./assets/demo-animation/) | [Generate GIF](./assets/demo-animation/generate-video.sh)</sup>
+
+</div>
+
+---
+
+### 📸 Additional Screenshots
+
+*(Screenshots section content from original README will be preserved here)*
 
 ---
 
@@ -213,202 +389,6 @@ QWAMOS is the **first mobile operating system** built from the ground up with:
 
 ---
 
-## Is QWAMOS Right for You?
-
-QWAMOS is ideal if you:
-- Handle sensitive communications (journalist, activist, attorney, investigator, contractor)
-- Travel in hostile jurisdictions or through adversarial border checkpoints
-- Need strong separation between work, personal, and high-risk apps
-- Require post-quantum encryption and compartmentalization by design
-
-QWAMOS may not be ideal if you:
-- Depend on Google Play Services or typical consumer Android workflows
-- Want a mainstream, commercial, stable-for-everyone UI/UX experience
-- Are unfamiliar with virtualization-based operating systems
-
----
-
-## User-Friendly Overview
-
-### What is QWAMOS?
-
-Imagine if your smartphone worked like a high-security government facility: instead of one big building where anyone with a keycard can wander anywhere, you have **separate buildings for separate tasks**. One building handles internet connections (heavily guarded, all visitors screened). Another building is where you do your work (no internet connection at all—totally isolated). A third building is a panic room that can be instantly locked down if something goes wrong.
-
-**That's QWAMOS.** It's a mobile operating system that treats every app like a potential security risk and puts it in its own **virtual machine (VM)**—a completely isolated software environment. Even if one app gets hacked, the attacker is trapped in that VM and can't access your other apps, files, or data.
-
-On top of this, QWAMOS uses **post-quantum encryption**—the kind of cryptography that's designed to resist attacks from quantum computers, which will make today's encryption obsolete within the next decade. And every time you connect to the internet, your traffic is automatically routed through **Tor and I2P anonymity networks**, hiding your identity and location from surveillance.
-
----
-
-### AI Privacy
-
-- **Kali GPT**: runs 100% on-device, with no network access.
-- **Claude / ChatGPT** (optional): cloud AI accessed only through Tor; a sanitization layer removes sensitive tokens before transmission.
-- **All cloud AI**: isolated in its own VM with firewall rules preventing cross-VM data leakage.
-
----
-
-### What You Can Do with QWAMOS
-
-- **Send truly private messages**: Your messaging app runs in an isolated VM, encrypted with post-quantum crypto, routed through Tor. Even nation-state adversaries can't intercept or decrypt your communications.
-
-- **Browse the web anonymously**: All internet traffic automatically routes through Tor/I2P. Websites, ISPs, and governments can't track your browsing or correlate your activities.
-
-- **Sandbox untrusted apps**: Install sketchy apps (games, utilities, experimental software) in disposable VMs. If they're malicious, they're trapped—can't access your contacts, photos, or other apps.
-
-- **Isolate banking and financial apps**: Keep your banking app in a dedicated "Vault VM" with zero network access except through the Gateway VM proxy. Even if malware infects another VM, your finances are untouchable.
-
-- **Create specialized workspaces**: One VM for work emails and documents, another for personal social media, another for sensitive research. Each workspace is cryptographically isolated.
-
-- **Use AI assistants securely**: QWAMOS includes three AI assistants (Kali GPT for security, Claude for general help, ChatGPT for brainstorming)—all running **locally** on your device. No data ever leaves your phone.
-
-- **Emergency panic protection**: Triple-tap with five fingers, and QWAMOS instantly wipes all sensitive data, shuts down VMs, and kills network radios. Alternatively, enter a "duress PIN" to unlock a decoy profile with fake data.
-
-- **Defeat firmware-level attacks**: QWAMOS uses machine learning to verify that your bootloader hasn't been tampered with—even if an attacker has physical access to your device. This protects against "evil maid" attacks where adversaries modify your device's firmware.
-
----
-
-### Key Benefits
-
-**🛡️ Post-Quantum Protection**
-- Your data is encrypted with **Kyber-1024**, the encryption standard approved by NIST to resist quantum computer attacks. Even if adversaries record your encrypted traffic today, they won't be able to decrypt it in the future when quantum computers exist.
-
-**🔐 Each App in Its Own VM**
-- Apps can't spy on each other, share data without your permission, or escalate privileges to compromise the operating system. It's like running each app on a physically separate phone.
-
-**🌐 Tor/I2P Routing for All Internet Traffic**
-- Your IP address, location, and browsing habits are hidden from ISPs, governments, and websites. Network traffic is onion-routed through multiple encrypted hops.
-
-**⚡ Panic Gesture → Instant Wipe**
-- If you're in danger (device seizure, coercion, border crossing), trigger the panic gesture to instantly destroy all decryption keys, wipe VMs, and power off radios. Unrecoverable, military-grade data destruction.
-
-**🔥 Local Firewall Per-VM**
-- Every VM has its own firewall rules. The "Workstation VM" where you run apps has **zero direct internet access**—all requests must go through the "Gateway VM" (Tor proxy). This makes network-based attacks nearly impossible.
-
-**🚫 Zero Google Dependencies**
-- No Google Play Services, no Google telemetry, no secret data transmission to Alphabet. QWAMOS is built on open-source components and can function completely offline or with alternative app stores.
-
-**🔒 Hardware Kill Switches**
-- Physical or software switches to disable camera, microphone, cellular radio, GPS, Wi-Fi, and Bluetooth. When disabled, these components are powered off at the hardware level (not just software-toggled).
-
-**🤖 AI-Powered Threat Detection**
-- QWAMOS continuously monitors network traffic, file system changes, and system calls using machine learning models. Anomalies (unusual DNS queries, rapid file encryption patterns, privilege escalation attempts) trigger automatic alerts and can isolate compromised VMs.
-
----
-
-### How It Works: Simple Diagram
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     QWAMOS Mobile Device                     │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │   Dom0 VM    │  │  Gateway VM  │  │ Workstation  │      │
-│  │  (Control)   │  │  (Tor/I2P)   │  │      VM      │      │
-│  │              │  │              │  │              │      │
-│  │ • Firewall   │  │ • Tor        │  │ • Your apps  │      │
-│  │ • VM Manager │  │ • I2P        │  │ • Documents  │      │
-│  │ • Policies   │  │ • DNSCrypt   │  │ • Browser    │      │
-│  │              │  │              │  │ • NO network │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
-│        ▲                 ▲                   │              │
-│        │                 │                   │              │
-│        │         ┌───────┴────────┐          │              │
-│        └─────────│  KVM Hypervisor │──────────┘              │
-│                  └────────────────┘                         │
-│                          │                                  │
-│                  ┌───────▼───────┐                          │
-│                  │  Linux Kernel  │                          │
-│                  │  (6.6 LTS)     │                          │
-│                  └────────────────┘                         │
-│                          │                                  │
-│  ┌───────────────────────▼──────────────────────┐          │
-│  │   ARM TrustZone (StrongBox Keystore)         │          │
-│  │   + Snapdragon 8 Gen 3 Secure Boot           │          │
-│  └──────────────────────────────────────────────┘          │
-└─────────────────────────────────────────────────────────────┘
-         │                                        │
-    ┌────▼───┐                              ┌────▼───────┐
-    │ Camera │                              │   Radio    │
-    │  Mic   │ ◄───── Kill Switches ──────► │  (Modem)   │
-    └────────┘                              └────────────┘
-```
-
-**How this protects you:**
-
-1. **Internet Connection (Gateway VM):** Your workstation VM (where apps run) has NO direct internet access. All requests go through the Gateway VM, which routes everything through Tor/I2P. Even if malware infects an app, it can't "phone home" or leak your IP address.
-
-2. **App Isolation (Workstation VM):** Each app thinks it's the only app on the phone. Apps can't see each other's files, memory, or processes. A compromised banking app can't steal your Signal messages.
-
-3. **System Control (Dom0 VM):** The hypervisor enforces strict rules: "Workstation cannot talk to Dom0," "Gateway cannot access storage," etc. Even if an attacker exploits a VM, they're trapped.
-
-4. **Hardware Root of Trust (TrustZone):** Encryption keys are stored in ARM TrustZone secure enclave. The bootloader verifies that the kernel hasn't been tampered with before loading it. ML algorithms detect firmware-level persistence attacks.
-
-5. **Kill Switches:** If you're at a border crossing or in a coercive situation, flip the hardware kill switch (or trigger the panic gesture) to instantly power off radios, wipe encryption keys, and render the device forensically unrecoverable.
-
----
-
-## Screenshots & Demo Animation
-
-<div align="center">
-
-### 🎬 QWAMOS in Action
-
-Experience the future of mobile security with QWAMOS - a Qubes + Whonix-inspired Android OS featuring post-quantum encryption, VM isolation, and AI-powered threat detection.
-
-<!-- Autoplay Demo Animation -->
-<picture>
-  <source srcset="./assets/demo-animation/qwamos-demo.webp" type="image/webp">
-  <img src="./assets/screenshots/demo_preview.gif"
-       alt="QWAMOS Demo Animation showing VM isolation dashboard, post-quantum encryption indicators, and AI threat detection interface"
-       width="800"
-       autoplay loop muted playsinline />
-</picture>
-
-<p><i>🎥 <a href="./assets/demo-animation/qwamos-demo.html"><b>View full interactive demo</b></a> | <a href="#-quick-start">Get Started →</a></i></p>
-
-### ✨ Demo Highlights
-
-- 🔐 **VM Isolation** - Workstation, Vault, Kali, and Disposable VMs with real-time status monitoring
-- 🛡️ **Post-Quantum Crypto** - Kyber-1024 → ChaCha20-Poly1305 → BLAKE3 encryption chain visualization
-- 🤖 **AI-Powered Security** - Multi-AI threat detection (Kali GPT ↔ Claude ↔ ChatGPT) with live alerts
-- 🔒 **Real-Time Protection** - Live network packet analysis and automated threat response workflows
-
-<sup>Animation: HTML5/CSS3 | Resolution: 1920×1080 | Duration: 10s | [Source Code](./assets/demo-animation/) | [Generate GIF](./assets/demo-animation/generate-video.sh)</sup>
-
-</div>
-
----
-
-### 📸 Additional Screenshots
-
-*(All existing screenshots will be preserved in their original locations below - this section will be populated from the existing README screenshots section)*
-
----
-
-## 🎬 Demo Animation (Coming Soon)
-
-**High-Impact Animated Demonstration:**
-
-This section will contain an expanded animated demonstration showcasing:
-
-- **VM Isolation Dashboard:** Real-time visualization of security domains (Dom0, Gateway, Workstation, Trusted UI) with data flow indicators
-- **Post-Quantum Cryptography Workflow:** Step-by-step animation of Kyber-1024 key encapsulation → ChaCha20-Poly1305 encryption → BLAKE3 integrity verification
-- **AI Threat Detection:** Live demonstration of ML anomaly detection identifying and isolating a simulated network intrusion
-- **Panic Gesture Activation:** Visualization of emergency data wipe and radio kill switch procedures
-- **Cross-VM Communication Firewall:** Animated diagram showing how firewall rules prevent lateral movement between VMs
-
-**Technical Specifications:**
-- Format: WebM (VP9) + MP4 (H.265) + GIF fallback
-- Resolution: 1920×1080 @ 60fps
-- Duration: 30-60 seconds
-- Interactive HTML5 controls with chapter markers
-- Accessibility: Full captions and screen reader descriptions
-
-*(Placeholder for final animation to be inserted once rendering is complete)*
-
----
 
 # Developer / Engineering Documentation
 
