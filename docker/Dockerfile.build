@@ -41,9 +41,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xz-utils \
     zip \
     unzip \
-    # QEMU for VM testing (user-mode only for build container)
-    qemu-user-static \
-    qemu-utils \
     # Android build dependencies
     openjdk-17-jdk \
     openjdk-17-jre-headless \
