@@ -61,13 +61,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /workspace
 
 # Install Python packages
-RUN pip3 install --no-cache-dir --upgrade \
+# Note: --break-system-packages needed for Debian 12+ externally-managed-environment
+RUN pip3 install --no-cache-dir --break-system-packages --upgrade \
     pip \
     setuptools \
     wheel
 
 # Install QWAMOS Python dependencies
-RUN pip3 install --no-cache-dir \
+RUN pip3 install --no-cache-dir --break-system-packages \
     # Cryptography
     cryptography \
     pycryptodome \
