@@ -1,0 +1,180 @@
+# QWAMOS ktlint Configuration
+# Kotlin code style and formatting rules
+# https://pinterest.github.io/ktlint/
+
+# Disabled rules (if any specific rules need to be disabled)
+disabled_rules:
+  # Uncomment to disable specific rules
+  # - no-semi
+
+# ktlint Standard Ruleset
+# Enforces Kotlin coding conventions and Android Kotlin Style Guide
+
+# Import ordering
+import-ordering:
+  # Use default alphabetical ordering
+  # No wildcard imports (enforced by no-wildcard-imports rule)
+
+# Indentation rules
+indent:
+  # Use 4 spaces for indentation (consistent with EditorConfig)
+  indent_size: 4
+  # Continuation indent (for wrapped lines)
+  continuation_indent_size: 4
+
+# Line length
+max-line-length:
+  # Maximum line length before wrapping
+  max_line_length: 120
+  # Ignore long import statements
+  ignore_back_ticked_identifier: false
+
+# Naming conventions
+class-naming:
+  # PascalCase for classes
+  # Example: MyClass, UserService
+
+function-naming:
+  # camelCase for functions
+  # Example: getUserName, processData
+
+property-naming:
+  # camelCase for properties
+  # Example: userName, isActive
+
+# Wildcard imports
+no-wildcard-imports:
+  # Disallow wildcard imports (import foo.*)
+  # Use explicit imports for better code clarity
+  # Exceptions can be made for common packages if needed
+
+# Trailing commas
+trailing-comma-on-call-site:
+  # Require trailing commas in multi-line parameter lists
+  use_trailing_comma_on_call_site: true
+
+trailing-comma-on-declaration-site:
+  # Require trailing commas in multi-line declarations
+  use_trailing_comma_on_declaration_site: true
+
+# Blank lines
+no-consecutive-blank-lines:
+  # Maximum number of consecutive blank lines allowed
+  # Default: 1
+
+no-blank-line-before-rbrace:
+  # No blank line before closing brace
+
+no-blank-line-in-list:
+  # No blank lines inside lists/parameter groups
+
+# Spacing rules
+no-multi-spaces:
+  # No multiple consecutive spaces
+
+no-trailing-spaces:
+  # No trailing whitespace at end of lines
+
+spacing-around-colon:
+  # Proper spacing around colons in type declarations
+
+spacing-around-comma:
+  # Proper spacing around commas
+
+spacing-around-curly:
+  # Proper spacing around curly braces
+
+spacing-around-dot:
+  # No spaces around dots
+
+spacing-around-keyword:
+  # Proper spacing around keywords
+
+spacing-around-operators:
+  # Proper spacing around operators
+
+spacing-around-parens:
+  # Proper spacing around parentheses
+
+spacing-around-range-operator:
+  # No spaces around range operator (..)
+
+spacing-between-declarations-with-annotations:
+  # Proper spacing for annotated declarations
+
+spacing-between-declarations-with-comments:
+  # Proper spacing for declarations with comments
+
+# Chain wrapping
+chain-wrapping:
+  # Consistent wrapping for method chains
+
+# String templates
+string-template:
+  # Simplify string templates where possible
+
+# Comments
+comment-spacing:
+  # Require space after // in comments
+
+# Final newline
+final-newline:
+  # Require final newline in files
+  insert_final_newline: true
+
+# Annotations
+annotation:
+  # Consistent annotation formatting
+
+# Enum entry
+enum-entry-name-case:
+  # UPPER_SNAKE_CASE for enum entries
+
+# Parameter list wrapping
+parameter-list-wrapping:
+  # Consistent parameter list wrapping
+  max_line_length: 120
+  indent_size: 4
+
+# Type argument list spacing
+type-argument-list-spacing:
+  # Proper spacing in type argument lists
+
+# Type parameter list spacing
+type-parameter-list-spacing:
+  # Proper spacing in type parameter lists
+
+# Unnecessary parentheses
+unnecessary-parentheses-before-trailing-lambda:
+  # Remove unnecessary parentheses
+
+# Wrapping
+wrapping:
+  # Consistent line wrapping rules
+  max_line_length: 120
+  indent_size: 4
+
+# Android-specific rules (if applicable)
+# Uncomment if building Android components
+
+# android:
+#   # Android-specific formatting rules
+#   manifest-order: true
+#   resource-naming: true
+
+# Experimental rules (opt-in)
+experimental:
+  # Enable experimental rules if needed
+  enabled: false
+  rules:
+    # - rule-name
+
+# Custom rules (if you have custom ktlint rules)
+# custom:
+#   - path/to/custom/rule.jar
+
+# Baseline file (to ignore existing violations during migration)
+# baseline: ktlint-baseline.xml
+
+# Note: ktlint uses .editorconfig for many settings
+# See .editorconfig file for complementary configuration

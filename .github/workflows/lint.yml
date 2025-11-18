@@ -1,0 +1,291 @@
+# QWAMOS Linting and Formatting Workflow
+# Comprehensive code quality checks for all file types
+
+name: Lint & Format Check
+
+on:
+  # Trigger on push to master
+  push:
+    branches:
+      - master
+    paths:
+      - '**.py'
+      - '**.kt'
+      - '**.kts'
+      - '**.sh'
+      - '**.bash'
+      - '**.md'
+      - '**.yml'
+      - '**.yaml'
+      - '.github/workflows/lint.yml'
+      - '.pylintrc'
+      - '.flake8'
+      - 'pyproject.toml'
+      - '.editorconfig'
+      - '.shellcheckrc'
+      - '.markdownlint.json'
+      - 'linting/**'
+
+  # Trigger on pull requests
+  pull_request:
+    branches:
+      - master
+
+  # Manual trigger
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  # Job 1: Python Linting
+  python-lint:
+    name: Python Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Python linting tools
+        run: |
+          pip install --upgrade pip
+          pip install black pylint flake8 mypy bandit isort
+
+      - name: Run Black (format check)
+        continue-on-error: true
+        run: |
+          echo "::group::Black Format Check"
+          black --check --diff --color . || echo "::warning::Black formatting issues found"
+          echo "::endgroup::"
+
+      - name: Run isort (import sorting check)
+        continue-on-error: true
+        run: |
+          echo "::group::isort Import Check"
+          isort --check-only --diff . || echo "::warning::isort import sorting issues found"
+          echo "::endgroup::"
+
+      - name: Run Flake8 (style check)
+        continue-on-error: true
+        run: |
+          echo "::group::Flake8 Style Check"
+          flake8 . --count --show-source --statistics || echo "::warning::Flake8 style issues found"
+          echo "::endgroup::"
+
+      - name: Run Pylint (code quality)
+        continue-on-error: true
+        run: |
+          echo "::group::Pylint Code Quality"
+          find . -name "*.py" -not -path "*/venv/*" -not -path "*/.venv/*" -not -path "*/build/*" -not -path "*/dist/*" | \
+            xargs pylint --output-format=colorized --score=yes || echo "::warning::Pylint quality issues found"
+          echo "::endgroup::"
+
+      - name: Run Bandit (security check)
+        continue-on-error: true
+        run: |
+          echo "::group::Bandit Security Check"
+          bandit -r . -ll -f screen || echo "::warning::Bandit security issues found"
+          echo "::endgroup::"
+
+      - name: Run mypy (type checking)
+        continue-on-error: true
+        run: |
+          echo "::group::mypy Type Check"
+          mypy . --ignore-missing-imports --show-error-codes || echo "::warning::mypy type issues found"
+          echo "::endgroup::"
+
+  # Job 2: Kotlin Linting
+  kotlin-lint:
+    name: Kotlin Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Download ktlint
+        run: |
+          curl -sSLO https://github.com/pinterest/ktlint/releases/download/1.0.1/ktlint
+          chmod +x ktlint
+          sudo mv ktlint /usr/local/bin/
+
+      - name: Run ktlint
+        continue-on-error: true
+        run: |
+          echo "::group::ktlint Kotlin Check"
+          if [ -f "linting/ktlint-rules.yml" ]; then
+            ktlint --editorconfig=.editorconfig --color "**/*.kt" "**/*.kts" || echo "::warning::ktlint issues found"
+          else
+            ktlint --editorconfig=.editorconfig --color "**/*.kt" "**/*.kts" || echo "::warning::ktlint issues found"
+          fi
+          echo "::endgroup::"
+
+  # Job 3: Shell Script Linting
+  shell-lint:
+    name: Shell Script Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install ShellCheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+
+      - name: Install shfmt
+        run: |
+          curl -sSL https://github.com/mvdan/sh/releases/download/v3.7.0/shfmt_v3.7.0_linux_amd64 -o shfmt
+          chmod +x shfmt
+          sudo mv shfmt /usr/local/bin/
+
+      - name: Run ShellCheck
+        continue-on-error: true
+        run: |
+          echo "::group::ShellCheck Analysis"
+          find . -name "*.sh" -not -path "*/node_modules/*" -not -path "*/.git/*" -not -path "*/venv/*" | \
+            xargs shellcheck --color=always --format=gcc || echo "::warning::ShellCheck issues found"
+          echo "::endgroup::"
+
+      - name: Run shfmt (format check)
+        continue-on-error: true
+        run: |
+          echo "::group::shfmt Format Check"
+          if [ -f "linting/.shfmt.yaml" ]; then
+            find . -name "*.sh" -not -path "*/node_modules/*" -not -path "*/.git/*" -not -path "*/venv/*" | \
+              xargs shfmt -d -i 2 || echo "::warning::shfmt formatting issues found"
+          else
+            find . -name "*.sh" -not -path "*/node_modules/*" -not -path "*/.git/*" -not -path "*/venv/*" | \
+              xargs shfmt -d -i 2 || echo "::warning::shfmt formatting issues found"
+          fi
+          echo "::endgroup::"
+
+  # Job 4: Markdown Linting
+  markdown-lint:
+    name: Markdown Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install markdownlint-cli
+        run: |
+          npm install -g markdownlint-cli
+
+      - name: Run markdownlint
+        continue-on-error: true
+        run: |
+          echo "::group::Markdownlint Check"
+          if [ -f ".markdownlint.json" ]; then
+            markdownlint "**/*.md" --config .markdownlint.json || echo "::warning::Markdownlint issues found"
+          else
+            markdownlint "**/*.md" || echo "::warning::Markdownlint issues found"
+          fi
+          echo "::endgroup::"
+
+  # Job 5: YAML Linting
+  yaml-lint:
+    name: YAML Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install yamllint
+        run: |
+          pip install yamllint
+
+      - name: Run yamllint
+        continue-on-error: true
+        run: |
+          echo "::group::yamllint Check"
+          yamllint -f colored . || echo "::warning::yamllint issues found"
+          echo "::endgroup::"
+
+  # Job 6: EditorConfig Check
+  editorconfig-check:
+    name: EditorConfig Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install editorconfig-checker
+        run: |
+          curl -sSL https://github.com/editorconfig-checker/editorconfig-checker/releases/download/2.7.2/ec-linux-amd64.tar.gz | tar xz
+          sudo mv bin/ec-linux-amd64 /usr/local/bin/editorconfig-checker
+          sudo chmod +x /usr/local/bin/editorconfig-checker
+
+      - name: Run editorconfig-checker
+        continue-on-error: true
+        run: |
+          echo "::group::EditorConfig Check"
+          editorconfig-checker || echo "::warning::EditorConfig violations found"
+          echo "::endgroup::"
+
+  # Job 7: Lint Summary
+  lint-summary:
+    name: Linting Summary
+    needs: [python-lint, kotlin-lint, shell-lint, markdown-lint, yaml-lint, editorconfig-check]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Create summary
+        run: |
+          echo "## 🔍 Lint & Format Check Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Workflow Run:** ${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### Job Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Linter | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Python Lint | ${{ needs.python-lint.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Kotlin Lint | ${{ needs.kotlin-lint.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Shell Lint | ${{ needs.shell-lint.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Markdown Lint | ${{ needs.markdown-lint.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| YAML Lint | ${{ needs.yaml-lint.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| EditorConfig | ${{ needs.editorconfig-check.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### Configuration Files" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- 📄 \`.pylintrc\` - Pylint configuration" >> $GITHUB_STEP_SUMMARY
+          echo "- 📄 \`.flake8\` - Flake8 configuration" >> $GITHUB_STEP_SUMMARY
+          echo "- 📄 \`pyproject.toml\` - Python project & Black/isort/mypy config" >> $GITHUB_STEP_SUMMARY
+          echo "- 📄 \`linting/ktlint-rules.yml\` - ktlint configuration" >> $GITHUB_STEP_SUMMARY
+          echo "- 📄 \`.shellcheckrc\` - ShellCheck configuration" >> $GITHUB_STEP_SUMMARY
+          echo "- 📄 \`linting/.shfmt.yaml\` - shfmt configuration" >> $GITHUB_STEP_SUMMARY
+          echo "- 📄 \`.markdownlint.json\` - Markdownlint configuration" >> $GITHUB_STEP_SUMMARY
+          echo "- 📄 \`.editorconfig\` - EditorConfig for consistent coding styles" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "🤖 *Automated by QWAMOS Lint Workflow*" >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,131 @@
+# QWAMOS Flake8 Configuration
+# Python code style and quality checking
+
+[flake8]
+# Maximum line length (aligned with black)
+max-line-length = 120
+
+# Maximum complexity for McCabe
+max-complexity = 15
+
+# Directories to exclude from checking
+exclude =
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    env,
+    build,
+    dist,
+    *.egg-info,
+    .eggs,
+    .tox,
+    .pytest_cache,
+    .mypy_cache,
+    docs/conf.py,
+    # Generated files
+    *_pb2.py,
+    *_pb2_grpc.py,
+    # Version files
+    _version.py
+
+# Files to ignore
+ignore =
+    # Black conflicts
+    E203,  # whitespace before ':'
+    E501,  # line too long (handled by black)
+    W503,  # line break before binary operator (black style)
+    W504,  # line break after binary operator
+    # Other
+    E402,  # module level import not at top of file
+    E731,  # do not assign a lambda expression, use a def
+    # Complexity warnings (handled by pylint)
+    C901,  # function is too complex
+    # Documentation
+    D100,  # Missing docstring in public module
+    D101,  # Missing docstring in public class
+    D102,  # Missing docstring in public method
+    D103,  # Missing docstring in public function
+    D104,  # Missing docstring in public package
+    D105,  # Missing docstring in magic method
+    D107,  # Missing docstring in __init__
+
+# Enable specific plugins
+select =
+    # Pyflakes errors
+    F,
+    # Pycodestyle errors
+    E,
+    # Pycodestyle warnings
+    W,
+    # McCabe complexity
+    C,
+    # Naming conventions
+    N,
+    # Import order (if flake8-isort installed)
+    I,
+    # Bandit security (if flake8-bandit installed)
+    S,
+    # Bugbear (if flake8-bugbear installed)
+    B,
+    # Comprehensions (if flake8-comprehensions installed)
+    C4
+
+# Per-file ignores
+per-file-ignores =
+    # __init__.py files can have unused imports
+    __init__.py:F401,F403
+    # Test files can use assert
+    test_*.py:S101
+    tests/*.py:S101
+    # Setup files can have broad imports
+    setup.py:F401
+    # Config files
+    conf.py:E501
+
+# Ignore specific errors in specific directories
+# Example: tests/*:S101 (ignore assert usage in tests)
+
+# Show source code for each error
+show-source = true
+
+# Show the relevant text for each error
+show-pep8 = true
+
+# Count the number of occurrences of each error/warning code
+count = true
+
+# Print total number of errors
+statistics = true
+
+# Format for error messages
+format = %(path)s:%(row)d:%(col)d: %(code)s %(text)s
+
+# Enable color output (if terminal supports it)
+color = auto
+
+# Benchmark the runtime of flake8
+benchmark = false
+
+# Plugins configuration (if installed)
+
+# flake8-docstrings (pydocstyle)
+docstring-convention = google
+
+# flake8-quotes
+inline-quotes = double
+multiline-quotes = double
+docstring-quotes = double
+
+# flake8-import-order
+import-order-style = google
+application-import-names = qwamos
+
+# flake8-bugbear additional checks
+# B950: Line too long (using max-line-length + 10% buffer)
+
+# flake8-comprehensions additional checks
+# C4: Unnecessary list/set/dict comprehension
+
+# Security checks (if flake8-bandit installed)
+# S: Security issues detected by Bandit

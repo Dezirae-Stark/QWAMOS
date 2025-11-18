@@ -1,0 +1,121 @@
+# QWAMOS ShellCheck Configuration
+# Shell script static analysis and linting
+# https://www.shellcheck.net/
+
+# Specify the shell dialect
+# Options: sh, bash, dash, ksh
+# Leave unset to auto-detect from shebang
+# shell=bash
+
+# Enable optional checks
+enable=all
+
+# Disable specific checks
+# Format: disable=SC####,SC####
+
+disable=
+
+# SC1090: Can't follow non-constant source
+# Disabled because we often source files with variable paths
+disable=SC1090
+
+# SC1091: Not following sourced file
+# Disabled for files that may not exist in all environments
+disable+=,SC1091
+
+# SC2034: Variable appears unused
+# Disabled for variables that may be used in sourced scripts
+# Uncomment if this causes too many false positives:
+# disable+=,SC2034
+
+# SC2046: Quote to prevent word splitting
+# Keep enabled - important for security
+
+# SC2086: Double quote to prevent globbing and word splitting
+# Keep enabled - important for security
+
+# SC2148: Add shebang to the top of your script
+# Keep enabled - ensures scripts are properly identified
+
+# SC2154: Variable referenced but not assigned
+# Keep enabled - helps catch typos and missing variable definitions
+
+# Severity levels to include
+# Options: error, warning, info, style
+# Default: error,warning
+
+# Only show errors and warnings (hide info and style)
+# severity=error,warning
+
+# Show all severity levels
+severity=error,warning,info,style
+
+# Source path for finding sourced files
+# Helps ShellCheck find scripts that are sourced
+# source-path=SCRIPTDIR
+
+# External sources (files that are sourced from other projects)
+# Format: external-sources=true
+external-sources=false
+
+# Enable checking of sourced files
+# check-sourced=true
+
+# Color output
+# Options: auto, always, never
+# color=auto
+
+# Format for output
+# Options: checkstyle, diff, gcc, json, json1, quiet, tty
+# format=gcc
+
+# Exclude paths (relative to project root)
+# Use .shellcheckignore file for more complex exclusions
+# exclude-dir=.git
+# exclude-dir=node_modules
+# exclude-dir=.venv
+
+# Minimum severity to report
+# Options: error, warning, info, style
+# norc=false
+
+# Wiki link format (for error explanations)
+# format: tty will show links in terminal
+# wiki-link-count=3
+
+# Additional configuration notes:
+#
+# 1. For inline disabling of checks, use:
+#    # shellcheck disable=SC####
+#    command here
+#
+# 2. For disabling checks for the entire file:
+#    # shellcheck disable=SC####
+#    (at the top of the file)
+#
+# 3. To check which shell is being assumed:
+#    # shellcheck shell=bash
+#
+# 4. Common useful checks to keep enabled:
+#    - SC2086: Quote variables to prevent word splitting
+#    - SC2046: Quote command substitutions
+#    - SC2068: Quote array expansions
+#    - SC2145: Quote arguments to prevent globbing
+#    - SC2155: Declare and assign separately
+#
+# 5. Security-related checks (always keep enabled):
+#    - SC2006: Use $(...) instead of backticks
+#    - SC2116: Useless echo?
+#    - SC2006: Deprecated syntax
+#
+# 6. POSIX compliance:
+#    Use `# shellcheck shell=sh` for POSIX-compliant scripts
+#
+# 7. Best practices enabled by default:
+#    - Quote expansions to prevent word splitting
+#    - Use [[ ]] instead of [ ] in Bash
+#    - Prefer ${var} over $var for clarity
+#    - Check exit codes of commands
+#
+# See: https://github.com/koalaman/shellcheck/wiki
+# for detailed explanations of all checks

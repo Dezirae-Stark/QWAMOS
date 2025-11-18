@@ -1,0 +1,53 @@
+# QWAMOS Markdownlint Ignore File
+# Files and directories to exclude from Markdown linting
+
+# Node modules
+node_modules/
+
+# Build outputs
+build/
+dist/
+_build/
+site/
+
+# Dependencies
+vendor/
+.vendor/
+
+# Generated files
+CHANGELOG.md
+CHANGELOG_*.md
+
+# Git
+.git/
+.github/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Python
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Test coverage
+htmlcov/
+.coverage
+
+# Documentation builds
+docs/_site/
+docs/.jekyll-cache/
+
+# Package files
+*.egg-info/
+.eggs/
+
+# Other
+.DS_Store
+Thumbs.db

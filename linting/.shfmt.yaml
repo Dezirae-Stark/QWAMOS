@@ -1,0 +1,32 @@
+# QWAMOS shfmt Configuration
+# Shell script formatter
+# https://github.com/mvdan/sh
+
+# Language variant to use
+# Options: bash, posix, mksh, bats
+language: bash
+
+# Indent with spaces (not tabs)
+# Number of spaces per indentation level
+indent: 2
+
+# Binary operators like && and | may start a line
+binary-next-line: false
+
+# Switch cases will be indented
+case-indent: true
+
+# Redirect operators will be followed by a space
+space-redirects: false
+
+# Keep column alignment padding (useful for readability)
+keep-padding: false
+
+# Minify the code
+minify: false
+
+# Function opening braces on the same line as the function name
+# function-next-line: false
+
+# Simplify the code
+simplify: true
