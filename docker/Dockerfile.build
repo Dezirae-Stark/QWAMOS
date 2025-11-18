@@ -41,8 +41,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     zip \
     unzip \
     # Android build dependencies
-    openjdk-17-jdk \
-    openjdk-17-jre-headless \
+    default-jdk \
+    default-jre-headless \
     # Kotlin (via SDKMAN later)
     # Flutter dependencies
     clang \
@@ -159,8 +159,8 @@ RUN mkdir -p /build_artifacts && \
 # Switch to build user
 USER qwamos
 
-# Set Java environment
-ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+# Set Java environment (using default JDK)
+ENV JAVA_HOME=/usr/lib/jvm/default-java
 
 # Verify installations
 RUN python3 --version && \
