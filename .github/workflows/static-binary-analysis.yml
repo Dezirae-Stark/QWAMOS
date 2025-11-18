@@ -162,15 +162,29 @@ jobs:
 
       - name: Download built binaries
         uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           name: compiled-binaries
           path: ${{ env.BUILD_DIR }}/
 
+      - name: Check if binaries exist
+        id: check_binaries
+        run: |
+          if [ -d "${BUILD_DIR}" ] && [ "$(find ${BUILD_DIR} -type f 2>/dev/null | wc -l)" -gt 0 ]; then
+            echo "binaries_found=true" >> $GITHUB_OUTPUT
+            echo "✓ Found $(find ${BUILD_DIR} -type f | wc -l) binary files to analyze"
+          else
+            echo "binaries_found=false" >> $GITHUB_OUTPUT
+            echo "⚠️ No binaries found to analyze (builds may have been skipped)"
+          fi
+
       - name: Set up analysis directories
+        if: steps.check_binaries.outputs.binaries_found == 'true'
         run: |
           mkdir -p ${REPORTS_DIR}/{ghidra,binwalk,syscalls,secrets,networking}
 
       - name: Install analysis tools
+        if: steps.check_binaries.outputs.binaries_found == 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -196,6 +210,7 @@ jobs:
             r2pipe
 
       - name: Install Ghidra
+        if: steps.check_binaries.outputs.binaries_found == 'true'
         run: |
           cd /tmp
           wget -q https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_11.0_build/ghidra_11.0_PUBLIC_20231222.zip || true
@@ -210,6 +225,7 @@ jobs:
           fi
 
       - name: Run binwalk analysis
+        if: steps.check_binaries.outputs.binaries_found == 'true'
         run: |
           echo "=== Binwalk Analysis ===" | tee ${REPORTS_DIR}/binwalk/binwalk-summary.txt
 
@@ -231,6 +247,7 @@ jobs:
           done
 
       - name: Scan for embedded secrets
+        if: steps.check_binaries.outputs.binaries_found == 'true'
         run: |
           echo "=== Secret Detection ===" | tee ${REPORTS_DIR}/secrets/secrets-scan.txt
 
@@ -252,6 +269,7 @@ jobs:
           done
 
       - name: Analyze syscalls and imports
+        if: steps.check_binaries.outputs.binaries_found == 'true'
         run: |
           echo "=== Syscall and Import Analysis ===" | tee ${REPORTS_DIR}/syscalls/syscall-analysis.txt
           echo "{" > ${REPORTS_DIR}/syscalls/syscall-map.json
@@ -313,6 +331,7 @@ jobs:
           echo "}" >> ${REPORTS_DIR}/syscalls/syscall-map.json
 
       - name: Detect networking code
+        if: steps.check_binaries.outputs.binaries_found == 'true'
         run: |
           echo "=== Network Code Detection ===" | tee ${REPORTS_DIR}/networking/network-scan.txt
 
@@ -337,6 +356,7 @@ jobs:
           done
 
       - name: Check for weak crypto fallback
+        if: steps.check_binaries.outputs.binaries_found == 'true'
         run: |
           echo "=== Weak Cryptography Detection ===" | tee ${REPORTS_DIR}/crypto-check.txt
           echo "Checking for AES/Twofish/Serpent fallback code (should be removed)..." | tee -a ${REPORTS_DIR}/crypto-check.txt
@@ -423,6 +443,7 @@ jobs:
           done
 
       - name: Run radare2 analysis
+        if: steps.check_binaries.outputs.binaries_found == 'true'
         run: |
           echo "=== Radare2 Analysis ===" | tee ${REPORTS_DIR}/radare2-analysis.txt
 
@@ -440,6 +461,7 @@ jobs:
           done
 
       - name: Generate analysis summary
+        if: steps.check_binaries.outputs.binaries_found == 'true'
         run: |
           cat > ${REPORTS_DIR}/ANALYSIS_SUMMARY.md <<'EOF'
           # QWAMOS Static Binary Analysis Report
@@ -518,6 +540,7 @@ jobs:
           retention-days: 90
 
       - name: Check for critical issues
+        if: steps.check_binaries.outputs.binaries_found == 'true'
         run: |
           echo "=== Critical Issue Check ==="
 
