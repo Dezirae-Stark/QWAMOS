@@ -1,0 +1,252 @@
+# Build and Release QWAMOS VM Templates
+# Automatically builds, validates, and publishes VM templates on release creation
+
+name: Build VM Templates
+
+on:
+  # Trigger on release creation
+  release:
+    types: [created, published]
+
+  # Manual trigger for testing
+  workflow_dispatch:
+    inputs:
+      upload_to_release:
+        description: 'Upload artifacts to latest release'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  build-qemu-template:
+    name: Build QEMU Template
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up build environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            qemu-utils \
+            debootstrap \
+            coreutils \
+            tar \
+            gzip \
+            xz-utils
+
+      - name: Build QEMU template
+        run: |
+          cd vm-templates/scripts
+          chmod +x build_qemu_template.sh
+          ./build_qemu_template.sh
+
+      - name: Validate QEMU template
+        run: |
+          cd vm-templates/scripts
+          chmod +x validate_vm_template.sh
+          ./validate_vm_template.sh ../output/templates/qwamos-qemu-template.tar.gz --type qemu
+
+      - name: Upload QEMU template artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: qwamos-qemu-template
+          path: |
+            vm-templates/output/templates/qwamos-qemu-template.tar.gz
+            vm-templates/output/templates/qwamos-qemu-template.tar.gz.sha256
+          retention-days: 90
+
+  build-proot-template:
+    name: Build PRoot Template
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up build environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            proot \
+            debootstrap \
+            coreutils \
+            tar \
+            gzip \
+            xz-utils
+
+      - name: Build PRoot template
+        run: |
+          cd vm-templates/scripts
+          chmod +x build_proot_template.sh
+          ./build_proot_template.sh
+
+      - name: Validate PRoot template
+        run: |
+          cd vm-templates/scripts
+          chmod +x validate_vm_template.sh
+          ./validate_vm_template.sh ../output/templates/qwamos-proot-template.tar.gz --type proot
+
+      - name: Upload PRoot template artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: qwamos-proot-template
+          path: |
+            vm-templates/output/templates/qwamos-proot-template.tar.gz
+            vm-templates/output/templates/qwamos-proot-template.tar.gz.sha256
+          retention-days: 90
+
+  build-chroot-template:
+    name: Build Chroot Template
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up build environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            debootstrap \
+            coreutils \
+            tar \
+            gzip \
+            xz-utils
+
+      - name: Build Chroot template
+        run: |
+          cd vm-templates/scripts
+          chmod +x build_chroot_template.sh
+          ./build_chroot_template.sh
+
+      - name: Validate Chroot template
+        run: |
+          cd vm-templates/scripts
+          chmod +x validate_vm_template.sh
+          ./validate_vm_template.sh ../output/templates/qwamos-chroot-template.tar.gz --type chroot
+
+      - name: Upload Chroot template artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: qwamos-chroot-template
+          path: |
+            vm-templates/output/templates/qwamos-chroot-template.tar.gz
+            vm-templates/output/templates/qwamos-chroot-template.tar.gz.sha256
+          retention-days: 90
+
+  export-and-release:
+    name: Export & Upload to Release
+    needs: [build-qemu-template, build-proot-template, build-chroot-template]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' || github.event.inputs.upload_to_release == 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download all template artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: vm-templates/output/templates/
+
+      - name: Prepare templates for export
+        run: |
+          # Move artifacts to correct location
+          cd vm-templates/output/templates
+
+          # Flatten directory structure (artifacts creates subdirs)
+          find . -name "*.tar.gz" -exec mv {} . \;
+          find . -name "*.sha256" -exec mv {} . \;
+
+          # Remove empty artifact directories
+          find . -type d -empty -delete
+
+          ls -lh
+
+      - name: Install export dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xz-utils coreutils
+
+      - name: Export templates
+        run: |
+          cd vm-templates/scripts
+          chmod +x export_vm_template.sh
+          ./export_vm_template.sh
+
+      - name: Get release info
+        id: release_info
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            echo "tag=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
+            echo "upload_url=${{ github.event.release.upload_url }}" >> $GITHUB_OUTPUT
+          else
+            # For manual trigger, get latest release
+            LATEST_TAG=$(gh release list --limit 1 --json tagName --jq '.[0].tagName')
+            echo "tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload templates to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.release_info.outputs.tag }}
+          files: |
+            vm-templates/output/release/*.tar.gz
+            vm-templates/output/release/*.tar.xz
+            vm-templates/output/release/*.sha256
+            vm-templates/output/release/*.sha512
+            vm-templates/output/release/SHA256SUMS
+            vm-templates/output/release/MANIFEST.txt
+            vm-templates/output/release/RELEASE_NOTES.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create release summary
+        run: |
+          echo "## 📦 VM Templates Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Release Tag:** ${{ steps.release_info.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Build Date:** $(date -Iseconds)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### Templates Built" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          cd vm-templates/output/release
+          for template in *.tar.gz; do
+            if [ -f "$template" ]; then
+              SIZE=$(du -h "$template" | cut -f1)
+              SHA256=$(cat "${template}.sha256" 2>/dev/null | cut -d' ' -f1 | cut -c1-16 || echo "N/A")
+              echo "- **$template** (${SIZE}) - SHA256: ${SHA256}..." >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Download" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "```bash" >> $GITHUB_STEP_SUMMARY
+          echo "# Download templates" >> $GITHUB_STEP_SUMMARY
+          echo "gh release download ${{ steps.release_info.outputs.tag }} -p '*.tar.gz'" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "# Verify checksums" >> $GITHUB_STEP_SUMMARY
+          echo "sha256sum -c SHA256SUMS" >> $GITHUB_STEP_SUMMARY
+          echo "```" >> $GITHUB_STEP_SUMMARY
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ All templates built and uploaded successfully!" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload export directory as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vm-templates-release-package
+          path: vm-templates/output/release/
+          retention-days: 90
