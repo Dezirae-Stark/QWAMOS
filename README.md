@@ -211,6 +211,10 @@ QWAMOS continuously monitors network traffic, file system changes, and system ca
 
 ---
 
+**→ Next Steps for Users:** Ready to try QWAMOS? Jump to [Getting Started (Quickstart)](#getting-started-quickstart) for installation instructions, or review [INSTALLATION.md](./INSTALLATION.md) and [OPS_GUIDE.md](./OPS_GUIDE.md) for detailed setup guides.
+
+---
+
 ## Demo & Screenshots
 
 <div align="center">
@@ -389,8 +393,15 @@ QWAMOS is the **first mobile operating system** built from the ground up with:
 
 ---
 
+**→ Next Steps for Investors & Partners:** For detailed technical implementation, see [Developer / Engineering Documentation](#developer--engineering-documentation). For business inquiries, contact information is available in the [Contact](#-contact) section.
+
+---
 
 # Developer / Engineering Documentation
+
+**→ For Developers:** This section contains comprehensive technical documentation. For quick setup, see [Quick Start](#-quick-start), [INSTALLATION.md](./INSTALLATION.md), [OPS_GUIDE.md](./OPS_GUIDE.md), and [SECURITY.md](./SECURITY.md). For contribution guidelines, review [Contributing](#-contributing).
+
+---
 
 ## Executive Summary
 
