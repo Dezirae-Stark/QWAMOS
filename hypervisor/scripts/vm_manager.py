@@ -2,7 +2,8 @@
 """
 QWAMOS VM Manager
 Manages QEMU virtual machines with post-quantum security
-Phase XII: Now with KVM hardware acceleration support
+Phase XII: KVM hardware acceleration support
+Phase XIII: Post-quantum encrypted storage support
 """
 
 import os
@@ -15,6 +16,8 @@ from pathlib import Path
 # Add hypervisor module to path
 QWAMOS_ROOT = Path.home() / "QWAMOS"
 sys.path.insert(0, str(QWAMOS_ROOT / "hypervisor"))
+sys.path.insert(0, str(QWAMOS_ROOT / "crypto"))
+sys.path.insert(0, str(QWAMOS_ROOT / "storage"))
 
 # Import KVM Manager (Phase XII)
 try:
@@ -23,6 +26,15 @@ try:
 except ImportError:
     KVM_AVAILABLE = False
     print("⚠️  KVM Manager not found - using legacy mode")
+
+# Import PQC Storage (Phase XIII)
+try:
+    from pqc_keystore import PQCKeystore
+    from pqc_volume import PQCVolume
+    PQC_STORAGE_AVAILABLE = True
+except ImportError:
+    PQC_STORAGE_AVAILABLE = False
+    print("⚠️  PQC Storage not found - encryption disabled")
 
 # QWAMOS Paths
 VMS_DIR = QWAMOS_ROOT / "vms"
@@ -45,6 +57,14 @@ class VMManager:
         else:
             self.kvm_manager = None
             self.kvm_enabled = False
+
+        # Initialize PQC Storage (Phase XIII)
+        if PQC_STORAGE_AVAILABLE:
+            self.pqc_keystore = PQCKeystore()
+            self.pqc_storage_enabled = True
+        else:
+            self.pqc_keystore = None
+            self.pqc_storage_enabled = False
 
         # Ensure logs directory exists
         LOGS_DIR.mkdir(parents=True, exist_ok=True)
@@ -143,10 +163,30 @@ class VMManager:
 
         return cmd
 
-    def create_disk(self, disk_path, size):
-        """Create QCOW2 disk image"""
+    def create_disk(self, disk_path, size, encrypted=None):
+        """
+        Create disk image (QCOW2 or encrypted PQC volume).
+
+        Args:
+            disk_path: Path to disk file
+            size: Size string (e.g., "10G", "512M")
+            encrypted: True/False/None (None = auto-detect from config)
+        """
         os.makedirs(os.path.dirname(disk_path), exist_ok=True)
 
+        # Auto-detect encryption from config if not specified
+        if encrypted is None:
+            encrypted = self.config.get('storage', {}).get('encryption', {}).get('enabled', False)
+
+        if encrypted and self.pqc_storage_enabled:
+            # Create encrypted PQC volume
+            return self._create_encrypted_disk(disk_path, size)
+        else:
+            # Create standard QCOW2 image
+            return self._create_qcow2_disk(disk_path, size)
+
+    def _create_qcow2_disk(self, disk_path, size):
+        """Create standard QCOW2 disk image."""
         cmd = [
             "qemu-img", "create",
             "-f", "qcow2",
@@ -158,7 +198,65 @@ class VMManager:
         if result.returncode != 0:
             raise RuntimeError(f"Failed to create disk: {result.stderr}")
 
-        print(f"✓ Created disk: {disk_path}")
+        print(f"✓ Created QCOW2 disk: {disk_path}")
+
+    def _create_encrypted_disk(self, disk_path, size):
+        """Create encrypted PQC volume."""
+        # Convert size string to MB (e.g., "10G" -> 10240, "512M" -> 512)
+        size_mb = self._parse_size_to_mb(size)
+
+        # Change extension to .qvol for encrypted volumes
+        if disk_path.endswith('.qcow2'):
+            encrypted_path = disk_path.replace('.qcow2', '.qvol')
+        elif not disk_path.endswith('.qvol'):
+            encrypted_path = disk_path + '.qvol'
+        else:
+            encrypted_path = disk_path
+
+        # Create PQC volume
+        volume = PQCVolume(encrypted_path, keystore=self.pqc_keystore)
+        key_id = volume.create(
+            volume_name=f"{self.vm_name}-primary",
+            vm_name=self.vm_name,
+            size_mb=size_mb
+        )
+
+        # Store key ID in VM config for future reference
+        if 'storage' not in self.config:
+            self.config['storage'] = {}
+        if 'encryption' not in self.config['storage']:
+            self.config['storage']['encryption'] = {}
+
+        self.config['storage']['encryption']['key_id'] = key_id
+        self.config['storage']['encryption']['enabled'] = True
+
+        # Update disk path in config to .qvol
+        self.config['hardware']['disk']['primary']['path'] = encrypted_path
+
+        # Save updated config
+        with open(self.config_file, 'w') as f:
+            yaml.dump(self.config, f, default_flow_style=False, sort_keys=False)
+
+        print(f"🔒 Created encrypted PQC volume: {encrypted_path}")
+        print(f"   Size: {size_mb} MB")
+        print(f"   Key ID: {key_id}")
+        print(f"   Encryption: ChaCha20-Poly1305")
+
+        return encrypted_path
+
+    def _parse_size_to_mb(self, size_str):
+        """Parse size string (e.g., '10G', '512M') to megabytes."""
+        size_str = size_str.upper().strip()
+
+        if size_str.endswith('G'):
+            return int(size_str[:-1]) * 1024
+        elif size_str.endswith('M'):
+            return int(size_str[:-1])
+        elif size_str.endswith('K'):
+            return max(1, int(size_str[:-1]) // 1024)
+        else:
+            # Assume bytes, convert to MB
+            return max(1, int(size_str) // (1024 * 1024))
 
     def start(self, background=False):
         """Start the VM"""
@@ -253,6 +351,21 @@ class VMManager:
         if self.kvm_manager:
             accel_status = "✅ KVM" if self.kvm_enabled else "⚠️  TCG (software)"
             print(f"Acceleration: {accel_status}")
+
+        # Phase XIII: Show encryption status
+        storage_config = config.get('storage', {})
+        encryption_config = storage_config.get('encryption', {})
+        if encryption_config.get('enabled', False):
+            key_id = encryption_config.get('key_id', 'unknown')
+            print(f"Encryption:   🔒 ENABLED (PQC)")
+            print(f"  Algorithm:  ChaCha20-Poly1305")
+            print(f"  Key ID:     {key_id}")
+        else:
+            disk_path = config['hardware']['disk']['primary']['path']
+            if disk_path.endswith('.qvol'):
+                print(f"Encryption:   🔒 ENABLED (legacy)")
+            else:
+                print(f"Encryption:   ❌ DISABLED")
 
         print(f"{'='*60}\n")
 

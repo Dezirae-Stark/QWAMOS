@@ -1,0 +1,35 @@
+vm:
+  name: test-pqc-vm
+  type: test
+  description: Test VM with PQC encrypted storage
+machine:
+  type: virt
+  accel: tcg
+  gic_version: 3
+hardware:
+  cpu:
+    model: cortex-a76
+    cores: 2
+  memory:
+    size: 512
+  disk:
+    primary:
+      path: /data/data/com.termux/files/home/QWAMOS/vms/test-pqc-vm/disk.qvol
+      size: 100M
+      format: qcow2
+  graphics:
+    type: virtio-gpu-pci
+boot:
+  kernel: /data/data/com.termux/files/home/QWAMOS/kernel/Image
+  initrd: /data/data/com.termux/files/home/QWAMOS/kernel/initramfs_static.cpio.gz
+  cmdline: console=ttyAMA0 root=/dev/ram0
+network:
+  mode: nat
+  device: virtio-net-pci
+  mac: 41135085296
+  nat_rules: []
+storage:
+  encryption:
+    enabled: true
+    key_id: vm-test-pqc-vm-11afd0717e01a19c
+autostart: false
