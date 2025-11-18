@@ -1,0 +1,543 @@
+name: Release Generator
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+        type: string
+      release_type:
+        description: 'Release type'
+        required: true
+        type: choice
+        options:
+          - Major Release
+          - Minor Release
+          - Patch Release
+          - Security Release
+          - Hotfix
+      prerelease:
+        description: 'Mark as pre-release'
+        required: false
+        type: boolean
+        default: false
+      draft:
+        description: 'Create as draft release'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: read
+  issues: read
+
+jobs:
+  generate-release:
+    name: Generate Release Notes and Create Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Get previous tag
+        id: previous_tag
+        run: |
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$PREVIOUS_TAG" ]; then
+            echo "No previous tag found, using initial commit"
+            PREVIOUS_TAG=$(git rev-list --max-parents=0 HEAD)
+          fi
+          echo "previous_tag=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
+          echo "Previous tag: $PREVIOUS_TAG"
+
+      - name: Get commit range
+        id: commit_range
+        run: |
+          PREVIOUS_TAG="${{ steps.previous_tag.outputs.previous_tag }}"
+          COMMIT_RANGE="${PREVIOUS_TAG}..HEAD"
+          echo "commit_range=$COMMIT_RANGE" >> $GITHUB_OUTPUT
+          echo "Commit range: $COMMIT_RANGE"
+
+      - name: Parse commits and generate changelog
+        id: generate_changelog
+        run: |
+          python3 << 'PYTHON_SCRIPT'
+          import subprocess
+          import re
+          from datetime import datetime
+          from collections import defaultdict
+
+          # Get commit range
+          commit_range = "${{ steps.commit_range.outputs.commit_range }}"
+
+          # Get all commits in range
+          try:
+              commits = subprocess.check_output(
+                  ["git", "log", commit_range, "--pretty=format:%H|||%s|||%an|||%ae"],
+                  text=True
+              ).strip().split("\n")
+          except subprocess.CalledProcessError:
+              print("No commits found in range")
+              commits = []
+
+          # Categories for conventional commits
+          categories = {
+              "SECURITY": [],
+              "FEATURE": [],
+              "FIX": [],
+              "PERF": [],
+              "REFACTOR": [],
+              "DOCS": [],
+              "TEST": [],
+              "BUILD": [],
+              "CI": [],
+              "BREAKING": [],
+              "OTHER": []
+          }
+
+          # Parse commits
+          for commit in commits:
+              if not commit:
+                  continue
+
+              parts = commit.split("|||")
+              if len(parts) != 4:
+                  continue
+
+              commit_hash, message, author, email = parts
+              commit_short = commit_hash[:7]
+
+              # Extract issue numbers
+              issue_match = re.search(r'#(\d+)', message)
+              issue_ref = f" (#{issue_match.group(1)})" if issue_match else ""
+
+              # Detect breaking changes
+              if "BREAKING" in message.upper() or "!" in message[:20]:
+                  categories["BREAKING"].append(f"- {message} [{commit_short}]{issue_ref}")
+
+              # Parse conventional commit format
+              match = re.match(r'\[?(\w+)\]?:?\s*(.*)', message)
+              if match:
+                  commit_type = match.group(1).upper()
+                  commit_msg = match.group(2)
+
+                  if commit_type in categories:
+                      categories[commit_type].append(f"- {commit_msg} [{commit_short}]{issue_ref}")
+                  else:
+                      categories["OTHER"].append(f"- {message} [{commit_short}]{issue_ref}")
+              else:
+                  categories["OTHER"].append(f"- {message} [{commit_short}]{issue_ref}")
+
+          # Generate changelog sections
+          def format_section(items):
+              if not items:
+                  return "_No changes in this category._\n"
+              return "\n".join(items) + "\n"
+
+          # Security improvements
+          security_notes = format_section(categories["SECURITY"])
+
+          # New features
+          feature_notes = format_section(categories["FEATURE"])
+
+          # Bug fixes
+          critical_fixes = [item for item in categories["FIX"] if "critical" in item.lower() or "urgent" in item.lower()]
+          minor_fixes = [item for item in categories["FIX"] if item not in critical_fixes]
+
+          bug_fixes = format_section(categories["FIX"])
+          critical_fixes_text = format_section(critical_fixes)
+          minor_fixes_text = format_section(minor_fixes)
+
+          # Performance improvements
+          performance_notes = format_section(categories["PERF"])
+
+          # Refactoring
+          refactoring_notes = format_section(categories["REFACTOR"])
+
+          # Documentation
+          docs_notes = format_section(categories["DOCS"])
+
+          # Testing
+          testing_notes = format_section(categories["TEST"])
+
+          # Build and CI
+          build_notes = format_section(categories["BUILD"] + categories["CI"])
+
+          # Breaking changes
+          breaking_notes = format_section(categories["BREAKING"])
+
+          # Other changes
+          other_notes = format_section(categories["OTHER"])
+
+          # Generate statistics
+          total_commits = len([c for c in commits if c])
+          contributors = set()
+          for commit in commits:
+              if commit:
+                  parts = commit.split("|||")
+                  if len(parts) == 4:
+                      contributors.add(parts[2])
+
+          # Get issue and PR counts
+          try:
+              issues_closed = subprocess.check_output(
+                  ["git", "log", commit_range, "--grep=Fixes #", "--oneline"],
+                  text=True
+              ).strip().split("\n")
+              issues_count = len([i for i in issues_closed if i])
+          except:
+              issues_count = 0
+
+          # Generate full changelog
+          full_changelog = []
+          for commit in commits:
+              if commit:
+                  parts = commit.split("|||")
+                  if len(parts) == 4:
+                      commit_hash, message, author, email = parts
+                      full_changelog.append(f"- {message} by @{author} [{commit_hash[:7]}]")
+
+          full_changelog_text = "\n".join(full_changelog) if full_changelog else "_No commits in this release._"
+
+          # Generate overview
+          overview = f"""This release includes {total_commits} commits from {len(contributors)} contributor(s).
+
+          **Highlights**:
+          - {len(categories['SECURITY'])} security improvement(s)
+          - {len(categories['FEATURE'])} new feature(s)
+          - {len(categories['FIX'])} bug fix(es)
+          - {len(categories['PERF'])} performance improvement(s)
+          """
+
+          # Write to output files for use in next steps
+          with open("changelog_security.txt", "w") as f:
+              f.write(security_notes)
+          with open("changelog_features.txt", "w") as f:
+              f.write(feature_notes)
+          with open("changelog_bugfixes.txt", "w") as f:
+              f.write(bug_fixes)
+          with open("changelog_critical_fixes.txt", "w") as f:
+              f.write(critical_fixes_text)
+          with open("changelog_minor_fixes.txt", "w") as f:
+              f.write(minor_fixes_text)
+          with open("changelog_performance.txt", "w") as f:
+              f.write(performance_notes)
+          with open("changelog_refactoring.txt", "w") as f:
+              f.write(refactoring_notes)
+          with open("changelog_docs.txt", "w") as f:
+              f.write(docs_notes)
+          with open("changelog_testing.txt", "w") as f:
+              f.write(testing_notes)
+          with open("changelog_build.txt", "w") as f:
+              f.write(build_notes)
+          with open("changelog_breaking.txt", "w") as f:
+              f.write(breaking_notes)
+          with open("changelog_full.txt", "w") as f:
+              f.write(full_changelog_text)
+          with open("changelog_overview.txt", "w") as f:
+              f.write(overview)
+          with open("stats.txt", "w") as f:
+              f.write(f"COMMIT_COUNT={total_commits}\n")
+              f.write(f"CONTRIBUTOR_COUNT={len(contributors)}\n")
+              f.write(f"ISSUES_CLOSED={issues_count}\n")
+
+          print(f"Generated changelog with {total_commits} commits from {len(contributors)} contributors")
+          PYTHON_SCRIPT
+
+      - name: Read generated changelog
+        id: read_changelog
+        run: |
+          {
+            echo "overview<<EOF"
+            cat changelog_overview.txt
+            echo "EOF"
+            echo "security<<EOF"
+            cat changelog_security.txt
+            echo "EOF"
+            echo "features<<EOF"
+            cat changelog_features.txt
+            echo "EOF"
+            echo "bugfixes<<EOF"
+            cat changelog_bugfixes.txt
+            echo "EOF"
+            echo "critical_fixes<<EOF"
+            cat changelog_critical_fixes.txt
+            echo "EOF"
+            echo "minor_fixes<<EOF"
+            cat changelog_minor_fixes.txt
+            echo "EOF"
+            echo "performance<<EOF"
+            cat changelog_performance.txt
+            echo "EOF"
+            echo "refactoring<<EOF"
+            cat changelog_refactoring.txt
+            echo "EOF"
+            echo "docs<<EOF"
+            cat changelog_docs.txt
+            echo "EOF"
+            echo "testing<<EOF"
+            cat changelog_testing.txt
+            echo "EOF"
+            echo "build<<EOF"
+            cat changelog_build.txt
+            echo "EOF"
+            echo "breaking<<EOF"
+            cat changelog_breaking.txt
+            echo "EOF"
+            echo "full<<EOF"
+            cat changelog_full.txt
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+          # Read stats
+          source stats.txt
+          echo "commit_count=$COMMIT_COUNT" >> $GITHUB_OUTPUT
+          echo "contributor_count=$CONTRIBUTOR_COUNT" >> $GITHUB_OUTPUT
+          echo "issues_closed=$ISSUES_CLOSED" >> $GITHUB_OUTPUT
+
+      - name: Generate release notes file
+        run: |
+          # Copy template
+          cp RELEASE_TEMPLATE.md RELEASE_NOTES_${{ github.event.inputs.version }}.md
+
+          # Replace placeholders
+          VERSION="${{ github.event.inputs.version }}"
+          DATE=$(date -u '+%Y-%m-%d')
+          RELEASE_TYPE="${{ github.event.inputs.release_type }}"
+          TAG="${{ github.event.inputs.version }}"
+          PREVIOUS_TAG="${{ steps.previous_tag.outputs.previous_tag }}"
+          BUILD_NUMBER="${GITHUB_RUN_NUMBER}"
+
+          # Use sed to replace placeholders (escape special characters)
+          sed -i "s|{{VERSION}}|${VERSION}|g" RELEASE_NOTES_${VERSION}.md
+          sed -i "s|{{DATE}}|${DATE}|g" RELEASE_NOTES_${VERSION}.md
+          sed -i "s|{{RELEASE_TYPE}}|${RELEASE_TYPE}|g" RELEASE_NOTES_${VERSION}.md
+          sed -i "s|{{TAG}}|${TAG}|g" RELEASE_NOTES_${VERSION}.md
+          sed -i "s|{{PREVIOUS_TAG}}|${PREVIOUS_TAG}|g" RELEASE_NOTES_${VERSION}.md
+          sed -i "s|{{BUILD_NUMBER}}|${BUILD_NUMBER}|g" RELEASE_NOTES_${VERSION}.md
+          sed -i "s|{{COMMIT_COUNT}}|${{ steps.read_changelog.outputs.commit_count }}|g" RELEASE_NOTES_${VERSION}.md
+          sed -i "s|{{CONTRIBUTOR_COUNT}}|${{ steps.read_changelog.outputs.contributor_count }}|g" RELEASE_NOTES_${VERSION}.md
+          sed -i "s|{{ISSUES_CLOSED}}|${{ steps.read_changelog.outputs.issues_closed }}|g" RELEASE_NOTES_${VERSION}.md
+          sed -i "s|{{RELEASE_DATE}}|${DATE}|g" RELEASE_NOTES_${VERSION}.md
+          sed -i "s|{{RELEASE_MANAGER}}|${{ github.actor }}|g" RELEASE_NOTES_${VERSION}.md
+
+          # Note: Content replacements will be done in a separate step due to multiline complexity
+
+      - name: Insert changelog content
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+
+          # Create Python script to handle multiline replacements
+          python3 << 'PYTHON_SCRIPT'
+          import re
+
+          version = "${{ github.event.inputs.version }}"
+          filename = f"RELEASE_NOTES_{version}.md"
+
+          # Read the template
+          with open(filename, "r") as f:
+              content = f.read()
+
+          # Read changelog sections
+          with open("changelog_overview.txt") as f:
+              overview = f.read()
+          with open("changelog_security.txt") as f:
+              security = f.read()
+          with open("changelog_features.txt") as f:
+              features = f.read()
+          with open("changelog_bugfixes.txt") as f:
+              bugfixes = f.read()
+          with open("changelog_critical_fixes.txt") as f:
+              critical_fixes = f.read()
+          with open("changelog_minor_fixes.txt") as f:
+              minor_fixes = f.read()
+          with open("changelog_performance.txt") as f:
+              performance = f.read()
+          with open("changelog_refactoring.txt") as f:
+              refactoring = f.read()
+          with open("changelog_docs.txt") as f:
+              docs = f.read()
+          with open("changelog_testing.txt") as f:
+              testing = f.read()
+          with open("changelog_build.txt") as f:
+              build = f.read()
+          with open("changelog_breaking.txt") as f:
+              breaking = f.read()
+          with open("changelog_full.txt") as f:
+              full_changelog = f.read()
+
+          # Replace placeholders
+          replacements = {
+              "{{OVERVIEW}}": overview,
+              "{{SECURITY_IMPROVEMENTS}}": security,
+              "{{NEW_FEATURES}}": features,
+              "{{BUG_FIXES}}": bugfixes,
+              "{{CRITICAL_FIXES}}": critical_fixes,
+              "{{MINOR_FIXES}}": minor_fixes,
+              "{{PERFORMANCE_IMPROVEMENTS}}": performance,
+              "{{REFACTORING}}": refactoring,
+              "{{DOCUMENTATION_UPDATES}}": docs,
+              "{{TESTING_UPDATES}}": testing,
+              "{{BUILD_UPDATES}}": build,
+              "{{BREAKING_CHANGES}}": breaking,
+              "{{FULL_CHANGELOG}}": full_changelog,
+              # Empty placeholders for manual filling
+              "{{PQC_UPDATES}}": "_No PQC updates in this release. Manual review may be needed._",
+              "{{VM_ISOLATION_UPDATES}}": "_No VM isolation updates. Manual review may be needed._",
+              "{{NETWORK_UPDATES}}": "_No network updates. Manual review may be needed._",
+              "{{VM_FEATURES}}": "_No VM-specific features. See general features above._",
+              "{{GATEWAY_FEATURES}}": "_No gateway-specific features. See general features above._",
+              "{{CRYPTO_FEATURES}}": "_No crypto-specific features. See general features above._",
+              "{{UI_FEATURES}}": "_No UI-specific features. See general features above._",
+              "{{VM_PERFORMANCE}}": "_No VM-specific performance improvements._",
+              "{{CRYPTO_PERFORMANCE}}": "_No crypto-specific performance improvements._",
+              "{{NETWORK_PERFORMANCE}}": "_No network-specific performance improvements._",
+              "{{API_BREAKING_CHANGES}}": "_No API breaking changes._",
+              "{{CONFIG_BREAKING_CHANGES}}": "_No configuration breaking changes._",
+              "{{MIGRATION_REQUIRED}}": "_No data migration required._",
+              "{{DEPRECATIONS}}": "_No deprecations in this release._",
+              "{{KNOWN_ISSUES}}": "_No known issues at release time. Check GitHub Issues for updates._",
+              "{{VM_KNOWN_ISSUES}}": "_No known VM issues._",
+              "{{GATEWAY_KNOWN_ISSUES}}": "_No known gateway issues._",
+              "{{PLATFORM_KNOWN_ISSUES}}": "_No known platform issues._",
+              "{{UPGRADE_STEPS}}": "_Standard upgrade process applies. No special steps required._",
+              "{{VM_MIGRATION_STEPS}}": "_No VM migration required._",
+              "{{GATEWAY_MIGRATION_STEPS}}": "_No gateway reconfiguration required._",
+              "{{DATA_MIGRATION_STEPS}}": "_No data migration required._",
+              "{{RELEASE_STATISTICS}}": "",
+              "{{FILES_CHANGED}}": "TBD",
+              "{{LINES_ADDED}}": "TBD",
+              "{{LINES_REMOVED}}": "TBD",
+              "{{PRS_MERGED}}": "TBD",
+              "{{UNIT_TEST_COUNT}}": "TBD",
+              "{{INTEGRATION_TEST_COUNT}}": "TBD",
+              "{{CODE_COVERAGE}}": "TBD",
+              "{{CONTRIBUTORS}}": "_See GitHub for full contributor list._",
+              "{{NEW_CONTRIBUTORS}}": "_Welcome to all new contributors!_",
+              "{{THREAT_MODEL_IMPACT}}": "_No significant threat model changes._",
+              "{{SECURITY_AUDIT_STATUS}}": "_No formal audit for this release._",
+              "{{SECURITY_LIMITATIONS}}": "_See Security-Model.md for full security considerations._",
+              "{{NEXT_RELEASE_PREVIEW}}": "_See Roadmap.md for planned features._",
+              "{{RELEASE_VERIFICATION_HASH}}": "TBD",
+              "{{SIGNING_KEY_ID}}": "TBD"
+          }
+
+          for placeholder, replacement in replacements.items():
+              content = content.replace(placeholder, replacement)
+
+          # Write back
+          with open(filename, "w") as f:
+              f.write(content)
+
+          print(f"Generated release notes: {filename}")
+          PYTHON_SCRIPT
+
+      - name: Create Git tag
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          git tag -a "${VERSION}" -m "Release ${VERSION} - ${{ github.event.inputs.release_type }}"
+          git push origin "${VERSION}"
+          echo "Created and pushed tag: ${VERSION}"
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          release_name: "QWAMOS ${{ github.event.inputs.version }} - ${{ github.event.inputs.release_type }}"
+          body_path: RELEASE_NOTES_${{ github.event.inputs.version }}.md
+          draft: ${{ github.event.inputs.draft }}
+          prerelease: ${{ github.event.inputs.prerelease }}
+
+      - name: Commit release notes to repository
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+
+          # Add generated release notes
+          git add RELEASE_NOTES_${VERSION}.md
+
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "$(cat <<'EOF'
+          docs: Add release notes for ${VERSION}
+
+          Auto-generated release notes for ${{ github.event.inputs.release_type }}.
+
+          - Total commits: ${{ steps.read_changelog.outputs.commit_count }}
+          - Contributors: ${{ steps.read_changelog.outputs.contributor_count }}
+          - Issues closed: ${{ steps.read_changelog.outputs.issues_closed }}
+
+          🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+          Co-Authored-By: Claude <noreply@anthropic.com>
+          EOF
+          )"
+            git push origin master
+            echo "Release notes committed and pushed"
+          fi
+
+      - name: Generate summary
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY << 'EOF'
+          ## Release Generation Complete! 🎉
+
+          **Release**: ${{ github.event.inputs.version }}
+          **Type**: ${{ github.event.inputs.release_type }}
+          **Tag**: `${{ github.event.inputs.version }}`
+
+          ### Statistics
+
+          - **Commits**: ${{ steps.read_changelog.outputs.commit_count }}
+          - **Contributors**: ${{ steps.read_changelog.outputs.contributor_count }}
+          - **Issues Closed**: ${{ steps.read_changelog.outputs.issues_closed }}
+
+          ### Generated Files
+
+          - Release notes: `RELEASE_NOTES_${{ github.event.inputs.version }}.md`
+          - Git tag: `${{ github.event.inputs.version }}`
+          - GitHub Release: Created
+
+          ### Next Steps
+
+          1. Review the generated release notes for accuracy
+          2. Edit `RELEASE_NOTES_${{ github.event.inputs.version }}.md` to add:
+             - QWAMOS-specific details (VM/Gateway/PQC changes)
+             - Known issues
+             - Migration guides (if applicable)
+          3. Update the GitHub Release with additional details if needed
+          4. Announce the release in Discussions
+
+          ### Links
+
+          - **Release**: https://github.com/${{ github.repository }}/releases/tag/${{ github.event.inputs.version }}
+          - **Changelog**: https://github.com/${{ github.repository }}/blob/master/RELEASE_NOTES_${{ github.event.inputs.version }}.md
+          - **Compare**: https://github.com/${{ github.repository }}/compare/${{ steps.previous_tag.outputs.previous_tag }}...${{ github.event.inputs.version }}
+
+          ---
+
+          **🤖 Generated by Release Generator Workflow**
+          EOF
+
+      - name: Cleanup temporary files
+        run: |
+          rm -f changelog_*.txt stats.txt
+          echo "Cleaned up temporary files"
