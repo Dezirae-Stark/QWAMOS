@@ -1,0 +1,197 @@
+# QWAMOS SBOM Configuration
+# Configuration for Software Bill of Materials generation using Syft
+
+# Package cataloging configuration
+package:
+  # Search directories
+  search:
+    scope: all-layers  # Search all layers in container images
+    unindexed-archives: true  # Include unindexed archives
+    indexed-archives: true  # Include indexed archives
+
+  # Catalogers to use
+  catalogers:
+    # Enable all catalogers
+    - alpm-cataloger  # Arch Linux packages
+    - apk-cataloger   # Alpine packages
+    - binary-cataloger  # Binary analysis
+    - dart-cataloger  # Dart/Flutter dependencies
+    - dpkg-cataloger  # Debian packages
+    - go-module-cataloger  # Go modules
+    - java-cataloger  # Java/Maven/Gradle
+    - javascript-cataloger  # NPM/Yarn
+    - python-cataloger  # Python packages (pip, poetry, setup.py)
+    - rpm-cataloger   # RPM packages
+    - rust-cataloger  # Rust/Cargo
+    - php-cataloger   # PHP/Composer
+    - dotnet-cataloger  # .NET packages
+    - ruby-cataloger  # Ruby gems
+    - cocoapods-cataloger  # iOS dependencies
+    - swift-cataloger  # Swift packages
+    - portage-cataloger  # Gentoo packages
+
+# File metadata configuration
+file-metadata:
+  # Include file metadata in SBOM
+  enabled: true
+
+  # Digest algorithms to use
+  digests:
+    - sha256
+    - sha1
+
+  # File selection patterns
+  selection: all  # all, none, or specific patterns
+
+# File classification
+file-classification:
+  enabled: true
+
+  # Classify executable files
+  executables: true
+
+  # Classify by MIME type
+  mime-types: true
+
+# Secrets scanning (disabled by default for SBOM)
+secrets:
+  cataloger:
+    enabled: false  # Don't include secrets in SBOM
+
+# Exclude patterns (files/directories to ignore)
+exclude:
+  # Build artifacts
+  - "**/build/**"
+  - "**/dist/**"
+  - "**/.eggs/**"
+  - "**/target/**"
+
+  # Dependencies
+  - "**/node_modules/**"
+  - "**/vendor/**"
+  - "**/.venv/**"
+  - "**/venv/**"
+
+  # Git
+  - "**/.git/**"
+  - "**/.github/**"
+
+  # IDE
+  - "**/.idea/**"
+  - "**/.vscode/**"
+  - "**/*.swp"
+
+  # Cache
+  - "**/__pycache__/**"
+  - "**/.cache/**"
+  - "**/.pytest_cache/**"
+  - "**/.mypy_cache/**"
+
+  # Documentation
+  - "**/docs/_build/**"
+  - "**/site/**"
+
+  # Test fixtures
+  - "**/test-fixtures/**"
+  - "**/testdata/**"
+
+# Source file analysis
+source:
+  # Include source code in analysis
+  enabled: true
+
+  # Name patterns for source files
+  name: ".*"
+
+  # Include digests for source files
+  digests:
+    - sha256
+
+# Relationships between packages
+relationships:
+  # Include package relationships
+  enabled: true
+
+  # Types of relationships to track
+  package-file-ownership: true
+
+  # Exclude binary-only packages from relationships
+  exclude-binary-packages-with-file-ownership-overlap: false
+
+# Output format configuration
+output:
+  # Default format
+  format: json
+
+  # Pretty print JSON
+  pretty: true
+
+  # Include file contents
+  file: false
+
+# Logging
+log:
+  # Log level: debug, info, warn, error
+  level: info
+
+  # Structured logging
+  structured: false
+
+# Registry authentication (for container images)
+registry:
+  # Insecure registries
+  insecure-skip-tls-verify: []
+
+  # Use Docker credentials
+  insecure-use-http: false
+
+  # Authentication
+  auth: []
+
+# Platform selection for multi-platform images
+platform: ""
+
+# Cataloging options
+catalogers:
+  # Scope of cataloging
+  scope: squashed  # all-layers, squashed
+
+# Attest configuration (for build attestations)
+attest:
+  # Key for signing attestations
+  key: ""
+
+  # Skip TLS verification
+  skip-tls-verify: false
+
+# Development options
+dev:
+  # Profile CPU usage
+  profile-cpu: false
+
+  # Profile memory usage
+  profile-mem: false
+
+# Custom metadata
+metadata:
+  # Author information
+  author: "QWAMOS Team"
+
+  # Component information
+  component:
+    name: "QWAMOS"
+    version: "auto"  # Auto-detect from VERSION file or git tag
+    type: "application"
+    description: "Quantum-Resistant Workstation and Mobile Operating System"
+
+  # Organization
+  supplier:
+    name: "QWAMOS Project"
+    url: "https://github.com/Dezirae-Stark/QWAMOS"
+
+# Notes:
+# - This configuration is used by Syft (https://github.com/anchore/syft)
+# - Syft automatically detects package managers and dependencies
+# - Output formats: json, xml, spdx, spdx-json, cyclonedx-json, cyclonedx-xml
+# - SBOM files are stored in /sbom/builds/
+# - SBOMs are automatically signed with GPG via release-signing workflow

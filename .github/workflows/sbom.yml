@@ -1,43 +1,126 @@
-name: QWAMOS - SBOM Generation
+# QWAMOS SBOM Generation Workflow
+# Automatically generates Software Bill of Materials for transparency and security
+
+name: SBOM Generation
+
 on:
+  # Trigger on push to master
   push:
-    branches: [ "main", "master" ]
+    branches:
+      - master
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/workflows/doc-sync.yml'
+      - '.github/workflows/lint.yml'
+
+  # Trigger on release creation
   release:
-    types: [published]
-  schedule:
-    - cron: "30 2 * * *" # nightly
+    types:
+      - created
+      - published
+
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      upload_to_release:
+        description: 'Upload SBOM to latest release'
+        required: false
+        type: boolean
+        default: false
+      release_tag:
+        description: 'Release tag to upload SBOM to (if upload_to_release is true)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  packages: read
+  security-events: write
+
+env:
+  SBOM_VERSION: "auto"
 
 jobs:
-  sbom:
+  generate-sbom:
+    name: Generate SBOM
     runs-on: ubuntu-latest
+
+    outputs:
+      sbom_generated: ${{ steps.generate.outputs.sbom_generated }}
+      sbom_version: ${{ steps.version.outputs.version }}
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine version
+        id: version
+        run: |
+          if [ -f VERSION ]; then
+            VERSION=$(cat VERSION | tr -d '\n')
+            echo "version=${VERSION}" >> $GITHUB_OUTPUT
+            echo "Version from VERSION file: ${VERSION}"
+          elif git describe --tags --exact-match 2>/dev/null; then
+            VERSION=$(git describe --tags --exact-match)
+            echo "version=${VERSION}" >> $GITHUB_OUTPUT
+            echo "Version from git tag: ${VERSION}"
+          else
+            VERSION="commit-$(git rev-parse --short HEAD)"
+            echo "version=${VERSION}" >> $GITHUB_OUTPUT
+            echo "Version from commit: ${VERSION}"
+          fi
 
       - name: Install Syft
-        uses: anchore/sbom-action/download-syft@v0.15.5
-
-      - name: Generate Syft SBOM
-        run: syft . -o json > sbom-syft.json
-
-      - name: Install CycloneDX
-        run: pip install cyclonedx-bom
-
-      - name: Generate CycloneDX SBOM
         run: |
-          # Create a minimal requirements.txt if it doesn't exist
-          if [ ! -f requirements.txt ]; then
-            echo "# QWAMOS Python dependencies" > requirements.txt
-            find . -name "requirements.txt" -not -path "./.git/*" -not -path "./vms/*" | \
-              xargs cat | sort -u >> requirements.txt || echo "pycryptodome" >> requirements.txt
-          fi
-          cyclonedx-bom -r -o sbom-cyclonedx.json || echo "CycloneDX generation skipped"
+          echo "::group::Installing Syft"
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+          syft version
+          echo "✓ Syft installed successfully"
+          echo "::endgroup::"
 
-      - name: Upload SBOM Artifacts
+      - name: Generate SBOM files
+        id: generate
+        run: |
+          echo "::group::Generating SBOM files"
+
+          VERSION="${{ steps.version.outputs.version }}"
+          BUILD_DIR="sbom/builds/${VERSION}"
+
+          mkdir -p "${BUILD_DIR}"
+
+          echo "Generating SBOM for QWAMOS ${VERSION}..."
+
+          syft dir:. --config sbom/sbom-config.yml --output json --file "${BUILD_DIR}/sbom.json"
+          syft dir:. --config sbom/sbom-config.yml --output cyclonedx-xml --file "${BUILD_DIR}/sbom.xml"
+          syft dir:. --config sbom/sbom-config.yml --output spdx-json --file "${BUILD_DIR}/sbom.spdx.json"
+          syft dir:. --config sbom/sbom-config.yml --output cyclonedx-json --file "${BUILD_DIR}/sbom.cyclonedx.json"
+          syft dir:. --config sbom/sbom-config.yml --output table --file "${BUILD_DIR}/sbom.txt"
+
+          mkdir -p sbom/latest
+          cp "${BUILD_DIR}"/* sbom/latest/
+
+          echo "sbom_generated=true" >> $GITHUB_OUTPUT
+
+          echo "::endgroup::"
+
+      - name: Commit SBOM to repository
+        if: github.event_name != 'release'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add sbom/builds/ sbom/latest/
+
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: Update SBOM for ${{ steps.version.outputs.version }}"
+            git push origin master
+          fi
+
+      - name: Upload SBOM as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: sbom
-          path: |
-            sbom-syft.json
-            sbom-cyclonedx.json
-        continue-on-error: true
+          name: sbom-${{ steps.version.outputs.version }}
+          path: sbom/builds/${{ steps.version.outputs.version }}/
+          retention-days: 90
