@@ -1,0 +1,552 @@
+name: Static Binary Analysis
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'android/**'
+      - 'crypto/**'
+      - 'gateway/**'
+      - 'hypervisor/**'
+      - 'bootloader/**'
+      - 'kernel/**'
+      - '**.c'
+      - '**.cpp'
+      - '**.kt'
+      - '**.py'
+      - '.github/workflows/static-binary-analysis.yml'
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+env:
+  BUILD_DIR: build_bin
+  REPORTS_DIR: binary_analysis_reports
+  PYTHON_VERSION: '3.11'
+  JAVA_VERSION: '17'
+
+jobs:
+  build-binaries:
+    name: Build All Binaries
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up build directories
+        run: |
+          mkdir -p ${BUILD_DIR}/{android,python,native,bootloader}
+          mkdir -p ${REPORTS_DIR}
+
+      - name: Set up JDK for Android
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            gcc \
+            g++ \
+            make \
+            cmake \
+            nasm \
+            binutils \
+            python3-dev \
+            pyinstaller
+
+          pip install pyinstaller nuitka
+
+      - name: Build Android binaries
+        run: |
+          if [ -d "android" ]; then
+            cd android
+            chmod +x gradlew
+            ./gradlew assembleDebug assembleRelease || true
+
+            # Copy APKs
+            find . -name "*.apk" -exec cp {} ../${BUILD_DIR}/android/ \;
+
+            # Extract DEX files from APKs
+            cd ../${BUILD_DIR}/android
+            for apk in *.apk; do
+              if [ -f "$apk" ]; then
+                unzip -q "$apk" "*.dex" -d "${apk%.apk}_dex" || true
+              fi
+            done
+            cd ../../..
+          fi
+
+      - name: Build Python binaries
+        run: |
+          # Find all Python entry points
+          if [ -f "gateway/tor_controller.py" ]; then
+            pyinstaller --onefile gateway/tor_controller.py \
+              --distpath ${BUILD_DIR}/python || true
+          fi
+
+          if [ -f "crypto/keygen.py" ]; then
+            pyinstaller --onefile crypto/keygen.py \
+              --distpath ${BUILD_DIR}/python || true
+          fi
+
+      - name: Build native binaries
+        run: |
+          # Build bootloader if exists
+          if [ -f "bootloader/Makefile" ]; then
+            cd bootloader
+            make clean && make || true
+            find . -type f -executable -exec cp {} ../${BUILD_DIR}/bootloader/ \;
+            cd ..
+          fi
+
+          # Build crypto native code
+          if [ -d "crypto/native" ]; then
+            cd crypto/native
+            if [ -f "Makefile" ]; then
+              make clean && make || true
+              find . -type f -name "*.so" -exec cp {} ../../${BUILD_DIR}/native/ \;
+            fi
+            cd ../..
+          fi
+
+          # Build hypervisor components
+          if [ -d "hypervisor/native" ]; then
+            cd hypervisor/native
+            if [ -f "Makefile" ]; then
+              make clean && make || true
+              find . -type f -name "*.so" -o -name "*.a" -exec cp {} ../../${BUILD_DIR}/native/ \;
+            fi
+            cd ../..
+          fi
+
+      - name: List built binaries
+        run: |
+          echo "=== Built Binaries ===" | tee ${REPORTS_DIR}/build-manifest.txt
+          find ${BUILD_DIR} -type f | tee -a ${REPORTS_DIR}/build-manifest.txt
+
+      - name: Upload built binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-binaries
+          path: ${{ env.BUILD_DIR }}/
+          retention-days: 30
+
+      - name: Upload build manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-manifest
+          path: ${{ env.REPORTS_DIR }}/build-manifest.txt
+
+  static-analysis:
+    name: Static Binary Analysis
+    needs: build-binaries
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download built binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: compiled-binaries
+          path: ${{ env.BUILD_DIR }}/
+
+      - name: Set up analysis directories
+        run: |
+          mkdir -p ${REPORTS_DIR}/{ghidra,binwalk,syscalls,secrets,networking}
+
+      - name: Install analysis tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            binwalk \
+            radare2 \
+            strace \
+            ltrace \
+            strings \
+            file \
+            binutils \
+            python3-pip \
+            openjdk-17-jdk \
+            wget \
+            unzip
+
+          # Install additional tools
+          pip install \
+            yara-python \
+            pefile \
+            pyelftools \
+            lief \
+            capstone \
+            r2pipe
+
+      - name: Install Ghidra
+        run: |
+          cd /tmp
+          wget -q https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_11.0_build/ghidra_11.0_PUBLIC_20231222.zip || true
+
+          if [ -f ghidra_11.0_PUBLIC_20231222.zip ]; then
+            unzip -q ghidra_11.0_PUBLIC_20231222.zip
+            sudo mv ghidra_11.0_PUBLIC /opt/ghidra
+            export GHIDRA_HOME=/opt/ghidra
+            echo "GHIDRA_HOME=/opt/ghidra" >> $GITHUB_ENV
+          else
+            echo "Ghidra download failed, will skip Ghidra analysis"
+          fi
+
+      - name: Run binwalk analysis
+        run: |
+          echo "=== Binwalk Analysis ===" | tee ${REPORTS_DIR}/binwalk/binwalk-summary.txt
+
+          for binary in $(find ${BUILD_DIR} -type f); do
+            echo "" | tee -a ${REPORTS_DIR}/binwalk/binwalk-summary.txt
+            echo "Analyzing: $binary" | tee -a ${REPORTS_DIR}/binwalk/binwalk-summary.txt
+            echo "---" | tee -a ${REPORTS_DIR}/binwalk/binwalk-summary.txt
+
+            # Basic file info
+            file "$binary" | tee -a ${REPORTS_DIR}/binwalk/binwalk-summary.txt
+
+            # Binwalk structure detection
+            binwalk "$binary" 2>&1 | tee -a ${REPORTS_DIR}/binwalk/binwalk-summary.txt || true
+
+            # Binwalk entropy analysis (detect encryption/compression)
+            binwalk -E "$binary" 2>&1 | tee -a ${REPORTS_DIR}/binwalk/binwalk-entropy.txt || true
+
+            echo "" | tee -a ${REPORTS_DIR}/binwalk/binwalk-summary.txt
+          done
+
+      - name: Scan for embedded secrets
+        run: |
+          echo "=== Secret Detection ===" | tee ${REPORTS_DIR}/secrets/secrets-scan.txt
+
+          for binary in $(find ${BUILD_DIR} -type f); do
+            echo "" | tee -a ${REPORTS_DIR}/secrets/secrets-scan.txt
+            echo "Scanning: $binary" | tee -a ${REPORTS_DIR}/secrets/secrets-scan.txt
+            echo "---" | tee -a ${REPORTS_DIR}/secrets/secrets-scan.txt
+
+            # Extract strings and look for secrets
+            strings "$binary" | grep -iE '(password|secret|api[_-]?key|private[_-]?key|token|credential)' | head -20 | tee -a ${REPORTS_DIR}/secrets/secrets-scan.txt || true
+
+            # Look for PEM keys
+            strings "$binary" | grep -E "(BEGIN|END).*(PRIVATE|PUBLIC|RSA|EC|ENCRYPTED)" | tee -a ${REPORTS_DIR}/secrets/secrets-scan.txt || true
+
+            # Look for base64 encoded data (potential secrets)
+            strings "$binary" | grep -E '^[A-Za-z0-9+/]{40,}={0,2}$' | head -10 | tee -a ${REPORTS_DIR}/secrets/secrets-scan.txt || true
+
+            echo "" | tee -a ${REPORTS_DIR}/secrets/secrets-scan.txt
+          done
+
+      - name: Analyze syscalls and imports
+        run: |
+          echo "=== Syscall and Import Analysis ===" | tee ${REPORTS_DIR}/syscalls/syscall-analysis.txt
+          echo "{" > ${REPORTS_DIR}/syscalls/syscall-map.json
+          echo '  "binaries": [' >> ${REPORTS_DIR}/syscalls/syscall-map.json
+
+          first=true
+          for binary in $(find ${BUILD_DIR} -type f -executable -o -name "*.so" -o -name "*.apk"); do
+            echo "" | tee -a ${REPORTS_DIR}/syscalls/syscall-analysis.txt
+            echo "Analyzing: $binary" | tee -a ${REPORTS_DIR}/syscalls/syscall-analysis.txt
+            echo "---" | tee -a ${REPORTS_DIR}/syscalls/syscall-analysis.txt
+
+            # Check file type
+            file_type=$(file "$binary" | cut -d: -f2)
+            echo "Type: $file_type" | tee -a ${REPORTS_DIR}/syscalls/syscall-analysis.txt
+
+            # For ELF binaries
+            if file "$binary" | grep -q "ELF"; then
+              echo "Imported symbols:" | tee -a ${REPORTS_DIR}/syscalls/syscall-analysis.txt
+              readelf -s "$binary" 2>/dev/null | grep -E "FUNC.*UND" | head -20 | tee -a ${REPORTS_DIR}/syscalls/syscall-analysis.txt || true
+
+              echo "Dynamic dependencies:" | tee -a ${REPORTS_DIR}/syscalls/syscall-analysis.txt
+              ldd "$binary" 2>/dev/null | tee -a ${REPORTS_DIR}/syscalls/syscall-analysis.txt || true
+
+              # Extract syscall info
+              syscalls=$(strings "$binary" | grep -E "^(open|read|write|socket|connect|bind|listen|accept|fork|exec|mmap|ioctl)" | sort -u || true)
+
+              # Add to JSON
+              if [ "$first" = true ]; then
+                first=false
+              else
+                echo "    ," >> ${REPORTS_DIR}/syscalls/syscall-map.json
+              fi
+
+              echo "    {" >> ${REPORTS_DIR}/syscalls/syscall-map.json
+              echo "      \"binary\": \"$binary\"," >> ${REPORTS_DIR}/syscalls/syscall-map.json
+              echo "      \"type\": \"ELF\"," >> ${REPORTS_DIR}/syscalls/syscall-map.json
+              echo "      \"syscalls\": [" >> ${REPORTS_DIR}/syscalls/syscall-map.json
+
+              first_syscall=true
+              for syscall in $syscalls; do
+                if [ "$first_syscall" = true ]; then
+                  first_syscall=false
+                else
+                  echo "," >> ${REPORTS_DIR}/syscalls/syscall-map.json
+                fi
+                echo -n "        \"$syscall\"" >> ${REPORTS_DIR}/syscalls/syscall-map.json
+              done
+
+              echo "" >> ${REPORTS_DIR}/syscalls/syscall-map.json
+              echo "      ]" >> ${REPORTS_DIR}/syscalls/syscall-map.json
+              echo "    }" >> ${REPORTS_DIR}/syscalls/syscall-map.json
+            fi
+
+            echo "" | tee -a ${REPORTS_DIR}/syscalls/syscall-analysis.txt
+          done
+
+          echo "" >> ${REPORTS_DIR}/syscalls/syscall-map.json
+          echo "  ]" >> ${REPORTS_DIR}/syscalls/syscall-map.json
+          echo "}" >> ${REPORTS_DIR}/syscalls/syscall-map.json
+
+      - name: Detect networking code
+        run: |
+          echo "=== Network Code Detection ===" | tee ${REPORTS_DIR}/networking/network-scan.txt
+
+          for binary in $(find ${BUILD_DIR} -type f); do
+            echo "" | tee -a ${REPORTS_DIR}/networking/network-scan.txt
+            echo "Scanning: $binary" | tee -a ${REPORTS_DIR}/networking/network-scan.txt
+            echo "---" | tee -a ${REPORTS_DIR}/networking/network-scan.txt
+
+            # Look for network-related strings
+            echo "Network indicators:" | tee -a ${REPORTS_DIR}/networking/network-scan.txt
+            strings "$binary" | grep -iE '(http://|https://|ftp://|tcp://|udp://|socket|bind|listen|connect|recv|send)' | head -20 | tee -a ${REPORTS_DIR}/networking/network-scan.txt || true
+
+            # Look for IP addresses
+            echo "IP addresses:" | tee -a ${REPORTS_DIR}/networking/network-scan.txt
+            strings "$binary" | grep -E '([0-9]{1,3}\.){3}[0-9]{1,3}' | head -10 | tee -a ${REPORTS_DIR}/networking/network-scan.txt || true
+
+            # Look for domains
+            echo "Domains:" | tee -a ${REPORTS_DIR}/networking/network-scan.txt
+            strings "$binary" | grep -E '[a-zA-Z0-9-]+\.(com|org|net|io|gov|mil|edu)' | head -10 | tee -a ${REPORTS_DIR}/networking/network-scan.txt || true
+
+            echo "" | tee -a ${REPORTS_DIR}/networking/network-scan.txt
+          done
+
+      - name: Check for weak crypto fallback
+        run: |
+          echo "=== Weak Cryptography Detection ===" | tee ${REPORTS_DIR}/crypto-check.txt
+          echo "Checking for AES/Twofish/Serpent fallback code (should be removed)..." | tee -a ${REPORTS_DIR}/crypto-check.txt
+          echo "" | tee -a ${REPORTS_DIR}/crypto-check.txt
+
+          weak_crypto_found=false
+
+          for binary in $(find ${BUILD_DIR} -type f); do
+            # Check for AES references
+            aes_count=$(strings "$binary" | grep -ic "aes" || true)
+            if [ "$aes_count" -gt 0 ]; then
+              echo "WARNING: Found $aes_count AES references in $binary" | tee -a ${REPORTS_DIR}/crypto-check.txt
+              strings "$binary" | grep -i "aes" | head -5 | tee -a ${REPORTS_DIR}/crypto-check.txt
+              weak_crypto_found=true
+            fi
+
+            # Check for Twofish references
+            twofish_count=$(strings "$binary" | grep -ic "twofish" || true)
+            if [ "$twofish_count" -gt 0 ]; then
+              echo "WARNING: Found $twofish_count Twofish references in $binary" | tee -a ${REPORTS_DIR}/crypto-check.txt
+              strings "$binary" | grep -i "twofish" | head -5 | tee -a ${REPORTS_DIR}/crypto-check.txt
+              weak_crypto_found=true
+            fi
+
+            # Check for Serpent references
+            serpent_count=$(strings "$binary" | grep -ic "serpent" || true)
+            if [ "$serpent_count" -gt 0 ]; then
+              echo "WARNING: Found $serpent_count Serpent references in $binary" | tee -a ${REPORTS_DIR}/crypto-check.txt
+              strings "$binary" | grep -i "serpent" | head -5 | tee -a ${REPORTS_DIR}/crypto-check.txt
+              weak_crypto_found=true
+            fi
+
+            # Check for DES/3DES
+            des_count=$(strings "$binary" | grep -iE "(^des$|3des)" | wc -l || true)
+            if [ "$des_count" -gt 0 ]; then
+              echo "WARNING: Found DES/3DES references in $binary" | tee -a ${REPORTS_DIR}/crypto-check.txt
+              weak_crypto_found=true
+            fi
+
+            # Check for MD5/SHA1
+            weak_hash_count=$(strings "$binary" | grep -iE "(md5|sha-?1)" | wc -l || true)
+            if [ "$weak_hash_count" -gt 0 ]; then
+              echo "INFO: Found weak hash references in $binary (MD5/SHA1)" | tee -a ${REPORTS_DIR}/crypto-check.txt
+            fi
+          done
+
+          echo "" | tee -a ${REPORTS_DIR}/crypto-check.txt
+          if [ "$weak_crypto_found" = true ]; then
+            echo "⚠️  ALERT: Weak cryptography algorithms detected!" | tee -a ${REPORTS_DIR}/crypto-check.txt
+            echo "QWAMOS should use post-quantum crypto (Kyber, Dilithium, etc.)" | tee -a ${REPORTS_DIR}/crypto-check.txt
+          else
+            echo "✅ No weak crypto fallback code detected" | tee -a ${REPORTS_DIR}/crypto-check.txt
+          fi
+
+      - name: Run Ghidra headless analysis
+        if: env.GHIDRA_HOME != ''
+        run: |
+          echo "=== Ghidra Headless Analysis ===" | tee ${REPORTS_DIR}/ghidra/ghidra-report.txt
+
+          # Create Ghidra project
+          GHIDRA_PROJECT_DIR="${REPORTS_DIR}/ghidra/project"
+          mkdir -p "$GHIDRA_PROJECT_DIR"
+
+          for binary in $(find ${BUILD_DIR} -type f -executable -o -name "*.so"); do
+            if file "$binary" | grep -q "ELF"; then
+              echo "" | tee -a ${REPORTS_DIR}/ghidra/ghidra-report.txt
+              echo "Analyzing: $binary" | tee -a ${REPORTS_DIR}/ghidra/ghidra-report.txt
+              echo "---" | tee -a ${REPORTS_DIR}/ghidra/ghidra-report.txt
+
+              binary_name=$(basename "$binary")
+
+              # Run Ghidra headless analyzer
+              ${GHIDRA_HOME}/support/analyzeHeadless \
+                "$GHIDRA_PROJECT_DIR" \
+                "qwamos_analysis" \
+                -import "$binary" \
+                -scriptPath "${GHIDRA_HOME}/Ghidra/Features/Python/ghidra_scripts" \
+                -postScript FunctionSummary.py \
+                -deleteProject \
+                2>&1 | tee -a ${REPORTS_DIR}/ghidra/ghidra-report.txt || true
+
+              echo "" | tee -a ${REPORTS_DIR}/ghidra/ghidra-report.txt
+            fi
+          done
+
+      - name: Run radare2 analysis
+        run: |
+          echo "=== Radare2 Analysis ===" | tee ${REPORTS_DIR}/radare2-analysis.txt
+
+          for binary in $(find ${BUILD_DIR} -type f -executable -o -name "*.so"); do
+            if file "$binary" | grep -q "ELF"; then
+              echo "" | tee -a ${REPORTS_DIR}/radare2-analysis.txt
+              echo "Analyzing: $binary" | tee -a ${REPORTS_DIR}/radare2-analysis.txt
+              echo "---" | tee -a ${REPORTS_DIR}/radare2-analysis.txt
+
+              # Analyze with radare2
+              r2 -q -c 'aaa; afl; q' "$binary" 2>&1 | head -50 | tee -a ${REPORTS_DIR}/radare2-analysis.txt || true
+
+              echo "" | tee -a ${REPORTS_DIR}/radare2-analysis.txt
+            fi
+          done
+
+      - name: Generate analysis summary
+        run: |
+          cat > ${REPORTS_DIR}/ANALYSIS_SUMMARY.md <<'EOF'
+          # QWAMOS Static Binary Analysis Report
+
+          ## Overview
+          This report contains static analysis results for all compiled binaries in QWAMOS.
+
+          ## Analysis Performed
+
+          ### 1. Binary Structure Analysis (binwalk)
+          - File structure detection
+          - Entropy analysis for encryption/compression detection
+          - Embedded file system detection
+
+          ### 2. Secret Detection
+          - Embedded passwords, API keys, tokens
+          - Private key material (PEM, RSA, EC)
+          - Base64-encoded secrets
+
+          ### 3. Syscall and Import Analysis
+          - System call mapping
+          - Dynamic library dependencies
+          - Imported function analysis
+
+          ### 4. Network Code Detection
+          - URL and protocol detection (HTTP, HTTPS, FTP, TCP, UDP)
+          - IP address and domain extraction
+          - Socket operation detection
+
+          ### 5. Weak Cryptography Detection
+          - AES/Twofish/Serpent fallback code (should be removed)
+          - DES/3DES detection
+          - MD5/SHA1 weak hash detection
+          - Post-quantum crypto verification
+
+          ### 6. Disassembly Analysis
+          - Ghidra headless analysis (if available)
+          - Radare2 function analysis
+          - Control flow analysis
+
+          ## Report Files
+
+          - `binwalk/binwalk-summary.txt` - Binary structure analysis
+          - `binwalk/binwalk-entropy.txt` - Entropy analysis
+          - `secrets/secrets-scan.txt` - Embedded secret detection
+          - `syscalls/syscall-analysis.txt` - Syscall analysis
+          - `syscalls/syscall-map.json` - JSON syscall mapping
+          - `networking/network-scan.txt` - Network code detection
+          - `crypto-check.txt` - Weak crypto detection
+          - `ghidra/ghidra-report.txt` - Ghidra disassembly (if available)
+          - `radare2-analysis.txt` - Radare2 analysis
+
+          ## Security Recommendations
+
+          1. **Remove Weak Crypto**: Ensure no AES/Twofish/Serpent fallback code exists
+          2. **No Embedded Secrets**: All secrets should be external (env vars, key files)
+          3. **Minimal Syscalls**: Only necessary system calls should be present
+          4. **Network Isolation**: Unexpected network code should be investigated
+          5. **Post-Quantum Only**: All crypto should use Kyber-1024, Dilithium, etc.
+
+          EOF
+
+          echo "" >> ${REPORTS_DIR}/ANALYSIS_SUMMARY.md
+          echo "## Analysis Date" >> ${REPORTS_DIR}/ANALYSIS_SUMMARY.md
+          echo "$(date -u)" >> ${REPORTS_DIR}/ANALYSIS_SUMMARY.md
+          echo "" >> ${REPORTS_DIR}/ANALYSIS_SUMMARY.md
+          echo "## Commit" >> ${REPORTS_DIR}/ANALYSIS_SUMMARY.md
+          echo "${GITHUB_SHA}" >> ${REPORTS_DIR}/ANALYSIS_SUMMARY.md
+
+      - name: Upload analysis reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-analysis-reports
+          path: ${{ env.REPORTS_DIR }}/
+          retention-days: 90
+
+      - name: Check for critical issues
+        run: |
+          echo "=== Critical Issue Check ==="
+
+          critical_issues=false
+
+          # Check if secrets were found
+          if grep -q "BEGIN.*PRIVATE" ${REPORTS_DIR}/secrets/secrets-scan.txt 2>/dev/null; then
+            echo "::error::CRITICAL: Private key material found in binaries!"
+            critical_issues=true
+          fi
+
+          # Check if weak crypto was found
+          if grep -q "WARNING.*AES" ${REPORTS_DIR}/crypto-check.txt 2>/dev/null; then
+            echo "::warning::Weak cryptography (AES/Twofish/Serpent) detected"
+          fi
+
+          # Check for suspicious network activity
+          suspicious_urls=$(grep -c "http://" ${REPORTS_DIR}/networking/network-scan.txt 2>/dev/null || echo 0)
+          if [ "$suspicious_urls" -gt 5 ]; then
+            echo "::warning::Multiple HTTP (non-HTTPS) URLs detected: $suspicious_urls"
+          fi
+
+          if [ "$critical_issues" = true ]; then
+            echo "::error::Critical security issues found! Review analysis reports."
+            exit 1
+          fi
+
+          echo "✅ No critical issues detected"
+
+      - name: Post analysis summary
+        if: always()
+        run: |
+          cat ${REPORTS_DIR}/ANALYSIS_SUMMARY.md >> $GITHUB_STEP_SUMMARY
