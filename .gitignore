@@ -157,3 +157,20 @@ coverage/
 htmlcov/
 .coverage
 *.qvol
+
+# ============================================================
+# Temporary and Backup Files
+# ============================================================
+
+*_BACKUP.*
+*_backup.*
+*.backup
+
+# ============================================================
+# Test Results (JSON)
+# ============================================================
+
+**/differential_results.json
+**/kvm_results.json
+**/qemu_results.json
+**/test_*_results.json
