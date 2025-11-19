@@ -32,7 +32,7 @@ github/codeql-action/upload-sarif  v3              github-action
 gitleaks/gitleaks-action           v2              github-action                    
 gradle-wrapper                     4.10.2          java-archive                     
 gradle-wrapper                     4.5             java-archive                     
-gradle-wrapper                     UNKNOWN         java-archive                     
+gradle-wrapper                     UNKNOWN         java-archive   (+1 duplicate)    
 httpclientandroidlib               1.2.1           java-archive                     
 jackson-databind                   2.13.0          java-archive                     
 jackson-datatype-jsr310            2.13.0          java-archive                     
