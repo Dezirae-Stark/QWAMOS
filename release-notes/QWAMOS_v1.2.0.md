@@ -1,6 +1,6 @@
 # QWAMOS v1.2.0 — Release Notes
 
-**Date:** 2025-11-18
+**Date:** 2025-11-19
 **Maintainer:** Dezirae Stark
 **Organization:** First Sterling Capital, LLC
 **License:** AGPL-3.0
@@ -9,7 +9,7 @@
 
 ## Summary
 
-Integrated advanced roadmap phases (XII-XVI) with PQC storage, GPU isolation, AI governor, and secure cluster mode. Enhanced security infrastructure with additional CI workflows and hardening. Added 15 new features. Fixed 30 bugs.
+Integrated advanced roadmap phases (XII-XVI) with PQC storage, GPU isolation, AI governor, and secure cluster mode. Enhanced security infrastructure with additional CI workflows and hardening. Added 15 new features. Fixed 34 bugs.
 
 ---
 
@@ -36,6 +36,10 @@ Integrated advanced roadmap phases (XII-XVI) with PQC storage, GPU isolation, AI
 
 ## 🐛 Fixed
 
+- **`cbd31a7`** Remove strict repository mode from settings.gradle
+- **`21fd3b4`** Remove Flutter dependency from Android settings.gradle
+- **`8225b5d`** Temporarily disable dev image build to prevent disk space errors
+- **`16350db`** Improve merge conflict resolution in sync workflows
 - **`222f23f`** Complete implementation of graceful binary handling in static analysis
 - **`5025c89`** Handle missing binaries gracefully in static binary analysis
 - **`24bffe1`** Move tool verification before user switch in Dockerfile.dev
@@ -72,6 +76,7 @@ Integrated advanced roadmap phases (XII-XVI) with PQC storage, GPU isolation, AI
 
 ## 🔒 Security
 
+- **`16350db`** Improve merge conflict resolution in sync workflows
 - **`063be42`** Fix additional workflow failures (docs-validation and static-analysis)
 - **`33f9178`** Fix multiple GitHub Actions workflow failures
 - **`c541dc8`** Add automated static binary analysis workflow
@@ -99,6 +104,9 @@ Integrated advanced roadmap phases (XII-XVI) with PQC storage, GPU isolation, AI
 
 ## 📚 Documentation
 
+- **`0fd0a90`** Sync wiki to docs/wiki/ directory
+- **`ba654b5`** Sync documentation [skip-doc-sync]
+- **`b09445d`** Sync wiki to docs/wiki/ directory
 - **`d0c85d5`** Sync wiki to docs/wiki/ directory
 - **`a9fd7d3`** Sync documentation [skip-doc-sync]
 - **`7ef5bea`** Sync wiki to docs/wiki/ directory
@@ -217,9 +225,9 @@ b6d614932f77369d4a3227ed6632e563dd457df12dfb38df16f6b68d63751f18
 ## 📋 Version Provenance
 
 - **Version:** v1.2.0
-- **Commit:** `222f23ffdc87539838f4d3eedbfa88604b78d608`
+- **Commit:** `cbd31a706e83a6f40463424350caaa8820b3cb68`
 - **Branch:** `master`
-- **Build Date:** 2025-11-18 23:49:56 UTC
+- **Build Date:** 2025-11-19 00:49:05 UTC
 
 ---
 
