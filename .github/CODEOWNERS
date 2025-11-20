@@ -1,0 +1,100 @@
+# QWAMOS Code Owners
+# Automatic review assignment for pull requests
+#
+# Each line is a file pattern followed by one or more owners.
+# Owners are automatically requested for review when someone opens a PR
+# that modifies files matching that pattern.
+#
+# Format: path/to/files @github-username @another-username
+#
+# More info: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global owner for all files (fallback)
+* @Dezirae-Stark
+
+# Core System Components
+/hypervisor/** @Dezirae-Stark
+/kernel/** @Dezirae-Stark
+/bootloader/** @Dezirae-Stark
+
+# Security & Cryptography
+/crypto/** @Dezirae-Stark
+/security/** @Dezirae-Stark
+/frontend/crypto_manager.py @Dezirae-Stark
+
+# Networking & Gateway
+/gateway/** @Dezirae-Stark
+/network/** @Dezirae-Stark
+
+# Storage & Device Management
+/storage/** @Dezirae-Stark
+/device/** @Dezirae-Stark
+
+# UI & Frontend
+/ui/** @Dezirae-Stark
+/frontend/** @Dezirae-Stark
+
+# Android Application
+/android/** @Dezirae-Stark
+android/app/src/** @Dezirae-Stark
+
+# Build System & Infrastructure
+/docker/** @Dezirae-Stark
+/scripts/** @Dezirae-Stark
+.github/workflows/** @Dezirae-Stark
+Makefile @Dezirae-Stark
+build.sh @Dezirae-Stark
+
+# Python Code
+*.py @Dezirae-Stark
+
+# Kotlin/Java Code
+*.kt @Dezirae-Stark
+*.kts @Dezirae-Stark
+*.java @Dezirae-Stark
+
+# Shell Scripts (require security review)
+*.sh @Dezirae-Stark
+*.bash @Dezirae-Stark
+
+# Configuration Files
+*.yml @Dezirae-Stark
+*.yaml @Dezirae-Stark
+*.toml @Dezirae-Stark
+*.json @Dezirae-Stark
+.pylintrc @Dezirae-Stark
+.flake8 @Dezirae-Stark
+.editorconfig @Dezirae-Stark
+
+# Documentation
+/docs/** @Dezirae-Stark
+*.md @Dezirae-Stark
+README.md @Dezirae-Stark
+
+# Testing
+/tests/** @Dezirae-Stark
+**/test_*.py @Dezirae-Stark
+**/*_test.py @Dezirae-Stark
+
+# Linting & Code Quality
+/linting/** @Dezirae-Stark
+.github/workflows/lint.yml @Dezirae-Stark
+
+# Security-Critical Files (require careful review)
+/crypto/** @Dezirae-Stark
+*.pem @Dezirae-Stark
+*.key @Dezirae-Stark
+*.crt @Dezirae-Stark
+
+# CI/CD Pipelines
+.github/workflows/** @Dezirae-Stark
+.github/actions/** @Dezirae-Stark
+
+# Dependencies & Package Management
+requirements.txt @Dezirae-Stark
+**/requirements*.txt @Dezirae-Stark
+Pipfile @Dezirae-Stark
+poetry.lock @Dezirae-Stark
+gradle.properties @Dezirae-Stark
+build.gradle @Dezirae-Stark
+settings.gradle @Dezirae-Stark
