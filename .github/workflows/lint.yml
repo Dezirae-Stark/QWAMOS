@@ -34,6 +34,11 @@ on:
   # Manual trigger
   workflow_dispatch:
 
+# GitHub Pro+ feature: Limit concurrent workflow runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   pull-requests: write

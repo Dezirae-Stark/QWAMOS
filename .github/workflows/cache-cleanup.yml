@@ -1,0 +1,229 @@
+# Cache Cleanup Workflow
+# Automatically cleans up old GitHub Actions caches to stay within limits
+# GitHub Pro+ individual: 10GB cache storage limit
+
+name: Cache Cleanup
+
+on:
+  # Run weekly on Sunday at 3 AM UTC
+  schedule:
+    - cron: '0 3 * * 0'
+
+  # Manual trigger
+  workflow_dispatch:
+
+  # Run after successful pushes to master (optional cleanup)
+  push:
+    branches:
+      - master
+
+# Prevent concurrent cleanup runs
+concurrency:
+  group: cache-cleanup
+  cancel-in-progress: false
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  cleanup-old-caches:
+    name: Cleanup Old Caches
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get cache list
+        id: cache-list
+        run: |
+          echo "Fetching cache list..."
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/actions/caches \
+            --paginate > caches.json
+
+          echo "Total caches: $(jq '.actions_caches | length' caches.json)"
+          cat caches.json | jq '.actions_caches[] | {id, key, created_at, last_accessed_at, size_in_bytes}' | head -20
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete caches older than 7 days
+        run: |
+          echo "## Cache Cleanup Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Cleanup Date:** $(date -u)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Calculate date 7 days ago
+          CUTOFF_DATE=$(date -u -d '7 days ago' +%Y-%m-%dT%H:%M:%SZ)
+          echo "Deleting caches older than: $CUTOFF_DATE"
+          echo "**Cutoff Date:** $CUTOFF_DATE" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          DELETED_COUNT=0
+          DELETED_SIZE=0
+
+          # Read cache IDs and delete old ones
+          jq -r --arg cutoff "$CUTOFF_DATE" \
+            '.actions_caches[] | select(.last_accessed_at < $cutoff) | @json' \
+            caches.json | while read -r cache; do
+
+            CACHE_ID=$(echo "$cache" | jq -r '.id')
+            CACHE_KEY=$(echo "$cache" | jq -r '.key')
+            CACHE_SIZE=$(echo "$cache" | jq -r '.size_in_bytes')
+            LAST_ACCESSED=$(echo "$cache" | jq -r '.last_accessed_at')
+
+            echo "Deleting cache: $CACHE_KEY (ID: $CACHE_ID, Size: $CACHE_SIZE bytes)"
+
+            gh api \
+              --method DELETE \
+              -H "Accept: application/vnd.github+json" \
+              /repos/${{ github.repository }}/actions/caches/$CACHE_ID || true
+
+            DELETED_COUNT=$((DELETED_COUNT + 1))
+            DELETED_SIZE=$((DELETED_SIZE + CACHE_SIZE))
+
+            echo "- \`$CACHE_KEY\` ($(numfmt --to=iec $CACHE_SIZE), last accessed: $LAST_ACCESSED)" >> $GITHUB_STEP_SUMMARY
+          done
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Total Deleted:** $DELETED_COUNT caches" >> $GITHUB_STEP_SUMMARY
+          echo "**Space Freed:** $(numfmt --to=iec $DELETED_SIZE)" >> $GITHUB_STEP_SUMMARY
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete caches from closed PRs
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Cleaning PR Branch Caches" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          DELETED_PR_COUNT=0
+
+          # Get list of closed/merged PRs
+          gh pr list --state closed --limit 100 --json number,headRefName | \
+            jq -r '.[] | .headRefName' | while read -r branch; do
+
+            echo "Checking caches for closed PR branch: $branch"
+
+            # Find and delete caches for this branch
+            jq -r --arg branch "refs/pull/$branch" \
+              '.actions_caches[] | select(.ref == $branch or (.key | contains($branch))) | .id' \
+              caches.json | while read -r cache_id; do
+
+              if [ -n "$cache_id" ]; then
+                CACHE_KEY=$(jq -r --arg id "$cache_id" '.actions_caches[] | select(.id == ($id | tonumber)) | .key' caches.json)
+
+                echo "Deleting PR cache: $CACHE_KEY (ID: $cache_id)"
+
+                gh api \
+                  --method DELETE \
+                  -H "Accept: application/vnd.github+json" \
+                  /repos/${{ github.repository }}/actions/caches/$cache_id || true
+
+                DELETED_PR_COUNT=$((DELETED_PR_COUNT + 1))
+                echo "- \`$CACHE_KEY\`" >> $GITHUB_STEP_SUMMARY
+              fi
+            done
+          done
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**PR Caches Deleted:** $DELETED_PR_COUNT" >> $GITHUB_STEP_SUMMARY
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Display remaining caches
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Remaining Cache Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Fetch updated cache list
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/actions/caches \
+            --paginate > remaining_caches.json
+
+          REMAINING_COUNT=$(jq '.actions_caches | length' remaining_caches.json)
+          TOTAL_SIZE=$(jq '[.actions_caches[].size_in_bytes] | add' remaining_caches.json)
+
+          echo "**Remaining Caches:** $REMAINING_COUNT" >> $GITHUB_STEP_SUMMARY
+          echo "**Total Size:** $(numfmt --to=iec $TOTAL_SIZE) / 10 GB (GitHub Pro+ limit)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Show top 10 largest caches
+          echo "#### Top 10 Largest Caches" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Cache Key | Size | Last Accessed |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|------|---------------|" >> $GITHUB_STEP_SUMMARY
+
+          jq -r '.actions_caches | sort_by(.size_in_bytes) | reverse | .[0:10] | .[] |
+            "\(.key) | \(.size_in_bytes | tostring) bytes | \(.last_accessed_at)"' \
+            remaining_caches.json | while read -r line; do
+
+            KEY=$(echo "$line" | cut -d'|' -f1 | xargs)
+            SIZE=$(echo "$line" | cut -d'|' -f2 | xargs | cut -d' ' -f1)
+            ACCESSED=$(echo "$line" | cut -d'|' -f3 | xargs)
+            SIZE_HUMAN=$(numfmt --to=iec $SIZE)
+
+            echo "| \`$KEY\` | $SIZE_HUMAN | $ACCESSED |" >> $GITHUB_STEP_SUMMARY
+          done
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "🧹 *Automated cache cleanup completed*" >> $GITHUB_STEP_SUMMARY
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  cleanup-old-artifacts:
+    name: Cleanup Old Artifacts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Delete artifacts older than 30 days
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const cutoffDate = new Date();
+            cutoffDate.setDate(cutoffDate.getDate() - 30);
+
+            const artifacts = await github.paginate(
+              github.rest.actions.listArtifactsForRepo,
+              {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                per_page: 100
+              }
+            );
+
+            let deletedCount = 0;
+            let deletedSize = 0;
+
+            for (const artifact of artifacts) {
+              const createdAt = new Date(artifact.created_at);
+
+              if (createdAt < cutoffDate) {
+                console.log(`Deleting artifact: ${artifact.name} (${artifact.size_in_bytes} bytes)`);
+
+                await github.rest.actions.deleteArtifact({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  artifact_id: artifact.id
+                });
+
+                deletedCount++;
+                deletedSize += artifact.size_in_bytes;
+              }
+            }
+
+            const summary = `## Artifact Cleanup Report
+
+**Artifacts Deleted:** ${deletedCount}
+**Space Freed:** ${(deletedSize / 1024 / 1024).toFixed(2)} MB
+
+Artifacts older than 30 days have been removed.
+`;
+
+            await core.summary.addRaw(summary).write();

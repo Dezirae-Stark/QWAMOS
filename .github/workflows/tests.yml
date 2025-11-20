@@ -17,23 +17,32 @@ on:
     # Run tests every day at 2 AM UTC
     - cron: '0 2 * * *'
 
+# GitHub Pro+ feature: Limit concurrent workflow runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   PYTHON_VERSION: '3.11'
   JAVA_VERSION: '17'
 
 jobs:
   python-unit-tests:
-    name: Python Unit Tests
-    runs-on: ubuntu-latest  # Standard runner (4-core runners need org config)
+    name: Python ${{ matrix.python-version }} Unit Tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          python-version: ${{ matrix.python-version }}
           cache: 'pip'
           cache-dependency-path: |
             tests/requirements.txt
@@ -43,9 +52,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ env.PYTHON_VERSION }}-${{ hashFiles('tests/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('tests/requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-pip-${{ env.PYTHON_VERSION }}-
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
             ${{ runner.os }}-pip-
 
       - name: Install dependencies
@@ -71,28 +80,32 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: python-unit-test-results
+          name: python-${{ matrix.python-version }}-unit-test-results
           path: tests/results/junit-unit.xml
 
       - name: Upload coverage reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: python-coverage-report
+          name: python-${{ matrix.python-version }}-coverage-report
           path: tests/coverage/
 
   python-integration-tests:
-    name: Python Integration Tests
-    runs-on: ubuntu-latest  # Standard runner (4-core runners need org config)
+    name: Python ${{ matrix.python-version }} Integration Tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          python-version: ${{ matrix.python-version }}
           cache: 'pip'
           cache-dependency-path: |
             tests/requirements.txt
@@ -102,9 +115,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ env.PYTHON_VERSION }}-${{ hashFiles('tests/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('tests/requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-pip-${{ env.PYTHON_VERSION }}-
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
             ${{ runner.os }}-pip-
 
       - name: Install dependencies
@@ -129,7 +142,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: python-integration-test-results
+          name: python-${{ matrix.python-version }}-integration-test-results
           path: tests/results/junit-integration.xml
 
   android-tests:
@@ -188,38 +201,49 @@ jobs:
   coverage-report:
     name: Generate Coverage Report
     needs: [python-unit-tests, python-integration-tests]
-    runs-on: ubuntu-latest  # Standard runner (4-core runners need org config)
+    runs-on: ubuntu-latest
     if: always()
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download coverage artifacts
+      - name: Download all coverage artifacts
         uses: actions/download-artifact@v4
         with:
-          name: python-coverage-report
+          pattern: python-*-coverage-report
           path: coverage/
+          merge-multiple: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install coverage tools
+        run: pip install coverage
 
       - name: Display coverage summary
         run: |
-          if [ -f coverage/coverage.xml ]; then
-            echo "Coverage report found"
-            # Display coverage percentage
-            if command -v coverage &> /dev/null; then
-              coverage report
+          echo "## Coverage Reports" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          for version in 3.10 3.11 3.12; do
+            coverage_file="coverage/python-${version}-coverage-report/coverage.xml"
+            if [ -f "$coverage_file" ]; then
+              echo "### Python ${version} Coverage" >> $GITHUB_STEP_SUMMARY
+              echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+              echo "Coverage file: $coverage_file" >> $GITHUB_STEP_SUMMARY
+              echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
             fi
-          else
-            echo "No coverage report found"
-          fi
+          done
 
       - name: Upload combined coverage to Codecov
         uses: codecov/codecov-action@v4
-        if: hashFiles('coverage/coverage.xml') != ''
         with:
-          files: coverage/coverage.xml
+          directory: coverage/
           flags: unittests
-          name: qwamos-coverage
+          name: qwamos-coverage-matrix
           fail_ci_if_error: false
 
   test-summary:
