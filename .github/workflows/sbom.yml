@@ -4,15 +4,16 @@
 name: SBOM Generation
 
 on:
-  # Trigger on push to master
-  push:
-    branches:
-      - master
-    paths-ignore:
-      - 'docs/**'
-      - '**.md'
-      - '.github/workflows/doc-sync.yml'
-      - '.github/workflows/lint.yml'
+  # Disabled push trigger due to branch protection rules
+  # SBOM commits would be rejected by required status checks
+  # push:
+  #   branches:
+  #     - master
+  #   paths-ignore:
+  #     - 'docs/**'
+  #     - '**.md'
+  #     - '.github/workflows/doc-sync.yml'
+  #     - '.github/workflows/lint.yml'
 
   # Trigger on release creation
   release:

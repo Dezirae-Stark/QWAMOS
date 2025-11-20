@@ -227,3 +227,4 @@ Artifacts older than 30 days have been removed.
 `;
 
             await core.summary.addRaw(summary).write();
+
