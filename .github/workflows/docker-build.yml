@@ -225,7 +225,7 @@ jobs:
 
       - name: Start build container
         run: |
-          docker-compose -f docker/docker-compose.yml up -d qbuild
+          docker compose -f docker/docker-compose.yml up -d qbuild
           sleep 5
 
       - name: Run test script
@@ -252,7 +252,7 @@ jobs:
       - name: Stop containers
         if: always()
         run: |
-          docker-compose -f docker/docker-compose.yml down
+          docker compose -f docker/docker-compose.yml down
 
   # Job 4: Security scan of Docker images
   security-scan:

@@ -41,9 +41,9 @@ start_build_container() {
     docker stop qwamos-build 2>/dev/null || true
     docker rm qwamos-build 2>/dev/null || true
 
-    # Start container with docker-compose
+    # Start container with docker compose
     cd "$DOCKER_DIR"
-    docker-compose up -d qbuild
+    docker compose up -d qbuild
 
     echo -e "${GREEN}✓ Build container started${NC}"
     echo ""
@@ -162,7 +162,7 @@ main() {
     echo "  docker exec -it qwamos-build /bin/bash"
     echo ""
     echo "To stop build container:"
-    echo "  docker-compose -f docker/docker-compose.yml down"
+    echo "  docker compose -f docker/docker-compose.yml down"
     echo ""
 }
 

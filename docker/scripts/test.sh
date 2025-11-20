@@ -44,7 +44,7 @@ ensure_container() {
     if ! docker ps | grep -q qwamos-build; then
         echo "Starting build container..."
         cd "$DOCKER_DIR"
-        docker-compose up -d qbuild
+        docker compose up -d qbuild
         sleep 2
     fi
 }
