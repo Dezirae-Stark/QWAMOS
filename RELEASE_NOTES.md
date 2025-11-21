@@ -330,7 +330,7 @@ Available at: `gpg_public_key.asc` in repository
 See [GitHub Issues](https://github.com/Dezirae-Stark/QWAMOS/issues) for current bugs and feature requests.
 
 **To report issues:**
-- Security vulnerabilities: clockwork.halo@tutanota.de (PGP encrypted)
+- Security vulnerabilities: qwamos@tutanota.com (PGP encrypted)
 - Bugs: GitHub Issues
 - Questions: See [SUPPORT.md](SUPPORT.md)
 
@@ -369,7 +369,7 @@ See [LICENSE](LICENSE) for full text.
 
 **Dezirae Stark**
 - Organization: First Sterling Capital, LLC
-- Email: clockwork.halo@tutanota.de
+- Email: qwamos@tutanota.com
 - GitHub: https://github.com/Dezirae-Stark
 - Repository: https://github.com/Dezirae-Stark/QWAMOS
 

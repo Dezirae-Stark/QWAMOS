@@ -27,7 +27,7 @@
 - Response time: 1-3 business days
 
 **Email Support:**
-- Email: clockwork.halo@tutanota.de
+- Email: qwamos@tutanota.com
 - Use for: Private issues, security concerns
 - Response time: 3-7 business days
 
@@ -665,7 +665,7 @@ We welcome feature requests! Please use the GitHub issue template and include:
 ## Contact Support
 
 **GitHub Issues:** https://github.com/Dezirae-Stark/QWAMOS/issues
-**Email:** clockwork.halo@tutanota.de
+**Email:** qwamos@tutanota.com
 **Security Issues:** See [SECURITY.md](SECURITY.md)
 
 ---

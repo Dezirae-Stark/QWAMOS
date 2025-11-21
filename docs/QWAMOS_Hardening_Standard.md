@@ -530,7 +530,7 @@ journalctl -u nftables --since "7 days ago" | grep DROP
 5. **Report:** Document incident in `docs/INCIDENT_REPORTS.md`
 
 **Escalation:**
-- Critical incidents: Contact security team (clockwork.halo@tutanota.de)
+- Critical incidents: Contact security team (qwamos@tutanota.com)
 - Suspected nation-state attack: Activate panic wipe if necessary
 - Data breach: Follow data breach notification laws
 

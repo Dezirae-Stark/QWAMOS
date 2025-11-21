@@ -1851,7 +1851,7 @@ See [SUPPLYCHAIN.md](SUPPLYCHAIN.md) for complete build instructions and depende
 
 If you discover a security vulnerability in QWAMOS, please report it responsibly.
 
-- **Contact:** clockwork.halo@tutanota.de
+- **Contact:** qwamos@tutanota.com
 - **PGP Fingerprint:** `18C4E89E37D5ECD392F52E85269CD0658D8BD942DCF33BE4E37CC94933E4C4D2`
 - **Response Timeline:**
   - Acknowledgment: Within 7 days
@@ -1900,7 +1900,7 @@ QWAMOS is developed and maintained by **First Sterling Capital, LLC**, under AGP
 
 - **GitHub:** https://github.com/Dezirae-Stark/QWAMOS
 - **Issues:** https://github.com/Dezirae-Stark/QWAMOS/issues
-- **Email:** clockwork.halo@tutanota.de
+- **Email:** qwamos@tutanota.com
 
 ---
 
@@ -1911,7 +1911,7 @@ QWAMOS is developed and maintained by **First Sterling Capital, LLC**, under AGP
 ---
 
 © 2025 First Sterling Capital, LLC · Author: Dezirae Stark
-Version 1.1.0 · [Contact](mailto:clockwork.halo@tutanota.de)
+Version 1.1.0 · [Contact](mailto:qwamos@tutanota.com)
 
 ---
 

@@ -641,7 +641,7 @@ All dependencies are tracked in this document. Changes to dependencies require:
 
 If you discover a dependency mismatch or security issue:
 
-1. **Email:** clockwork.halo@tutanota.de
+1. **Email:** qwamos@tutanota.com
 2. **Subject:** `[SUPPLY CHAIN] Issue description`
 3. **Include:**
    - Affected dependency name and version

@@ -196,7 +196,7 @@ If You have questions about this CLA, please contact:
 
 **QWAMOS Project Maintainer**
 First Sterling Capital, LLC
-**Email:** clockwork.halo@tutanota.de (PGP encryption encouraged)
+**Email:** qwamos@tutanota.com (PGP encryption encouraged)
 **GitHub Issues:** https://github.com/Dezirae-Stark/QWAMOS/issues (non-legal questions only)
 
 **PGP Public Key Fingerprint:**

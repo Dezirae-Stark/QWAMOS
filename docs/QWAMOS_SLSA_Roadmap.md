@@ -286,7 +286,7 @@ SLSA Level 4 represents the highest assurance level and requires:
 
 ### Contact
 For questions regarding SLSA compliance or supply chain security:
-- **Email:** clockwork.halo@tutanota.de (PGP encrypted preferred)
+- **Email:** qwamos@tutanota.com (PGP encrypted preferred)
 - **GitHub Issues:** https://github.com/Dezirae-Stark/QWAMOS/issues (non-sensitive only)
 
 ---

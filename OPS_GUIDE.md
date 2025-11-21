@@ -534,7 +534,7 @@ git fetch origin
 git tag -v v1.0.1-qbamos-gold
 
 # Should show:
-# gpg: Good signature from "Dezirae Stark <clockwork.halo@tutanota.de>"
+# gpg: Good signature from "Dezirae Stark <qwamos@tutanota.com>"
 
 # 3. Checkout new version
 git checkout v1.0.1-qbamos-gold
@@ -755,7 +755,7 @@ See [SUPPORT.md](SUPPORT.md) for detailed troubleshooting procedures.
 
 ---
 
-**Questions or issues? Email:** clockwork.halo@tutanota.de
+**Questions or issues? Email:** qwamos@tutanota.com
 
 ---
 

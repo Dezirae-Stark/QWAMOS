@@ -194,7 +194,7 @@ For security audit inquiries, please contact:
 
 **Primary Contact:**
 - **Name:** Dezirae Stark
-- **Email:** clockwork.halo@tutanota.de (PGP encrypted preferred)
+- **Email:** qwamos@tutanota.com (PGP encrypted preferred)
 - **Organization:** First Sterling Capital, LLC
 - **Role:** Lead Developer & Security Architect
 
@@ -304,4 +304,4 @@ pandoc docs/QWAMOS_Security_Audit_Readiness_Certificate.md \
 
 ---
 
-*This certificate is provided in good faith to support security research and independent verification. For questions or clarifications, please contact clockwork.halo@tutanota.de.*
+*This certificate is provided in good faith to support security research and independent verification. For questions or clarifications, please contact qwamos@tutanota.com.*

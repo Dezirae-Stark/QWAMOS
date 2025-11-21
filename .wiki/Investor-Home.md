@@ -168,7 +168,7 @@ The result is the first true intelligence-grade, offensive-resilient, mobile hyp
 Founder & Lead Developer
 First Sterling Capital, LLC
 
-**Email:** clockwork.halo@tutanota.de
+**Email:** qwamos@tutanota.com
 **GitHub:** https://github.com/Dezirae-Stark/QWAMOS
 **Website:** https://dezirae-stark.github.io/QWAMOS/
 

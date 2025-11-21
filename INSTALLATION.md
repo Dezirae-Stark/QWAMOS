@@ -477,7 +477,7 @@ cd ../magisk-module
 ## Support
 
 **GitHub Issues:** https://github.com/Dezirae-Stark/QWAMOS/issues
-**Email:** clockwork.halo@tutanota.de
+**Email:** qwamos@tutanota.com
 **Documentation:**
 - OPS_GUIDE.md (Operational procedures)
 - SUPPORT.md (Troubleshooting)
