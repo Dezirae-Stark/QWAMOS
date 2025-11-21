@@ -1,0 +1,1 @@
+QWAMOS is a post-quantum secure mobile hypervisor OS for ARM64 that isolates each OS and activity into hardened virtual machine domains.

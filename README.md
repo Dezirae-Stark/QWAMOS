@@ -35,6 +35,16 @@
 
 ---
 
+## What is QWAMOS?
+
+**QWAMOS is the world's first mobile hypervisor OS** — a post-quantum secure, compartmentalized operating system that turns any ARM64 phone into a Qubes-style environment. Android, GrapheneOS, Kali, Arch, and Ubuntu run as isolated VMs, each with its own encrypted domain and anonymized network identity. QWAMOS provides intelligence-grade security on commercial hardware.
+
+### Developer Summary
+
+**QWAMOS is a post-quantum secure mobile hypervisor OS for ARM64 devices.** It boots as its own operating system, isolates every activity into Qubes-style VMs, and runs Android/GrapheneOS/Kali/etc. as guest systems. All traffic flows through a Whonix-inspired anonymity gateway, and Kyber + ChaCha20 ensure cryptographic resilience.
+
+---
+
 ### 🎬 Watch QWAMOS in Action
 
 ![QWAMOS Promotional Demo](assets/demo-video/QWAMOS_promo.gif)
