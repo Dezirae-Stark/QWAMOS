@@ -34,10 +34,19 @@
 
   <section class="section">
     <div class="container">
+      <!-- Official Definition -->
       <div class="glass-panel mb-4 animate-on-scroll" style="padding: 2rem;">
-        <h3 style="color: var(--neon-cyan); margin-bottom: 1rem;">About QWAMOS</h3>
+        <h3 style="color: var(--neon-cyan); margin-bottom: 1rem;">What is QWAMOS?</h3>
+        <p style="color: var(--text-secondary); line-height: 1.8; font-size: 1.05rem;">
+          QWAMOS (Qubes+Whonix Advanced Mobile OS) is a post-quantum secure, ARM64-native mobile hypervisor operating system that runs directly on mobile hardware and provides full virtual machine isolation for all digital activities. Instead of functioning as an Android platform or custom ROM, QWAMOS is its own operating system: it controls the hardware, enforces hypervisor-level domain separation, and routes all traffic through a hardened, Whonix-style gateway that combines Tor, I2P, DNSCrypt, and multi-path VPN. Android, GrapheneOS, Kali NetHunter, Arch Linux, Ubuntu, and other systems run as isolated guest VMs (Qubes) inside QWAMOS, each with per-VM firewalls, encrypted storage, and independent network identities. QWAMOS integrates Kyber-based post-quantum cryptography, ChaCha20/Poly1305 stream encryption, sealed audit logs, panic-wipe gestures, containerized system services, and a modular virtualization stack (KVM/QEMU/PRoot/Chroot) to create a fully compartmentalized, offensive-resilient, privacy-first mobile hypervisor OS designed for intelligence-grade security on everyday hardware.
+        </p>
+      </div>
+
+      <!-- Bootstrap Installer Explanation -->
+      <div class="glass-panel mb-4 animate-on-scroll" style="padding: 2rem;">
+        <h3 style="color: var(--neon-cyan); margin-bottom: 1rem;">Bootstrap Installation</h3>
         <p style="color: var(--text-secondary); line-height: 1.8;">
-          QWAMOS is a mobile hypervisor OS for ARM64 devices. Current alpha builds are delivered via an Android-compatible bootstrap installer (APK + Termux tooling), which deploys the QWAMOS core and prepares the device to host multiple guest operating systems (Android, GrapheneOS, Kali, Arch, Ubuntu, etc.) inside isolated VMs.
+          QWAMOS is a bare-metal mobile hypervisor OS. Current alpha builds are delivered via an Android-compatible bootstrap installer (APK + Termux provisioning) that deploys the QWAMOS core and prepares the device to host multiple guest operating systems.
         </p>
       </div>
 

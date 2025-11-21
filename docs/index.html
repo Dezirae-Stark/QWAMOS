@@ -56,6 +56,18 @@
     </div>
   </section>
 
+  <!-- Official Definition -->
+  <section class="section" style="padding-top: 2rem; padding-bottom: 2rem;">
+    <div class="container">
+      <div class="glass-panel animate-on-scroll" style="padding: 2rem;">
+        <h2 class="neon-underline" style="margin-bottom: 1.5rem;">What is QWAMOS?</h2>
+        <p style="color: var(--text-secondary); line-height: 1.8; font-size: 1.05rem;">
+          QWAMOS (Qubes+Whonix Advanced Mobile OS) is a post-quantum secure, ARM64-native mobile hypervisor operating system that runs directly on mobile hardware and provides full virtual machine isolation for all digital activities. Instead of functioning as an Android platform or custom ROM, QWAMOS is its own operating system: it controls the hardware, enforces hypervisor-level domain separation, and routes all traffic through a hardened, Whonix-style gateway that combines Tor, I2P, DNSCrypt, and multi-path VPN. Android, GrapheneOS, Kali NetHunter, Arch Linux, Ubuntu, and other systems run as isolated guest VMs (Qubes) inside QWAMOS, each with per-VM firewalls, encrypted storage, and independent network identities. QWAMOS integrates Kyber-based post-quantum cryptography, ChaCha20/Poly1305 stream encryption, sealed audit logs, panic-wipe gestures, containerized system services, and a modular virtualization stack (KVM/QEMU/PRoot/Chroot) to create a fully compartmentalized, offensive-resilient, privacy-first mobile hypervisor OS designed for intelligence-grade security on everyday hardware.
+        </p>
+      </div>
+    </div>
+  </section>
+
   <!-- Features Overview -->
   <section class="section">
     <div class="container">
@@ -153,7 +165,7 @@
             <li>✓ PRoot containerization</li>
             <li>✓ Chroot jails</li>
             <li>✓ Debian ARM64 userland</li>
-            <li>✓ Android HAL integration</li>
+            <li>✓ Guest VM hardware integration</li>
           </ul>
         </div>
 
