@@ -271,12 +271,6 @@ _Showcases system architecture, post-quantum encryption, VM isolation, and secur
 
 ---
 
-### 📸 Additional Screenshots
-
-*(Screenshots section content from original README will be preserved here)*
-
----
-
 ## Investor Summary
 
 ### Problem Statement
