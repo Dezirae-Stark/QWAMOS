@@ -42,6 +42,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           configurationFile: renovate.json
+          docker-volumes: /tmp:/tmp
         env:
           # Renovate configuration
           RENOVATE_PLATFORM: github
@@ -52,7 +53,7 @@ jobs:
 
           # Logging
           LOG_LEVEL: ${{ env.LOG_LEVEL }}
-          RENOVATE_LOG_FILE: renovate-log.json
+          RENOVATE_LOG_FILE: /tmp/renovate-log.json
           RENOVATE_LOG_FILE_LEVEL: debug
 
           # Dry run mode
@@ -91,8 +92,8 @@ jobs:
         with:
           name: renovate-logs
           path: |
-            renovate-log.json
-            renovate-debug.log
+            /tmp/renovate-log.json
+            /tmp/renovate-debug.log
           retention-days: 30
           if-no-files-found: ignore
 
@@ -108,12 +109,12 @@ jobs:
           echo "- **Dry run**: ${{ env.RENOVATE_DRY_RUN }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          if [ -f renovate-log.json ]; then
+          if [ -f /tmp/renovate-log.json ]; then
             echo "✅ Renovate completed successfully" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "### Log Summary" >> $GITHUB_STEP_SUMMARY
             echo '```json' >> $GITHUB_STEP_SUMMARY
-            cat renovate-log.json | jq '.[] | select(.level == "error" or .level == "warn")' | head -20 >> $GITHUB_STEP_SUMMARY || true
+            cat /tmp/renovate-log.json | jq '.[] | select(.level == "error" or .level == "warn")' | head -20 >> $GITHUB_STEP_SUMMARY || true
             echo '```' >> $GITHUB_STEP_SUMMARY
           else
             echo "⚠️ Renovate log not found" >> $GITHUB_STEP_SUMMARY
