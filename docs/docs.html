@@ -37,31 +37,44 @@
       <div class="glass-panel mb-4 animate-on-scroll">
         <h2 class="neon-underline">Architecture Overview</h2>
         <pre style="background: rgba(0,0,0,0.5); padding: 1.5rem; border-radius: 8px; overflow-x: auto; color: var(--neon-cyan); line-height: 1.8;">
-┌─────────────────────────────────────────┐
-│         Android Application Layer        │
-├─────────────────────────────────────────┤
-│         QWAMOS Security Manager          │
-│  ┌───────────┬──────────┬─────────────┐ │
-│  │   Kyber   │ ChaCha20 │   BLAKE3    │ │
-│  │   KEM     │ Poly1305 │   Hash      │ │
-│  └───────────┴──────────┴─────────────┘ │
-├─────────────────────────────────────────┤
-│       Virtualization Layer (QEMU)        │
-│  ┌──────┬──────┬──────┬──────┬──────┐  │
-│  │ VM 1 │ VM 2 │ VM 3 │ VM 4 │ VM 5 │  │
-│  └──────┴──────┴──────┴──────┴──────┘  │
-├─────────────────────────────────────────┤
-│      PRoot Containers / Chroot Jails     │
-├─────────────────────────────────────────┤
-│    Network Gateway (InviZible Pro)       │
-│  ┌──────┬──────┬──────────┬──────────┐ │
-│  │ Tor  │ I2P  │ DNSCrypt │   VPN    │ │
-│  └──────┴──────┴──────────┴──────────┘ │
-├─────────────────────────────────────────┤
-│      Debian ARM64 Userland + KVM         │
-├─────────────────────────────────────────┤
-│   Hardened Android Kernel (Linux 6.x)    │
-└─────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────┐
+│  Guest OS Application Layer                         │
+│  (Android / GrapheneOS / Kali / Arch / Ubuntu)      │
+├─────────────────────────────────────────────────────┤
+│  Isolated Qubes (Per-VM Domains)                    │
+│  ┌────────┬────────┬────────┬────────┬────────┐    │
+│  │ Qube 1 │ Qube 2 │ Qube 3 │ Qube 4 │ Qube 5 │    │
+│  │Android │GraphOS │  Kali  │  Arch  │ Ubuntu │    │
+│  └────────┴────────┴────────┴────────┴────────┘    │
+├─────────────────────────────────────────────────────┤
+│  QWAMOS Security Manager                            │
+│  ┌──────────┬──────────┬──────────┬─────────────┐  │
+│  │  Kyber   │ ChaCha20 │  BLAKE3  │  Dilithium  │  │
+│  │  KEM     │ Poly1305 │   Hash   │  Signature  │  │
+│  └──────────┴──────────┴──────────┴─────────────┘  │
+├─────────────────────────────────────────────────────┤
+│  Virtualization Layer (QEMU/KVM + PRoot/Chroot)     │
+│  ┌─────────────────────────────────────────────┐   │
+│  │  Per-VM Memory Isolation & CPU Scheduling   │   │
+│  └─────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────┤
+│  Network Gateway (InviZible Pro: Tor, I2P,          │
+│                   DNSCrypt, VPN)                    │
+│  ┌──────┬──────┬──────────┬──────────┬─────────┐  │
+│  │ Tor  │ I2P  │ DNSCrypt │   VPN    │ Netfilter│  │
+│  └──────┴──────┴──────────┴──────────┴─────────┘  │
+├─────────────────────────────────────────────────────┤
+│  QWAMOS Core OS                                     │
+│  (Hardened Linux + Hypervisor Layer)                │
+│  • Mandatory Access Controls (SELinux/AppArmor)    │
+│  • Verified Boot Chain                             │
+│  • Kernel Hardening (grsecurity patches)           │
+├─────────────────────────────────────────────────────┤
+│  Mobile Hardware (ARM64 SoC)                        │
+│  • CPU: ARM Cortex-A/X series                      │
+│  • Secure Element / TrustZone                      │
+│  • Hardware Crypto Acceleration                    │
+└─────────────────────────────────────────────────────┘
         </pre>
       </div>
 

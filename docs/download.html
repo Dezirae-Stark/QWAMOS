@@ -34,6 +34,13 @@
 
   <section class="section">
     <div class="container">
+      <div class="glass-panel mb-4 animate-on-scroll" style="padding: 2rem;">
+        <h3 style="color: var(--neon-cyan); margin-bottom: 1rem;">About QWAMOS</h3>
+        <p style="color: var(--text-secondary); line-height: 1.8;">
+          QWAMOS is a mobile hypervisor OS for ARM64 devices. Current alpha builds are delivered via an Android-compatible bootstrap installer (APK + Termux tooling), which deploys the QWAMOS core and prepares the device to host multiple guest operating systems (Android, GrapheneOS, Kali, Arch, Ubuntu, etc.) inside isolated VMs.
+        </p>
+      </div>
+
       <div class="glass-panel text-center mb-4 animate-on-scroll">
         <h2>Latest Release: v1.0.0-alpha</h2>
         <p style="color: var(--text-secondary); margin: 1rem 0;">Released: 2024-01-01</p>
@@ -47,6 +54,7 @@
           <h3 class="neon-underline">Installation Methods</h3>
           <h4 style="margin-top: 1.5rem;">Method 1: Direct APK</h4>
           <pre style="background: rgba(0,0,0,0.5); padding: 1rem; border-radius: 8px; overflow-x: auto; color: var(--neon-cyan);">
+# This APK is a bootstrap installer for the QWAMOS hypervisor OS.
 # Enable unknown sources in Android settings
 adb install qwamos-release-v1.0.0.apk
           </pre>
@@ -78,13 +86,16 @@ sha256sum qwamos-release-v1.0.0.apk
       <div class="glass-panel mt-4 animate-on-scroll">
         <h3 class="neon-underline">System Requirements</h3>
         <ul style="color: var(--text-secondary); line-height: 2;">
-          <li>Android 8.0 (API 26) or higher</li>
-          <li>ARM64 (aarch64) processor</li>
-          <li>Minimum 4GB RAM (8GB recommended)</li>
-          <li>10GB free storage</li>
-          <li>Root access (optional but recommended)</li>
-          <li>Termux installed for full features</li>
+          <li><strong>Hardware:</strong> ARM64 (aarch64) mobile SoC</li>
+          <li><strong>Bootstrap Environment:</strong> Current alpha builds deploy via an Android-compatible bootstrap (Android 8.0+ firmware + Termux)</li>
+          <li><strong>RAM:</strong> Minimum 4GB (8GB recommended for multiple guest VMs)</li>
+          <li><strong>Storage:</strong> 10GB free storage (20GB+ recommended for multiple guest OSes)</li>
+          <li><strong>Root Access:</strong> Optional but recommended for full hypervisor capabilities</li>
+          <li><strong>Termux:</strong> Required for bootstrap deployment and QWAMOS core installation</li>
         </ul>
+        <p style="color: var(--text-secondary); margin-top: 1rem; font-style: italic;">
+          Note: Future releases will support direct bare-metal installation on supported ARM64 devices.
+        </p>
       </div>
     </div>
   </section>
