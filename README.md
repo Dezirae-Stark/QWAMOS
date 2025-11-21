@@ -641,7 +641,7 @@ QWAMOS is a **bare-metal mobile hypervisor OS** that runs directly on ARM64 hard
 │  └──────┴──────┴──────────┴──────────┘ │
 ├─────────────────────────────────────────┤
 │          QWAMOS Core OS                 │
-│   (Hardened Linux + Hypervisor Layer)   │
+│ (Hardened Linux Kernel + Hypervisor)    │
 ├─────────────────────────────────────────┤
 │         Mobile Hardware (ARM64)         │
 └─────────────────────────────────────────┘
