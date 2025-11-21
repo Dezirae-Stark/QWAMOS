@@ -267,7 +267,7 @@ jobs:
             git status --short
           fi
 
-      - name: Commit and push changes
+      - name: Commit and create pull request
         if: steps.check_changes.outputs.has_changes == 'true' || github.event.inputs.force_sync == 'true'
         run: |
           # Add all documentation changes
@@ -300,37 +300,25 @@ jobs:
             exit 0
           }
 
-          # Pull latest changes and rebase
-          echo "Pulling latest changes..."
-          git pull --rebase origin master || {
-            echo "Rebase failed, attempting merge with conflict resolution..."
-            git rebase --abort
+          # Create a unique branch name
+          BRANCH_NAME="docs-sync-$(date +%Y%m%d-%H%M%S)"
+          git checkout -b "$BRANCH_NAME"
 
-            # Try merge with strategy to prefer our changes (we're the source of truth for docs)
-            git pull --no-rebase --strategy-option=ours origin master || {
-              echo "Merge with strategy failed, resolving conflicts manually..."
+          # Push branch
+          echo "Pushing changes to branch $BRANCH_NAME..."
+          git push origin "$BRANCH_NAME"
 
-              # Accept our version for all conflicts (doc sync is authoritative)
-              git checkout --ours .
-              git add -A
+          # Create pull request using GitHub CLI
+          echo "Creating pull request..."
+          gh pr create \
+            --title "docs: Automated documentation sync" \
+            --body "$(cat /tmp/commit-msg.txt)" \
+            --base master \
+            --head "$BRANCH_NAME" \
+            --label "documentation,automated" \
+            || echo "Pull request already exists or creation failed"
 
-              # Check if there are any remaining conflicts
-              if git diff --name-only --diff-filter=U | grep -q .; then
-                echo "Error: Unable to resolve all conflicts automatically"
-                git status
-                exit 1
-              fi
-
-              # Complete the merge
-              git commit --no-edit || echo "No merge commit needed"
-            }
-          }
-
-          # Push changes
-          echo "Pushing changes to master..."
-          git push origin master
-
-          echo "Documentation sync complete!"
+          echo "Documentation sync complete! Pull request created."
 
       - name: Upload link validation report
         if: always()

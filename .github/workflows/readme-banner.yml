@@ -79,6 +79,9 @@ jobs:
       - name: Generate QWAMOS banner
         id: generate_banner
         run: |
+          # Create scripts directory first
+          mkdir -p scripts
+
           cat > scripts/generate_banner.py << 'PYSCRIPT'
           #!/usr/bin/env python3
           """
@@ -209,7 +212,6 @@ jobs:
           chmod +x scripts/generate_banner.py
 
           # Run banner generation
-          mkdir -p scripts
           python3 scripts/generate_banner.py
 
           if [ -f assets/banner.png ]; then
@@ -350,7 +352,7 @@ jobs:
             git status --short
           fi
 
-      - name: Commit and push changes
+      - name: Commit and create pull request
         if: steps.check_changes.outputs.has_changes == 'true'
         run: |
           git config user.name "github-actions[bot]"
@@ -384,11 +386,25 @@ jobs:
           # Commit
           git commit -F /tmp/banner-commit-msg.txt
 
-          # Push
-          echo "Pushing changes to master..."
-          git push origin master
+          # Create a unique branch name
+          BRANCH_NAME="banner-update-$(date +%Y%m%d-%H%M%S)"
+          git checkout -b "$BRANCH_NAME"
 
-          echo "Banner and badges updated successfully!"
+          # Push branch
+          echo "Pushing changes to branch $BRANCH_NAME..."
+          git push origin "$BRANCH_NAME"
+
+          # Create pull request using GitHub CLI
+          echo "Creating pull request..."
+          gh pr create \
+            --title "docs: Auto-generate README banner and badges" \
+            --body "$(cat /tmp/banner-commit-msg.txt)" \
+            --base master \
+            --head "$BRANCH_NAME" \
+            --label "documentation,automated" \
+            || echo "Pull request already exists or creation failed"
+
+          echo "Banner and badges updated successfully! Pull request created."
 
       - name: Upload banner artifact
         if: always()
