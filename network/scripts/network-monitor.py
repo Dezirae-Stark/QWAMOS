@@ -82,6 +82,10 @@ class NetworkMonitor:
         # Load previous state if exists
         self._load_state()
 
+        # CRITICAL SECURITY: Pre-load kill switch rules at startup
+        # This eliminates race condition during activation
+        self._load_killswitch_rules()
+
         # Setup signal handlers
         signal.signal(signal.SIGTERM, self._handle_signal)
         signal.signal(signal.SIGINT, self._handle_signal)
@@ -330,30 +334,104 @@ class NetworkMonitor:
         except Exception as e:
             self.logger.error(f"Firewall check failed: {e}")
 
+    def _load_killswitch_rules(self):
+        """Pre-load kill switch rules at startup (INACTIVE state)"""
+        try:
+            killswitch_rules = Path(__file__).parent.parent / 'firewall' / 'rules' / 'killswitch-base.nft'
+
+            if not killswitch_rules.exists():
+                self.logger.error(f"Kill switch rules not found: {killswitch_rules}")
+                return False
+
+            # Load pre-configured kill switch (policy=accept, inactive)
+            result = subprocess.run(
+                ['nft', '-f', str(killswitch_rules)],
+                capture_output=True,
+                text=True,
+                timeout=10
+            )
+
+            if result.returncode != 0:
+                self.logger.error(f"Failed to load kill switch rules: {result.stderr}")
+                return False
+
+            self.logger.info("✓ Kill switch rules pre-loaded (inactive)")
+            return True
+
+        except Exception as e:
+            self.logger.error(f"Exception loading kill switch: {e}")
+            return False
+
     def _activate_killswitch(self):
-        """Activate network kill switch"""
+        """
+        Activate network kill switch ATOMICALLY.
+
+        This changes the pre-loaded kill switch policy from ACCEPT to DROP.
+        Atomic operation - no race condition, instant activation.
+        """
         if self.state['killswitch_active']:
             return  # Already active
 
         self.logger.critical("🚨 ACTIVATING NETWORK KILL SWITCH 🚨")
 
         try:
-            # Block all traffic via nftables
+            # ATOMIC ACTIVATION: Change policy to DROP (single command)
+            # This happens instantly - no traffic can leak during activation
+            result = subprocess.run([
+                'nft', 'chain', 'inet', 'qwamos_killswitch', 'output',
+                '{', 'policy', 'drop', ';', '}'
+            ], capture_output=True, text=True, timeout=5)
+
+            if result.returncode != 0:
+                self.logger.error(f"Kill switch activation failed: {result.stderr}")
+                return
+
+            # Also block input and forward chains
             subprocess.run([
-                'nft', 'add', 'table', 'inet', 'qwamos_killswitch'
+                'nft', 'chain', 'inet', 'qwamos_killswitch', 'input',
+                '{', 'policy', 'drop', ';', '}'
             ], timeout=5)
 
             subprocess.run([
-                'nft', 'add', 'chain', 'inet', 'qwamos_killswitch', 'output',
-                '{', 'type', 'filter', 'hook', 'output', 'priority', '100', ';',
-                'policy', 'drop', ';', '}'
+                'nft', 'chain', 'inet', 'qwamos_killswitch', 'forward',
+                '{', 'policy', 'drop', ';', '}'
             ], timeout=5)
 
             self.state['killswitch_active'] = True
-            self.logger.critical("Kill switch activated - all traffic blocked")
+            self.logger.critical("✓ Kill switch activated - ALL traffic blocked")
 
         except Exception as e:
             self.logger.error(f"Failed to activate kill switch: {e}")
+
+    def _deactivate_killswitch(self):
+        """Deactivate kill switch (restore normal operation)"""
+        if not self.state['killswitch_active']:
+            return
+
+        self.logger.warning("Deactivating kill switch...")
+
+        try:
+            # Change policies back to ACCEPT
+            subprocess.run([
+                'nft', 'chain', 'inet', 'qwamos_killswitch', 'output',
+                '{', 'policy', 'accept', ';', '}'
+            ], timeout=5)
+
+            subprocess.run([
+                'nft', 'chain', 'inet', 'qwamos_killswitch', 'input',
+                '{', 'policy', 'accept', ';', '}'
+            ], timeout=5)
+
+            subprocess.run([
+                'nft', 'chain', 'inet', 'qwamos_killswitch', 'forward',
+                '{', 'policy', 'accept', ';', '}'
+            ], timeout=5)
+
+            self.state['killswitch_active'] = False
+            self.logger.info("Kill switch deactivated")
+
+        except Exception as e:
+            self.logger.error(f"Failed to deactivate kill switch: {e}")
 
     def _alert(self, level: AlertLevel, message: str):
         """Log and store alert"""

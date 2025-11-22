@@ -115,11 +115,15 @@ class NetworkManager:
             self.services['i2p'].start(mode_config.get('i2p', {}))
 
         elif mode == NetworkMode.MAXIMUM_ANONYMITY:
+            # CRITICAL FIX: Start Tor BEFORE I2P so I2P can chain through it
             self.services['dnscrypt'].start(mode_config.get('dnscrypt', {}))
             time.sleep(2)
-            self.services['i2p'].start(mode_config.get('i2p', {}))
-            time.sleep(5)  # Wait for I2P to initialize
+            print("   Starting Tor (required for I2P chaining)...")
             self.services['tor'].start(mode_config.get('tor', {}))
+            time.sleep(5)  # Wait for Tor to establish circuits
+            print("   Starting I2P (chained through Tor)...")
+            self.services['i2p'].start(mode_config.get('i2p', {}))
+            time.sleep(3)  # Wait for I2P to initialize
 
         # Step 4: Apply routing rules (TODO: Implement firewall rules)
         print("\nStep 4: Applying routing rules...")
@@ -335,7 +339,10 @@ class NetworkManager:
                     'use_bridges': True,
                     'bridge_type': 'obfs4'
                 },
-                'i2p': {'tunnel_length': 4},
+                'i2p': {
+                    'tunnel_length': 4,
+                    'chain_through_tor': True  # CRITICAL FIX: Enable I2P→Tor chaining
+                },
                 'dnscrypt': {'require_dnssec': True}
             }
         }

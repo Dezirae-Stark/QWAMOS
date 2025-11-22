@@ -1,0 +1,71 @@
+# Purple I2P (i2pd) Configuration for QWAMOS
+# This configuration enables I2P→Tor chaining for defense-in-depth anonymity
+
+[main]
+# Data directory
+datadir = /var/lib/i2p
+
+# Logging
+log = file
+logfile = /var/log/i2p/i2pd.log
+loglevel = info
+
+# Daemon mode
+daemon = false
+
+# IPv4/IPv6
+ipv4 = true
+ipv6 = false  # Disabled to prevent IPv6 leaks
+
+# Bandwidth limits (KB/s)
+bandwidth = L  # Low bandwidth mode (12KB/s in, 12KB/s out)
+
+# Share ratio (0-100, how much bandwidth to share)
+share = 50
+
+[http]
+# Web console
+enabled = true
+address = 127.0.0.1
+port = 7070
+auth = false
+
+[httpproxy]
+# HTTP proxy for .i2p sites
+enabled = true
+address = 127.0.0.1
+port = 4444
+# Route HTTP proxy through Tor SOCKS proxy
+outproxy = 127.0.0.1
+outproxyport = 9050
+
+[socksproxy]
+# SOCKS proxy for applications
+enabled = true
+address = 127.0.0.1
+port = 4447
+# CRITICAL FIX: Route I2P SOCKS through Tor SOCKS for defense-in-depth
+# This creates I2P→Tor chaining
+outproxy.enabled = {{CHAIN_THROUGH_TOR}}
+outproxy = 127.0.0.1
+outproxyport = 9050
+
+[sam]
+# SAM interface for I2P applications
+enabled = true
+address = 127.0.0.1
+port = 7656
+
+[upnp]
+# Disable UPnP to prevent leaks
+enabled = false
+
+[precomputation]
+# Cryptographic optimizations
+elgamal = true
+
+[reseed]
+# Reseed configuration
+verify = true
+file = /var/lib/i2p/netDb/reseed.zip
+urls = https://reseed.i2p-projekt.de/,https://i2p.mooo.com/netDb/,https://netdb.i2p2.no/

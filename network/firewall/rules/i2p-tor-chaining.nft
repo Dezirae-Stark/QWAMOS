@@ -1,0 +1,69 @@
+#!/usr/sbin/nft -f
+#
+# QWAMOS Firewall Rules: I2P→Tor Chaining Enforcement
+#
+# This ruleset enforces that I2P traffic MUST route through Tor.
+# Prevents I2P from bypassing Tor and leaking metadata to ISP.
+#
+# Security Model:
+# - I2P daemon can ONLY connect to Tor SOCKS proxy (127.0.0.1:9050)
+# - All other I2P internet traffic is BLOCKED
+# - Defense-in-depth: Two layers of anonymization (I2P + Tor)
+#
+
+# I2P daemon UID (adjust for your system)
+define I2P_UID = 998  # i2pd daemon user ID
+define TOR_SOCKS_PORT = 9050
+define I2P_HTTP_PROXY_PORT = 4444
+define I2P_SOCKS_PROXY_PORT = 4447
+define I2P_CONSOLE_PORT = 7070
+
+# Add I2P chaining rules to main filter table
+table inet qwamos_filter {
+    # I2P-specific output chain (priority -5 to run before main output chain)
+    chain i2p_output {
+        type filter hook output priority -5; policy accept;
+
+        # Skip if not I2P daemon
+        skuid != $I2P_UID accept
+
+        # === I2P DAEMON TRAFFIC RULES ===
+
+        # Allow loopback (for local proxies)
+        oif lo accept
+
+        # CRITICAL: Allow I2P to connect to Tor SOCKS proxy
+        ip daddr 127.0.0.1 tcp dport $TOR_SOCKS_PORT accept
+        ip6 daddr ::1 tcp dport $TOR_SOCKS_PORT accept
+
+        # Block all other internet traffic from I2P daemon
+        # This forces I2P to route through Tor
+        log prefix "[QWAMOS-I2P-BLOCK] " drop
+    }
+}
+
+# Allow applications to use I2P proxies
+# These rules ensure applications can connect to I2P's local proxies
+table inet qwamos_i2p_proxy {
+    chain input {
+        type filter hook input priority 10; policy accept;
+
+        # Allow connections to I2P HTTP proxy (from VMs)
+        iif { virbr0, vmbr0 } tcp dport $I2P_HTTP_PROXY_PORT accept
+
+        # Allow connections to I2P SOCKS proxy (from VMs)
+        iif { virbr0, vmbr0 } tcp dport $I2P_SOCKS_PROXY_PORT accept
+
+        # Allow connections to I2P web console (localhost only)
+        iif lo tcp dport $I2P_CONSOLE_PORT accept
+    }
+}
+
+# Logging for debugging (optional)
+# Uncomment to trace I2P traffic
+# table inet qwamos_i2p_trace {
+#     chain trace {
+#         type filter hook output priority -10; policy accept;
+#         skuid $I2P_UID meta nftrace set 1
+#     }
+# }

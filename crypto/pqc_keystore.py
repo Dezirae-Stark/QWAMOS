@@ -45,6 +45,7 @@ class KeyMetadata:
     rotation_count: int
     key_type: str  # "ecdh", "kyber1024" (future)
     public_key_fingerprint: str
+    hkdf_salt: str = None  # Random salt for HKDF (hex-encoded)
 
 
 class PQCKeystore:
@@ -95,8 +96,9 @@ class PQCKeystore:
         private_pem = private_key.export_key(format='PEM').encode('utf-8')
         public_pem = public_key.export_key(format='PEM').encode('utf-8')
 
-        # Create metadata
+        # Create metadata with random HKDF salt
         fingerprint = SHA256.new(public_pem).hexdigest()[:16]
+        hkdf_salt = secrets.token_hex(32)  # 32 bytes = 64 hex chars
         metadata = KeyMetadata(
             key_id=key_id,
             vm_name=vm_name,
@@ -104,7 +106,8 @@ class PQCKeystore:
             last_rotated=datetime.now().isoformat(),
             rotation_count=0,
             key_type="ecdh-curve25519",
-            public_key_fingerprint=fingerprint
+            public_key_fingerprint=fingerprint,
+            hkdf_salt=hkdf_salt
         )
 
         # Store keys securely
@@ -123,15 +126,29 @@ class PQCKeystore:
         Returns:
             32-byte symmetric key for ChaCha20-Poly1305
         """
-        # Load private key
+        # Load private key and metadata
         private_key_data = self._load_private_key(vm_key_id)
+        metadata = self._load_metadata(vm_key_id)
 
-        # Derive symmetric key using HKDF
+        # Get random salt (or generate if legacy key without salt)
+        if metadata.hkdf_salt:
+            salt = bytes.fromhex(metadata.hkdf_salt)
+        else:
+            # Legacy key without salt - generate and save
+            print(f"WARNING: Key {vm_key_id} missing HKDF salt. Generating and updating...")
+            salt = get_random_bytes(32)
+            metadata.hkdf_salt = salt.hex()
+            # Update metadata
+            meta_path = self.keystore_path / f"{vm_key_id}.meta"
+            with open(meta_path, 'w') as f:
+                json.dump(asdict(metadata), f, indent=2)
+
+        # Derive symmetric key using HKDF with random salt
         # In production, this would use Kyber shared secret
         storage_key = HKDF(
             master=private_key_data[:32],  # Use first 32 bytes as seed
             key_len=32,
-            salt=b"qwamos-pqc-storage-v1",
+            salt=salt,  # Random salt per key
             hashmod=SHA256,
             num_keys=1,
             context=context
@@ -270,17 +287,77 @@ class PQCKeystore:
 
     # Private methods
 
+    def _get_master_encryption_key(self) -> bytes:
+        """
+        Derive master encryption key from device-specific data.
+
+        In production, this should use:
+        - Android KeyStore hardware-backed key
+        - ARM TrustZone secure storage
+        - Device hardware ID + user passphrase
+
+        For now, derives from device ID (non-ideal but better than plaintext).
+        """
+        # Get device-specific identifier
+        device_id_file = Path("/sys/class/dmi/id/product_uuid")
+        if device_id_file.exists():
+            with open(device_id_file, 'r') as f:
+                device_id = f.read().strip().encode('utf-8')
+        else:
+            # Fallback: use MAC address or create persistent ID
+            import uuid
+            persistent_id_file = self.keystore_path / ".device_id"
+            if persistent_id_file.exists():
+                with open(persistent_id_file, 'rb') as f:
+                    device_id = f.read()
+            else:
+                device_id = str(uuid.getnode()).encode('utf-8')
+                persistent_id_file.parent.mkdir(parents=True, exist_ok=True)
+                with open(persistent_id_file, 'wb') as f:
+                    f.write(device_id)
+                os.chmod(persistent_id_file, 0o600)
+
+        # Derive 32-byte encryption key using HKDF
+        master_key = HKDF(
+            master=device_id,
+            key_len=32,
+            salt=b"qwamos-keystore-master-v2",
+            hashmod=SHA256,
+            num_keys=1,
+            context=b"master-encryption-key"
+        )
+
+        return master_key
+
     def _store_key(self, key_id: str, private_key: bytes, public_key: bytes, metadata: KeyMetadata):
-        """Store key pair and metadata securely."""
-        # Store keys (encrypted in production)
+        """Store key pair and metadata securely with encryption at rest."""
+        # Prepare key data
         key_data = {
             'private': private_key.decode('utf-8'),
-            'public': public_key.decode('utf-8')
+            'public': public_key.decode('utf-8'),
+            'version': 2  # Version 2 = encrypted storage
         }
 
+        # Serialize to JSON
+        key_json = json.dumps(key_data, indent=2).encode('utf-8')
+
+        # Encrypt with master key
+        master_key = self._get_master_encryption_key()
+        encrypted = self.encrypt_data(key_json, master_key)
+
+        # Store encrypted key data
         key_path = self.keystore_path / f"{key_id}.key"
+        encrypted_blob = {
+            'version': 2,
+            'ciphertext': encrypted['ciphertext'].hex(),
+            'nonce': encrypted['nonce'].hex(),
+            'tag': encrypted['tag'].hex(),
+            'algorithm': 'ChaCha20-Poly1305',
+            'kdf': 'HKDF-SHA256'
+        }
+
         with open(key_path, 'w') as f:
-            json.dump(key_data, f, indent=2)
+            json.dump(encrypted_blob, f, indent=2)
 
         # Restrict permissions
         os.chmod(key_path, 0o600)
@@ -291,16 +368,50 @@ class PQCKeystore:
             json.dump(asdict(metadata), f, indent=2)
 
     def _load_private_key(self, key_id: str) -> bytes:
-        """Load private key from keystore."""
+        """Load and decrypt private key from keystore."""
         key_path = self.keystore_path / f"{key_id}.key"
 
         if not key_path.exists():
             raise FileNotFoundError(f"Key not found: {key_id}")
 
         with open(key_path, 'r') as f:
-            key_data = json.load(f)
+            encrypted_blob = json.load(f)
 
-        return key_data['private'].encode('utf-8')
+        # Check version
+        version = encrypted_blob.get('version', 1)
+
+        if version == 2:
+            # Encrypted storage (version 2)
+            master_key = self._get_master_encryption_key()
+
+            # Decrypt key data
+            ciphertext = bytes.fromhex(encrypted_blob['ciphertext'])
+            nonce = bytes.fromhex(encrypted_blob['nonce'])
+            tag = bytes.fromhex(encrypted_blob['tag'])
+
+            try:
+                key_json = self.decrypt_data(ciphertext, nonce, tag, master_key)
+                key_data = json.loads(key_json.decode('utf-8'))
+                return key_data['private'].encode('utf-8')
+            except ValueError as e:
+                raise ValueError(f"Failed to decrypt key (tampered or wrong device): {e}")
+
+        elif version == 1:
+            # Legacy plaintext storage (version 1) - migrate to encrypted
+            print(f"WARNING: Key {key_id} is in legacy plaintext format. Migrating to encrypted storage...")
+            key_data = encrypted_blob
+            private_key = key_data['private'].encode('utf-8')
+
+            # Re-encrypt and save
+            public_key = key_data['public'].encode('utf-8')
+            metadata = self._load_metadata(key_id)
+            self._store_key(key_id, private_key, public_key, metadata)
+            print(f"✓ Key {key_id} migrated to encrypted storage")
+
+            return private_key
+
+        else:
+            raise ValueError(f"Unsupported key storage version: {version}")
 
     def _load_metadata(self, key_id: str) -> KeyMetadata:
         """Load key metadata from keystore."""

@@ -1,0 +1,44 @@
+#!/usr/sbin/nft -f
+#
+# QWAMOS Network Kill Switch - Base Rules
+#
+# This ruleset is pre-loaded at system startup in INACTIVE state.
+# The network monitor can atomically activate it by changing policy to DROP.
+#
+# Design: Pre-loading eliminates race condition between failure detection
+# and kill switch activation. Activation is instantaneous (single command).
+#
+
+# Kill switch table (pre-loaded, initially permissive)
+table inet qwamos_killswitch {
+    # Output chain - blocks ALL outgoing traffic when activated
+    chain output {
+        type filter hook output priority 200; policy accept;
+
+        # When activated, policy changes to DROP
+        # This will override all other firewall rules due to priority 200
+
+        # Emergency exceptions (even when kill switch active):
+        # - Allow loopback (for local services)
+        oif lo accept
+
+        # Everything else controlled by policy (accept/drop)
+    }
+
+    # Input chain - blocks ALL incoming traffic when activated
+    chain input {
+        type filter hook input priority 200; policy accept;
+
+        # Emergency exceptions:
+        oif lo accept
+
+        # Everything else controlled by policy
+    }
+
+    # Forward chain - blocks ALL forwarded traffic when activated
+    chain forward {
+        type filter hook forward priority 200; policy accept;
+
+        # No exceptions for forwarded traffic
+    }
+}

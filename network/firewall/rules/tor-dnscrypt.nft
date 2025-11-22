@@ -96,7 +96,42 @@ table ip qwamos_nat {
         skuid $TOR_UID return
         skuid $DNSCRYPT_UID return
 
-        # Redirect all TCP traffic to Tor TransPort
+        # ============================================================================
+        # SSH PORT 22 EXEMPTION - SECURITY CONSIDERATION
+        # ============================================================================
+        #
+        # CURRENT BEHAVIOR:
+        #   SSH traffic (port 22) is EXEMPTED from Tor routing (line below)
+        #
+        # SECURITY RISK:
+        #   - SSH connections bypass Tor anonymity
+        #   - Connection metadata (IP, timing) visible to ISP/network observers
+        #   - Potential correlation attack vector
+        #
+        # WHY THIS EXISTS:
+        #   - Allows direct SSH access for system management
+        #   - Prevents lockout if Tor fails
+        #   - Enables emergency recovery access
+        #
+        # RECOMMENDED ALTERNATIVES:
+        #   1. Remove exemption and use SSH over Tor hidden service:
+        #      - Configure /etc/tor/torrc with HiddenServicePort 22 127.0.0.1:22
+        #      - Connect via: torsocks ssh user@youronionaddress.onion
+        #
+        #   2. Use out-of-band management (physical console, IPMI, etc.)
+        #
+        #   3. Restrict SSH to local network only:
+        #      - Add rule: iif != { virbr0, vmbr0 } tcp dport 22 drop
+        #
+        # TO REMOVE THIS EXEMPTION (maximum security):
+        #   Change line below from:  tcp dport != { 22 } redirect ...
+        #   To:                      tcp redirect ...
+        #
+        # DECISION: Keeping exemption by default for operational safety.
+        #           Advanced users can remove it after configuring SSH over Tor.
+        # ============================================================================
+
+        # Redirect all TCP traffic to Tor TransPort (except SSH for management)
         tcp dport != { 22 } redirect to :$TOR_TRANS_PORT
 
         # DNS already handled in prerouting
@@ -128,11 +163,30 @@ table inet qwamos_mangle {
     }
 }
 
-# IPv6 - block completely to prevent leaks
+# IPv6 NAT - redirect DNS before blocking
+table ip6 qwamos_nat6 {
+    # Redirect IPv6 DNS to DNSCrypt (prevent IPv6 DNS leaks)
+    chain prerouting {
+        type nat hook prerouting priority -100; policy accept;
+
+        # CRITICAL FIX: Redirect IPv6 DNS queries to DNSCrypt
+        # Prevents DNS leaks via IPv6 even though IPv6 internet is blocked
+        iif { virbr0, vmbr0 } meta l4proto udp udp dport 53 redirect to :$TOR_DNS_PORT
+        iif { virbr0, vmbr0 } meta l4proto tcp tcp dport 53 redirect to :$TOR_DNS_PORT
+    }
+}
+
+# IPv6 - block all internet traffic to prevent leaks
+# NOTE: DNS is redirected above before blocking, everything else is blocked
 table ip6 qwamos_filter6 {
     chain input {
         type filter hook input priority 0; policy drop;
         iif lo accept
+
+        # Allow DNS responses from DNSCrypt (after redirection)
+        iif lo udp sport $TOR_DNS_PORT accept
+        iif lo tcp sport $TOR_DNS_PORT accept
+
         log prefix "[QWAMOS-DROP-IP6] " drop
     }
 
@@ -144,6 +198,11 @@ table ip6 qwamos_filter6 {
     chain output {
         type filter hook output priority 0; policy drop;
         oif lo accept
+
+        # Allow DNS queries to DNSCrypt (before they get encrypted)
+        oif lo udp dport $TOR_DNS_PORT accept
+        oif lo tcp dport $TOR_DNS_PORT accept
+
         log prefix "[QWAMOS-DROP-IP6-OUT] " drop
     }
 }

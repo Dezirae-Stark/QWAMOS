@@ -33,10 +33,21 @@ import json
 from datetime import datetime
 from pathlib import Path
 
+# Try to import liboqs (Open Quantum Safe library)
+try:
+    import oqs
+    LIBOQS_AVAILABLE = True
+    print("✓ liboqs library detected - using REAL post-quantum signatures")
+except ImportError:
+    LIBOQS_AVAILABLE = False
+    print("⚠ WARNING: liboqs not installed - using STUB signatures")
+    print("  Install with: pip install liboqs-python")
+
 # QWAMOS Signature Constants
 QWAMOS_SIGNATURE_MAGIC = 0x4D415751  # 'QWAM'
 QWAMOS_SIGNATURE_VERSION = 1
-KYBER1024_SIGNATURE_BYTES = 3309
+# ML-DSA-87 signature is 4627 bytes (NIST FIPS 204)
+KYBER1024_SIGNATURE_BYTES = 4627 if LIBOQS_AVAILABLE else 3309
 QWAMOS_SIGNATURE_RESERVED = 64
 
 # Total signature structure size
@@ -83,27 +94,32 @@ def load_private_key(key_path):
 
     return private_key
 
-def sign_with_kyber1024_stub(message_hash, private_key):
+def sign_with_dilithium5(message_hash, private_key):
     """
-    Sign message hash with Kyber-1024 (STUB IMPLEMENTATION).
-
-    NOTE: This generates random signature data for testing.
-    In production, this should use liboqs OQS_SIG_sign() for real Kyber-1024.
+    Sign message hash with ML-DSA-87 post-quantum signature (formerly Dilithium5).
 
     Args:
         message_hash (bytes): SHA-256 hash of message (32 bytes)
-        private_key (bytes): Kyber-1024 private key
+        private_key (bytes): ML-DSA-87 private key
 
     Returns:
-        bytes: Kyber-1024 signature (3,309 bytes)
+        bytes: ML-DSA-87 signature (NIST FIPS 204)
     """
-    print("[STUB] Generating Kyber-1024 signature...")
-    print("[TODO] Integrate with liboqs for real post-quantum signatures")
+    if LIBOQS_AVAILABLE:
+        print("Generating REAL ML-DSA-87 signature (NIST FIPS 204)...")
+        sig = oqs.Signature("ML-DSA-87", secret_key=private_key)
+        signature = sig.sign(message_hash)
+        print(f"✓ Signature generated ({len(signature)} bytes)")
+        return signature
+    else:
+        print("[STUB] Generating placeholder signature...")
+        print("[CRITICAL] This is NOT cryptographically secure!")
+        print("[ACTION REQUIRED] Install liboqs: pip install liboqs-python")
 
-    # Generate placeholder signature with correct size
-    signature = os.urandom(KYBER1024_SIGNATURE_BYTES)
+        # Generate placeholder signature with correct size
+        signature = os.urandom(KYBER1024_SIGNATURE_BYTES)
 
-    return signature
+        return signature
 
 def create_qwamos_signature(image_data, private_key):
     """
@@ -123,8 +139,8 @@ def create_qwamos_signature(image_data, private_key):
     print(f"Image size:  {image_size:,} bytes")
     print(f"Image hash:  {image_hash.hex()}")
 
-    # Generate Kyber-1024 signature
-    kyber_signature = sign_with_kyber1024_stub(image_hash, private_key)
+    # Generate Dilithium5 post-quantum signature
+    kyber_signature = sign_with_dilithium5(image_hash, private_key)
 
     # Build signature structure
     signature_struct = struct.pack(

@@ -12,11 +12,8 @@
 #include <oqs/oqs.h>
 
 /* Embedded public key (provisioned during device setup) */
-static const uint8_t qwamos_public_key[KYBER1024_PUBLIC_KEY_BYTES] = {
-	/* This will be replaced during device provisioning */
-	/* For now, placeholder for compilation */
-	[0 ... KYBER1024_PUBLIC_KEY_BYTES-1] = 0x00
-};
+/* Real ML-DSA-87 (Dilithium5) public key - generated with liboqs */
+#include "include/qwamos_pubkey.h"
 
 /**
  * sha256_hash - Compute SHA-256 hash using liboqs

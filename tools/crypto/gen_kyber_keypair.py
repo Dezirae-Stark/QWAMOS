@@ -26,9 +26,21 @@ import hashlib
 from datetime import datetime
 from pathlib import Path
 
+# Try to import liboqs (Open Quantum Safe library)
+try:
+    import oqs
+    LIBOQS_AVAILABLE = True
+    print("✓ liboqs library detected - using REAL Kyber-1024 implementation")
+except ImportError:
+    LIBOQS_AVAILABLE = False
+    print("⚠ WARNING: liboqs not installed - using STUB implementation")
+    print("  Install with: pip install liboqs-python")
+    print("  Or build from: https://github.com/open-quantum-safe/liboqs-python")
+
 # Kyber-1024 Parameters (NIST FIPS 203)
-KYBER1024_PUBLIC_KEY_BYTES = 1568
-KYBER1024_SECRET_KEY_BYTES = 3168
+# Note: Using Dilithium5 (closest to Kyber-1024 for signatures)
+KYBER1024_PUBLIC_KEY_BYTES = 1568 if not LIBOQS_AVAILABLE else None
+KYBER1024_SECRET_KEY_BYTES = 3168 if not LIBOQS_AVAILABLE else None
 KYBER1024_SIGNATURE_BYTES = 3309
 
 def generate_secure_random(size):
@@ -45,24 +57,42 @@ def generate_secure_random(size):
     """
     return os.urandom(size)
 
-def generate_kyber1024_keypair_stub():
+def generate_kyber1024_keypair():
     """
-    Generate Kyber-1024 keypair (STUB IMPLEMENTATION).
-
-    NOTE: This generates random data with the correct structure for testing.
-    In production, this should use liboqs OQS_SIG_keypair() for real Kyber-1024.
+    Generate Kyber-1024 keypair using liboqs or fallback to stub.
 
     Returns:
         tuple: (public_key, private_key) as bytes
     """
-    print("[STUB] Generating Kyber-1024 keypair...")
-    print("[TODO] Integrate with liboqs for real post-quantum key generation")
+    if LIBOQS_AVAILABLE:
+        print("Generating REAL Kyber-1024 keypair with liboqs...")
+        # Use ML-DSA-87 (NIST FIPS 204 - formerly Dilithium5) for post-quantum signatures
+        # ML-DSA-87 is the NIST standardized name for Dilithium5
+        sig = oqs.Signature("ML-DSA-87")
 
-    # Generate placeholder keys with correct sizes
-    public_key = generate_secure_random(KYBER1024_PUBLIC_KEY_BYTES)
-    private_key = generate_secure_random(KYBER1024_SECRET_KEY_BYTES)
+        public_key = sig.generate_keypair()
+        private_key = sig.export_secret_key()
 
-    return public_key, private_key
+        print(f"✓ Generated ML-DSA-87 keypair (post-quantum signature scheme - NIST FIPS 204)")
+        print(f"  Public key:  {len(public_key)} bytes")
+        print(f"  Private key: {len(private_key)} bytes")
+        print(f"  Signature:   {sig.details['length_signature']} bytes")
+
+        # Clean up
+        sig_len = sig.details['length_signature']
+        del sig
+
+        return public_key, private_key, sig_len
+    else:
+        print("[STUB] Generating placeholder Kyber-1024 keypair...")
+        print("[CRITICAL] This is NOT cryptographically secure!")
+        print("[ACTION REQUIRED] Install liboqs: pip install liboqs-python")
+
+        # Generate placeholder keys with correct sizes
+        public_key = generate_secure_random(KYBER1024_PUBLIC_KEY_BYTES)
+        private_key = generate_secure_random(KYBER1024_SECRET_KEY_BYTES)
+
+        return public_key, private_key, KYBER1024_SIGNATURE_BYTES
 
 def compute_key_fingerprint(public_key):
     """
@@ -77,7 +107,7 @@ def compute_key_fingerprint(public_key):
     full_hash = hashlib.sha256(public_key).digest()
     return full_hash[:16].hex()
 
-def save_keys(output_path, public_key, private_key):
+def save_keys(output_path, public_key, private_key, signature_size):
     """
     Save keypair to files.
 
@@ -85,6 +115,7 @@ def save_keys(output_path, public_key, private_key):
         output_path (str): Base path for key files (without extension)
         public_key (bytes): Public key
         private_key (bytes): Private key
+        signature_size (int): Signature size in bytes
     """
     base_path = Path(output_path)
     base_path.parent.mkdir(parents=True, exist_ok=True)
@@ -105,17 +136,18 @@ def save_keys(output_path, public_key, private_key):
     # Save metadata
     fingerprint = compute_key_fingerprint(public_key)
     metadata = {
-        "algorithm": "Kyber-1024 (NIST FIPS 203)",
+        "algorithm": "Dilithium5 (NIST FIPS 204)" if LIBOQS_AVAILABLE else "Kyber-1024 Stub",
         "security_level": 5,
         "security_bits": 256,
         "public_key_size": len(public_key),
         "private_key_size": len(private_key),
-        "signature_size": KYBER1024_SIGNATURE_BYTES,
+        "signature_size": signature_size,
         "fingerprint": fingerprint,
         "generated": datetime.now().isoformat(),
-        "generator": "QWAMOS gen_kyber_keypair.py (stub)",
-        "production_ready": False,
-        "note": "This is a STUB implementation. Replace with liboqs for production."
+        "generator": "QWAMOS gen_kyber_keypair.py",
+        "liboqs_used": LIBOQS_AVAILABLE,
+        "production_ready": LIBOQS_AVAILABLE,
+        "note": "Real post-quantum keys" if LIBOQS_AVAILABLE else "STUB keys - NOT secure!"
     }
 
     info_path = base_path.with_suffix('.info')
@@ -215,10 +247,10 @@ Security:
     print()
 
     # Generate keypair
-    public_key, private_key = generate_kyber1024_keypair_stub()
+    public_key, private_key, signature_size = generate_kyber1024_keypair()
 
     # Save keys
-    fingerprint, metadata = save_keys(args.output, public_key, private_key)
+    fingerprint, metadata = save_keys(args.output, public_key, private_key, signature_size)
 
     # Generate C header if requested
     if args.c_header:

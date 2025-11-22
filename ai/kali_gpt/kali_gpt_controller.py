@@ -14,6 +14,10 @@ from pathlib import Path
 from typing import Dict, List, Optional, Any
 from datetime import datetime
 
+# CRITICAL FIX #22: Import AI sandbox for process isolation
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from ai_sandbox import AISandbox, SandboxMode
+
 # Setup logging
 logging.basicConfig(
     level=logging.INFO,
@@ -24,12 +28,16 @@ logger = logging.getLogger('KaliGPT')
 class KaliGPTController:
     """Controller for Kali GPT local LLM service"""
 
-    def __init__(self, model_dir: str = "/opt/qwamos/ai/kali_gpt/models"):
+    def __init__(self, model_dir: str = "/opt/qwamos/ai/kali_gpt/models",
+                 enable_sandbox: bool = True,
+                 encrypt_history: bool = True):
         """
         Initialize Kali GPT controller
 
         Args:
             model_dir: Directory containing Llama model files
+            enable_sandbox: Enable process sandboxing (Fix #22)
+            encrypt_history: Encrypt conversation history (Fix #23)
         """
         self.model_dir = Path(model_dir)
         self.model_path = self.model_dir / "llama-3.1-8b-instruct.gguf"
@@ -39,6 +47,23 @@ class KaliGPTController:
         self.max_tokens = 2048
         self.temperature = 0.7
 
+        # CRITICAL FIX #22: Enable sandbox by default
+        self.enable_sandbox = enable_sandbox
+        self.sandbox = None
+        if self.enable_sandbox:
+            # Kali GPT doesn't need network (local model)
+            self.sandbox = AISandbox("kali_gpt", SandboxMode.NETWORK_ISOLATED)
+            self.sandbox.setup_sandbox()
+            logger.info("✓ AI sandbox enabled (network isolated)")
+        else:
+            logger.warning("⚠️  AI sandbox DISABLED - security risk!")
+
+        # CRITICAL FIX #23: Enable history encryption by default
+        self.encrypt_history = encrypt_history
+        self.history_file = Path.home() / ".qwamos" / "ai" / "kali_gpt_history.enc"
+        if self.encrypt_history:
+            logger.info("✓ Conversation history encryption enabled")
+
         # Load system prompts
         self.system_prompt = self._load_system_prompt()
 
@@ -47,6 +72,8 @@ class KaliGPTController:
 
         # Conversation history
         self.history = []
+        if self.encrypt_history:
+            self._load_encrypted_history()
 
         logger.info(f"Kali GPT controller initialized (model: {self.model_path})")
 
@@ -374,8 +401,125 @@ Include: Executive Summary, Technical Details, Risk Ratings, and Remediation Rec
             'model_exists': self.model_path.exists(),
             'context_size': self.context_size,
             'queries': len(self.history),
-            'status': 'ready' if self.model else 'not_loaded'
+            'status': 'ready' if self.model else 'not_loaded',
+            'sandbox_enabled': self.enable_sandbox,
+            'history_encrypted': self.encrypt_history
         }
+
+    def _load_encrypted_history(self):
+        """
+        Load encrypted conversation history.
+
+        CRITICAL FIX #23: Encrypts AI conversation history at rest.
+        """
+        if not self.history_file.exists():
+            return
+
+        try:
+            from Crypto.Cipher import ChaCha20_Poly1305
+            from Crypto.Protocol.KDF import HKDF
+            from Crypto.Hash import SHA256
+
+            # Derive encryption key from device-specific data
+            key = self._get_history_encryption_key()
+
+            # Read encrypted file
+            with open(self.history_file, 'rb') as f:
+                nonce = f.read(12)  # ChaCha20-Poly1305 nonce
+                tag = f.read(16)  # Authentication tag
+                ciphertext = f.read()
+
+            # Decrypt
+            cipher = ChaCha20_Poly1305.new(key=key, nonce=nonce)
+            plaintext = cipher.decrypt_and_verify(ciphertext, tag)
+
+            # Load history
+            self.history = json.loads(plaintext.decode('utf-8'))
+            logger.info(f"✓ Loaded {len(self.history)} encrypted history entries")
+
+        except Exception as e:
+            logger.warning(f"Failed to load encrypted history: {e}")
+            logger.info("Starting with empty history")
+            self.history = []
+
+    def _save_encrypted_history(self):
+        """
+        Save conversation history with encryption.
+
+        CRITICAL FIX #23: Encrypts AI conversation history at rest.
+        """
+        if not self.encrypt_history:
+            return
+
+        try:
+            from Crypto.Cipher import ChaCha20_Poly1305
+            from Crypto.Random import get_random_bytes
+
+            # Ensure directory exists
+            self.history_file.parent.mkdir(parents=True, exist_ok=True)
+
+            # Derive encryption key
+            key = self._get_history_encryption_key()
+
+            # Serialize history
+            plaintext = json.dumps(self.history, indent=2).encode('utf-8')
+
+            # Encrypt with ChaCha20-Poly1305
+            nonce = get_random_bytes(12)
+            cipher = ChaCha20_Poly1305.new(key=key, nonce=nonce)
+            ciphertext, tag = cipher.encrypt_and_digest(plaintext)
+
+            # Save encrypted file
+            with open(self.history_file, 'wb') as f:
+                f.write(nonce)
+                f.write(tag)
+                f.write(ciphertext)
+
+            # Set restrictive permissions
+            os.chmod(self.history_file, 0o600)
+
+            logger.debug(f"✓ Saved {len(self.history)} encrypted history entries")
+
+        except Exception as e:
+            logger.error(f"Failed to save encrypted history: {e}")
+
+    def _get_history_encryption_key(self) -> bytes:
+        """
+        Derive encryption key for conversation history.
+
+        Uses device-specific data to derive a unique key.
+
+        Returns:
+            32-byte encryption key
+        """
+        from Crypto.Protocol.KDF import HKDF
+        from Crypto.Hash import SHA256
+        import uuid
+
+        # Get device-specific ID
+        device_id_file = Path.home() / ".qwamos" / ".device_id"
+        if device_id_file.exists():
+            with open(device_id_file, 'rb') as f:
+                device_id = f.read()
+        else:
+            # Create persistent device ID
+            device_id = str(uuid.getnode()).encode('utf-8')
+            device_id_file.parent.mkdir(parents=True, exist_ok=True)
+            with open(device_id_file, 'wb') as f:
+                f.write(device_id)
+            os.chmod(device_id_file, 0o600)
+
+        # Derive key using HKDF
+        key = HKDF(
+            master=device_id,
+            key_len=32,
+            salt=b"qwamos-ai-history-v1",
+            hashmod=SHA256,
+            num_keys=1,
+            context=b"kali-gpt-history"
+        )
+
+        return key
 
 
 # === CLI Interface ===

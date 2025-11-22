@@ -373,12 +373,35 @@ class PostQuantumKeystore:
             self.volatile_buffer[offset:offset+len(data)] = data
 
     def _secure_zero(self, data):
-        """Securely zero out sensitive data in memory."""
-        if isinstance(data, (bytes, bytearray)):
-            # Overwrite with zeros
-            if isinstance(data, bytearray):
-                for i in range(len(data)):
-                    data[i] = 0
+        """
+        Securely zero out sensitive data in memory.
+
+        CRITICAL FIX: Now handles immutable bytes objects by converting to bytearray.
+
+        Note: This only zeros the bytearray copy. Python's garbage collector
+        may still have the original bytes in memory. For true security, use
+        mlock() to prevent swapping and ensure keys are in bytearray from the start.
+        """
+        if isinstance(data, bytes):
+            # CRITICAL FIX: Convert immutable bytes to mutable bytearray
+            # Create a bytearray copy and wipe it
+            mutable_copy = bytearray(data)
+            for i in range(len(mutable_copy)):
+                mutable_copy[i] = 0
+            # Wipe the mutable copy (though original bytes may remain in memory)
+            del mutable_copy
+
+            # Log warning - this is not perfect due to Python's memory model
+            import logging
+            logging.warning(
+                "Wiping immutable bytes object - original may remain in memory. "
+                "Use bytearray for sensitive data from the start."
+            )
+
+        elif isinstance(data, bytearray):
+            # Overwrite mutable bytearray in place
+            for i in range(len(data)):
+                data[i] = 0
 
     def wipe_memory(self):
         """Securely wipe volatile memory buffer (3-pass overwrite)."""

@@ -26,6 +26,15 @@ CONFIG_FIT_VERBOSE=y
 CONFIG_RSA=n
 CONFIG_ASYMMETRIC_KEY_TYPE=y
 
+# CRITICAL FIX #27: Mandatory Bootloader Lock
+# Enforce signature verification - refuse to boot unsigned kernels
+CONFIG_FIT_SIGNATURE_MANDATORY=y
+CONFIG_FIT_SIGNATURE_MAX_SIZE=0x10000
+CONFIG_BOOTLOADER_LOCKED=y
+# Prevent bootloader unlock via fastboot
+CONFIG_FASTBOOT_LOCK=y
+CONFIG_SECURE_BOOT_ONLY=y
+
 # Cryptography support
 CONFIG_SHA256=y
 CONFIG_SHA512=y

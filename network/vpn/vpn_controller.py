@@ -20,6 +20,16 @@ import json
 from pathlib import Path
 from typing import Optional, Dict
 
+# Try to import liboqs (Open Quantum Safe library)
+try:
+    import oqs
+    LIBOQS_AVAILABLE = True
+    print("✓ liboqs library detected - using REAL post-quantum VPN keys")
+except ImportError:
+    LIBOQS_AVAILABLE = False
+    print("⚠ WARNING: liboqs not installed - VPN PQ keys will be STUBS")
+    print("  Install with: pip install liboqs-python")
+
 class VPNController:
     """Controller for WireGuard VPN with post-quantum crypto"""
 
@@ -227,35 +237,100 @@ class VPNController:
 
         This generates Kyber-1024 keypairs for hybrid key exchange
         with WireGuard's classical Curve25519
+
+        CRITICAL FIX: Now uses real liboqs Kyber-1024 KEM
         """
         self.pq_keys_dir.mkdir(parents=True, exist_ok=True)
 
         private_key_file = self.pq_keys_dir / "kyber_private.key"
         public_key_file = self.pq_keys_dir / "kyber_public.key"
+        metadata_file = self.pq_keys_dir / "kyber_keys.json"
 
         if private_key_file.exists() and public_key_file.exists():
-            # Keys already exist
-            return
+            # Keys already exist - verify they're not stubs
+            if private_key_file.stat().st_size < 100:
+                print("⚠️  Existing keys appear to be stubs - regenerating...")
+            else:
+                return
 
-        print("🔐 Generating post-quantum keys (Kyber-1024)...")
-
-        # In production, this would use liboqs to generate Kyber-1024 keys
-        # For now, create placeholder files
-        # TODO: Implement actual Kyber-1024 key generation using liboqs
+        print("🔐 Generating post-quantum VPN keys (Kyber-1024 KEM)...")
 
         try:
-            # Placeholder: In real implementation, call liboqs
-            private_key_file.write_text("# Kyber-1024 private key placeholder\n")
-            public_key_file.write_text("# Kyber-1024 public key placeholder\n")
+            if LIBOQS_AVAILABLE:
+                # REAL IMPLEMENTATION: Use liboqs Kyber-1024 KEM
+                print("   Using liboqs for REAL post-quantum key generation")
 
-            # Set restrictive permissions
+                # Create Kyber-1024 KEM instance
+                kem = oqs.KeyEncapsulation("Kyber1024")
+
+                # Generate keypair
+                public_key = kem.generate_keypair()
+                private_key = kem.export_secret_key()
+
+                # Save keys in binary format
+                private_key_file.write_bytes(private_key)
+                public_key_file.write_bytes(public_key)
+
+                # Create metadata
+                metadata = {
+                    "algorithm": "Kyber1024",
+                    "public_key_size": len(public_key),
+                    "private_key_size": len(private_key),
+                    "shared_secret_size": kem.details['length_shared_secret'],
+                    "ciphertext_size": kem.details['length_ciphertext'],
+                    "security_level": "NIST Level 5 (256-bit equivalent)",
+                    "generated": time.strftime("%Y-%m-%d %H:%M:%S"),
+                    "production_ready": True
+                }
+
+                with open(metadata_file, 'w') as f:
+                    json.dump(metadata, f, indent=2)
+
+                print(f"✅ Real Kyber-1024 keys generated:")
+                print(f"   Public key:  {len(public_key)} bytes")
+                print(f"   Private key: {len(private_key)} bytes")
+                print(f"   Security:    NIST Level 5 (256-bit equivalent)")
+
+            else:
+                # STUB IMPLEMENTATION: Create placeholder files with warning
+                print("   ⚠️  CRITICAL: liboqs not available - creating STUB keys")
+                print("   ⚠️  These keys are NOT cryptographically secure!")
+                print("   ⚠️  Install liboqs: pip install liboqs-python")
+
+                # Create stub keys with appropriate sizes
+                # Real Kyber-1024 sizes: public=1568 bytes, private=3168 bytes
+                stub_public = b"STUB_KYBER1024_PUBLIC_KEY_NOT_SECURE" + os.urandom(1568 - 37)
+                stub_private = b"STUB_KYBER1024_PRIVATE_KEY_NOT_SECURE" + os.urandom(3168 - 38)
+
+                private_key_file.write_bytes(stub_private)
+                public_key_file.write_bytes(stub_public)
+
+                # Create metadata marking as stub
+                metadata = {
+                    "algorithm": "Kyber1024 (STUB)",
+                    "public_key_size": len(stub_public),
+                    "private_key_size": len(stub_private),
+                    "security_level": "NONE - STUB KEYS ONLY",
+                    "generated": time.strftime("%Y-%m-%d %H:%M:%S"),
+                    "production_ready": False,
+                    "warning": "THESE ARE NOT REAL POST-QUANTUM KEYS! Install liboqs!"
+                }
+
+                with open(metadata_file, 'w') as f:
+                    json.dump(metadata, f, indent=2)
+
+                print("   ⚠️  STUB keys generated (NOT SECURE)")
+
+            # Set restrictive permissions on private key
             os.chmod(private_key_file, 0o600)
             os.chmod(public_key_file, 0o644)
+            os.chmod(metadata_file, 0o644)
 
-            print("✅ Post-quantum keys generated")
+            print(f"   Keys saved to: {self.pq_keys_dir}")
 
         except Exception as e:
-            print(f"⚠️  Failed to generate PQ keys: {e}")
+            print(f"❌ Failed to generate PQ keys: {e}")
+            raise
 
     def get_public_ip(self) -> Optional[str]:
         """

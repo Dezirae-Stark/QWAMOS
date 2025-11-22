@@ -24,11 +24,14 @@ class I2PController:
         self.config_dir = Path(config_dir)
         self.i2pd_binary = self.config_dir / "i2pd"
         self.i2pd_conf = self.config_dir / "i2pd.conf"
+        self.i2pd_conf_template = self.config_dir / "i2pd.conf.template"
         self.http_proxy_port = 4444  # HTTP proxy for eepsites
         self.socks_proxy_port = 4447  # SOCKS proxy
         self.sam_port = 7656  # SAM interface
         self.console_port = 7070  # Web console
+        self.tor_socks_port = 9050  # Tor SOCKS proxy for chaining
         self.process: Optional[subprocess.Popen] = None
+        self.chain_through_tor = False  # I2P→Tor chaining enabled
 
     def start(self, config: Dict = None):
         """
@@ -39,12 +42,21 @@ class I2PController:
                 - tunnel_length: int - Number of hops in tunnel (default: 3)
                 - inbound_tunnels: int - Number of inbound tunnels
                 - outbound_tunnels: int - Number of outbound tunnels
+                - chain_through_tor: bool - Enable I2P→Tor chaining (default: False)
         """
         if self.is_running():
             print("⚠️  I2P is already running")
             return
 
         config = config or {}
+
+        # Enable I2P→Tor chaining if requested
+        if config.get('chain_through_tor', False):
+            self.chain_through_tor = True
+            print("🔗 I2P→Tor chaining ENABLED (defense-in-depth)")
+
+        # Generate i2pd.conf from template
+        self._generate_config()
 
         cmd = [
             str(self.i2pd_binary),
@@ -66,12 +78,21 @@ class I2PController:
             print(f"✅ I2P (i2pd) started (PID: {self.process.pid})")
             print(f"   HTTP Proxy: 127.0.0.1:{self.http_proxy_port}")
             print(f"   SOCKS Proxy: 127.0.0.1:{self.socks_proxy_port}")
+            if self.chain_through_tor:
+                print(f"   🔗 Chained through Tor: 127.0.0.1:{self.tor_socks_port}")
             print(f"   Web Console: http://127.0.0.1:{self.console_port}")
 
             # Wait for I2P to initialize
             print("⏳ Waiting for I2P to initialize...")
             if self._wait_for_ready(timeout=120):
                 print("✅ I2P is ready - router integrated into network")
+
+                # Verify Tor chaining if enabled
+                if self.chain_through_tor:
+                    if self._verify_tor_chaining():
+                        print("✅ I2P→Tor chaining verified")
+                    else:
+                        print("⚠️  WARNING: I2P→Tor chaining verification failed!")
             else:
                 print("⚠️  I2P initialization timeout - may not be fully ready")
 
@@ -214,6 +235,82 @@ class I2PController:
             return response.status_code == 200
 
         except:
+            return False
+
+    def _generate_config(self):
+        """
+        Generate i2pd.conf from template with Tor chaining configuration.
+
+        This creates the runtime config file with the correct outproxy settings.
+        """
+        if not self.i2pd_conf_template.exists():
+            print(f"⚠️  Warning: Config template not found at {self.i2pd_conf_template}")
+            print("   Using default i2pd configuration (no chaining)")
+            return
+
+        try:
+            # Read template
+            with open(self.i2pd_conf_template, 'r') as f:
+                config_content = f.read()
+
+            # Substitute template variables
+            config_content = config_content.replace(
+                '{{CHAIN_THROUGH_TOR}}',
+                'true' if self.chain_through_tor else 'false'
+            )
+
+            # Write runtime config
+            self.i2pd_conf.parent.mkdir(parents=True, exist_ok=True)
+            with open(self.i2pd_conf, 'w') as f:
+                f.write(config_content)
+
+            print(f"✓ Generated i2pd.conf (chaining: {self.chain_through_tor})")
+
+        except Exception as e:
+            print(f"⚠️  Warning: Failed to generate config: {e}")
+            print("   I2P may not start correctly")
+
+    def _verify_tor_chaining(self) -> bool:
+        """
+        Verify that I2P is actually routing through Tor.
+
+        Returns:
+            True if chaining is verified, False otherwise
+        """
+        if not self.chain_through_tor:
+            return True  # Not enabled, nothing to verify
+
+        try:
+            # Check if Tor is running and accepting connections
+            tor_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tor_sock.settimeout(5)
+            result = tor_sock.connect_ex(('127.0.0.1', self.tor_socks_port))
+            tor_sock.close()
+
+            if result != 0:
+                print(f"   ⚠️  Tor SOCKS proxy not reachable at 127.0.0.1:{self.tor_socks_port}")
+                return False
+
+            # Verify I2P config has outproxy enabled
+            if not self.i2pd_conf.exists():
+                print("   ⚠️  I2P config file not found")
+                return False
+
+            with open(self.i2pd_conf, 'r') as f:
+                config = f.read()
+
+            if 'outproxy.enabled = true' not in config:
+                print("   ⚠️  Outproxy not enabled in i2pd.conf")
+                return False
+
+            if f'outproxyport = {self.tor_socks_port}' not in config:
+                print(f"   ⚠️  Outproxy not configured for Tor port {self.tor_socks_port}")
+                return False
+
+            return True
+
+        except Exception as e:
+            print(f"   ⚠️  Chaining verification error: {e}")
             return False
 
     def _wait_for_ready(self, timeout: int = 120) -> bool:
