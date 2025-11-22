@@ -1,6 +1,6 @@
 # QWAMOS v1.2.0 — Release Notes
 
-**Date:** 2025-11-19
+**Date:** 2025-11-22
 **Maintainer:** Dezirae Stark
 **Organization:** First Sterling Capital, LLC
 **License:** AGPL-3.0
@@ -9,12 +9,16 @@
 
 ## Summary
 
-Integrated advanced roadmap phases (XII-XVI) with PQC storage, GPU isolation, AI governor, and secure cluster mode. Enhanced security infrastructure with additional CI workflows and hardening. Added 15 new features. Fixed 34 bugs.
+Integrated advanced roadmap phases (XII-XVI) with PQC storage, GPU isolation, AI governor, and secure cluster mode. Enhanced security infrastructure with additional CI workflows and hardening. Added 19 new features. Fixed 43 bugs.
 
 ---
 
 ## 🆕 Added
 
+- **`a78536e`** Advanced GitHub Pro+ optimizations (matrix testing, caching, cleanup)
+- **`2ebba62`** Add comprehensive GitHub Pro+ optimizations
+- **`08c22e0`** Add Android app code
+- **`36ef89c`** Upgrade test workflow to GitHub Pro+ runners
 - **`13e9c4d`** Add professional QWAMOS website with GitHub Pages
 - **`ce3f5c6`** Add reproducible build verification framework
 - **`496795e`** Add Renovate bot for automated dependency updates
@@ -36,6 +40,15 @@ Integrated advanced roadmap phases (XII-XVI) with PQC storage, GPU isolation, AI
 
 ## 🐛 Fixed
 
+- **`5bf9707`** Documentation Validation wiki sync protected branch error
+- **`a05a3f0`** Nightly Security Scan protected branch push error
+- **`8bab5fb`** Renovate workflow permission error with log file
+- **`b5db675`** Resolve workflow failures for doc-sync and banner generator
+- **`5c46344`** Update docker-compose to docker compose (V2)
+- **`6df92a8`** Disable cache-cleanup workflow temporarily
+- **`48930e9`** Resolve workflow errors (SBOM, lint, cache-cleanup)
+- **`f177e43`** Revert to standard runners to unblock test queue
+- **`c4c4244`** Invalid Docker tag prefix causing build failures
 - **`cbd31a7`** Remove strict repository mode from settings.gradle
 - **`21fd3b4`** Remove Flutter dependency from Android settings.gradle
 - **`8225b5d`** Temporarily disable dev image build to prevent disk space errors
@@ -76,6 +89,13 @@ Integrated advanced roadmap phases (XII-XVI) with PQC storage, GPU isolation, AI
 
 ## 🔒 Security
 
+- **`8bab5fb`** Renovate workflow permission error with log file
+- **`b5db675`** Resolve workflow failures for doc-sync and banner generator
+- **`6df92a8`** Disable cache-cleanup workflow temporarily
+- **`48930e9`** Resolve workflow errors (SBOM, lint, cache-cleanup)
+- **`1029728`** Add nightly security scan report [skip-ci]
+- **`5a43831`** Add nightly security scan report [skip-ci]
+- **`36ef89c`** Upgrade test workflow to GitHub Pro+ runners
 - **`16350db`** Improve merge conflict resolution in sync workflows
 - **`063be42`** Fix additional workflow failures (docs-validation and static-analysis)
 - **`33f9178`** Fix multiple GitHub Actions workflow failures
@@ -104,6 +124,15 @@ Integrated advanced roadmap phases (XII-XVI) with PQC storage, GPU isolation, AI
 
 ## 📚 Documentation
 
+- **`c52719f`** Update email contact to qwamos@tutanota.com across all files
+- **`c8b5bb9`** Integrated investor pitches into website, README, GitHub About, and Wiki pages
+- **`41c8885`** Refine architecture diagram - specify 'Linux Kernel' for clarity
+- **`b5f1c23`** README and GitHub About updated to reflect hypervisor-first architecture
+- **`5ec49f3`** Update website to reflect QWAMOS as mobile hypervisor OS + added official definition + new architecture diagram
+- **`b9e703e`** Reposition QWAMOS as mobile hypervisor OS and clarify Android/guest OS roles
+- **`c64e48d`** Update README.md
+- **`65a941a`** Sync documentation [skip-doc-sync]
+- **`c802fb0`** Sync wiki to docs/wiki/ directory
 - **`0fd0a90`** Sync wiki to docs/wiki/ directory
 - **`ba654b5`** Sync documentation [skip-doc-sync]
 - **`b09445d`** Sync wiki to docs/wiki/ directory
@@ -212,7 +241,7 @@ _No changes in this category._
 
 **README.md:**
 ```
-b6d614932f77369d4a3227ed6632e563dd457df12dfb38df16f6b68d63751f18
+23d25417863a9eb956f0f765c23e791c2d4f43336d009e2124cac7a52442e873
 ```
 
 **PROJECT_STATUS.md:**
@@ -225,9 +254,9 @@ b6d614932f77369d4a3227ed6632e563dd457df12dfb38df16f6b68d63751f18
 ## 📋 Version Provenance
 
 - **Version:** v1.2.0
-- **Commit:** `cbd31a706e83a6f40463424350caaa8820b3cb68`
+- **Commit:** `5eb0225b6a89e848d82cfa8f60b31a72315337f1`
 - **Branch:** `master`
-- **Build Date:** 2025-11-19 00:49:05 UTC
+- **Build Date:** 2025-11-22 04:48:37 UTC
 
 ---
 
