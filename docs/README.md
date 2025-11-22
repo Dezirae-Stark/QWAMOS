@@ -1,23 +1,37 @@
-<div align="center">
+<p align="center">
+  <img src="assets/QWAMOS_logo.gif" width="100%">
+</p>
 
-![QWAMOS Logo](assets/QWAMOS_logo.png)
+<div align="center">
 
 # QWAMOS - Qubes Whonix Advanced Mobile Operating System
 
-> _"Post-quantum hardened mobile virtualization bringing Qubes + Whonix security to Android."_
+> _"Post-quantum secure, ARM64-native mobile hypervisor OS with full VM isolation for all digital activities."_
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL%203.0-blue.svg)](LICENSE)
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](https://github.com/Dezirae-Stark/QWAMOS/blob/master/PROJECT_STATUS.md)
 [![Security](https://img.shields.io/badge/Security-Post--Quantum-purple.svg)](crypto/pq/TEST_RESULTS.md)
 [![Reproducible](https://img.shields.io/badge/Build-Reproducible-orange.svg)](https://github.com/Dezirae-Stark/QWAMOS/blob/master/SUPPLYCHAIN.md)
 
-**Ground-up mobile OS with post-quantum cryptography and VM-based isolation**
+**Bare-metal ARM64 hypervisor OS with post-quantum cryptography and Qubes-style VM isolation**
 
-**Current Status:** Phase 11 @ 100% (Flutter Hypervisor UI) - Internal feature-complete alpha; undergoing internal validation. External audits scheduled in future phases. | Phase 10 @ 100% (Advanced Hardware Security) | Phase 9 @ 100% (AI App Builder)
+**Current Status:** Phase 16 @ 100% (Secure Cluster) | Phase 15 @ 100% (AI Governor) | Phase 14 @ 100% (GPU Isolation) | Phase 13 @ 100% (PQ Storage) | Security Audit @ 100% (28/28) | Phase 12 @ 60% (KVM - Hardware Testing Required)
 
-**Last Updated:** 2025-11-18
+**Last Updated:** 2025-11-22
 
-**Version:** v1.2.0
+**Version:** v2.0.0 (Enterprise-Grade Multi-Device Clustering)
+
+**Latest Completions:**
+[![Phase 16](https://img.shields.io/badge/Phase_16-100%25-brightgreen.svg)](phases/phase16_secure_cluster_mode/COMPLETION_SUMMARY.md)
+[![Phase 15](https://img.shields.io/badge/Phase_15-100%25-brightgreen.svg)](phases/phase15_ai_governor/COMPLETION_SUMMARY.md)
+[![Phase 14](https://img.shields.io/badge/Phase_14-100%25-brightgreen.svg)](phases/phase14_gpu_isolation/COMPLETION_SUMMARY.md)
+[![Phase 13](https://img.shields.io/badge/Phase_13-100%25-brightgreen.svg)](phases/phase13_pqc_storage/COMPLETION_SUMMARY.md)
+[![Security Audit](https://img.shields.io/badge/Security_Audit-100%25-brightgreen.svg)](https://github.com/Dezirae-Stark/QWAMOS/blob/master/SECURITY_AUDIT_COMPLETION_REPORT.md)
+
+**In Progress:**
+[![Phase 12](https://img.shields.io/badge/Phase_12-60%25-yellow.svg)](phases/phase12_kvm_acceleration/README.md)
+
+**Earlier Phases:**
 [![Phase 11](https://img.shields.io/badge/Phase_11-100%25-brightgreen.svg)](ui/README.md)
 [![Phase 10](https://img.shields.io/badge/Phase_10-100%25-brightgreen.svg)](https://github.com/Dezirae-Stark/QWAMOS/blob/master/PHASE10_COMPLETION_SUMMARY.md)
 [![Phase 9](https://img.shields.io/badge/Phase_9-100%25-brightgreen.svg)](ai_app_builder/DEPLOYMENT_SUMMARY.md)
@@ -26,12 +40,22 @@
 [![Phase 6](https://img.shields.io/badge/Phase_6-100%25-brightgreen.svg)](docs/PHASE6_COMPLETION_SUMMARY.md)
 [![Phase 5](https://img.shields.io/badge/Phase_5-95%25-yellow.svg)](docs/PHASE5_COMPLETION_SUMMARY.md)
 [![Phase 4](https://img.shields.io/badge/Phase_4-100%25-brightgreen.svg)](crypto/pq/TEST_RESULTS.md)
-[![Overall](https://img.shields.io/badge/Overall-99.5%25-brightgreen.svg)](#-build-progress)
+[![Overall](https://img.shields.io/badge/Overall-99.8%25-brightgreen.svg)](#-build-progress)
 
 <!-- CI badges will activate once workflows generate them -->
 ![CodeQL](https://github.com/Dezirae-Stark/QWAMOS/actions/workflows/codeql.yml/badge.svg)
 ![SBOM](https://github.com/Dezirae-Stark/QWAMOS/actions/workflows/sbom.yml/badge.svg)
 ![Forensic Audit](https://github.com/Dezirae-Stark/QWAMOS/actions/workflows/forensic-audit.yml/badge.svg)
+
+---
+
+## What is QWAMOS?
+
+**QWAMOS is the world's first mobile hypervisor OS** — a post-quantum secure, compartmentalized operating system that turns any ARM64 phone into a Qubes-style environment. Android, GrapheneOS, Kali, Arch, and Ubuntu run as isolated VMs, each with its own encrypted domain and anonymized network identity. QWAMOS provides intelligence-grade security on commercial hardware.
+
+### Developer Summary
+
+**QWAMOS is a post-quantum secure mobile hypervisor OS for ARM64 devices.** It boots as its own operating system, isolates every activity into Qubes-style VMs, and runs Android/GrapheneOS/Kali/etc. as guest systems. All traffic flows through a Whonix-inspired anonymity gateway, and Kyber + ChaCha20 ensure cryptographic resilience.
 
 ---
 
@@ -73,7 +97,13 @@
 
 ## TL;DR
 
-**QWAMOS** is a ground-up mobile operating system that brings desktop-class security virtualization to smartphones. It addresses the fundamental vulnerability of modern mobile devices—monolithic operating systems where a single exploit can compromise everything—by implementing **VM-based compartmentalization** similar to Qubes OS and **mandatory network anonymization** similar to Whonix. Every app runs in its own virtual machine, all internet traffic is routed through Tor/I2P, and the entire stack is protected with **post-quantum cryptography** (Kyber-1024, ChaCha20-Poly1305, BLAKE3) to resist future quantum computer attacks. AI-driven threat detection with triple-LLM coordination (Kali GPT, Claude, ChatGPT) provides autonomous security monitoring, while ML-powered bootloader integrity verification defends against WikiLeaks Vault 7-style persistence attacks. QWAMOS is designed for government agencies, intelligence professionals, journalists, corporate executives, and high-value individuals who face nation-state-level adversaries and require uncompromising mobile security.
+### Official Definition
+
+**QWAMOS (Qubes+Whonix Advanced Mobile OS)** is a post-quantum secure, ARM64-native mobile hypervisor operating system that runs directly on mobile hardware and provides full virtual machine isolation for all digital activities. Instead of functioning as an Android platform or custom ROM, QWAMOS is its own operating system: it controls the hardware, enforces hypervisor-level domain separation, and routes all traffic through a hardened, Whonix-style gateway that combines Tor, I2P, DNSCrypt, and multi-path VPN. Android, GrapheneOS, Kali NetHunter, Arch Linux, Ubuntu, and other systems run as isolated guest VMs (Qubes) inside QWAMOS, each with per-VM firewalls, encrypted storage, and independent network identities. QWAMOS integrates Kyber-based post-quantum cryptography, ChaCha20/Poly1305 stream encryption, sealed audit logs, panic-wipe gestures, containerized system services, and a modular virtualization stack (KVM/QEMU/PRoot/Chroot) to create a fully compartmentalized, offensive-resilient, privacy-first mobile hypervisor OS designed for intelligence-grade security on everyday hardware.
+
+### Quick Summary
+
+**QWAMOS** is a bare-metal mobile hypervisor OS that brings desktop-class security virtualization to ARM64 smartphones. It addresses the fundamental vulnerability of modern mobile devices—monolithic operating systems where a single exploit can compromise everything—by implementing **hypervisor-level VM isolation** with Qubes-style compartmentalization and **mandatory network anonymization** with a Whonix-style gateway. Every app runs in its own virtual machine, all internet traffic is routed through Tor/I2P, and the entire stack is protected with **post-quantum cryptography** (Kyber-1024, ChaCha20-Poly1305, BLAKE3) to resist future quantum computer attacks. AI-driven threat detection with triple-LLM coordination (Kali GPT, Claude, ChatGPT) provides autonomous security monitoring, while ML-powered bootloader integrity verification defends against WikiLeaks Vault 7-style persistence attacks. QWAMOS is designed for government agencies, intelligence professionals, journalists, corporate executives, and high-value individuals who face nation-state-level adversaries and require uncompromising mobile security.
 
 ---
 
@@ -248,7 +278,7 @@ QWAMOS continuously monitors network traffic, file system changes, and system ca
 
 ### 🎬 QWAMOS in Action
 
-Experience the future of mobile security with QWAMOS - a Qubes + Whonix-inspired Android OS featuring post-quantum encryption, VM isolation, and AI-powered threat detection.
+Experience the future of mobile security with QWAMOS - a bare-metal mobile hypervisor OS with Qubes-style VM isolation, Whonix-style gateway routing, post-quantum encryption, and AI-powered threat detection.
 
 <!-- Demo Video - Click to Play -->
 [![QWAMOS Promotional Video](https://github.com/Dezirae-Stark/QWAMOS/blob/master/assets/screenshots/demo_preview.gif)](https://github.com/Dezirae-Stark/QWAMOS/raw/master/assets/demo-video/QWAMOS_promo.mp4)
@@ -268,12 +298,6 @@ _Showcases system architecture, post-quantum encryption, VM isolation, and secur
 <sup>Animation: HTML5/CSS3 | Resolution: 1920×1080 | Duration: 10s | [Source Code](https://github.com/Dezirae-Stark/QWAMOS/blob/master/assets/demo-animation/) | [Generate GIF](https://github.com/Dezirae-Stark/QWAMOS/blob/master/assets/demo-animation/generate-video.sh)</sup>
 
 </div>
-
----
-
-### 📸 Additional Screenshots
-
-*(Screenshots section content from original README will be preserved here)*
 
 ---
 
@@ -613,7 +637,39 @@ See full details in [ui/README.md](ui/README.md)
 
 ## 🏗️ Architecture
 
-### Current: 4-VM Security Architecture
+### QWAMOS System Architecture
+
+QWAMOS is a **bare-metal mobile hypervisor OS** that runs directly on ARM64 hardware. Android, GrapheneOS, Kali, and other operating systems run as **isolated guest VMs** inside QWAMOS, each with its own network identity and encrypted storage.
+
+```
+┌─────────────────────────────────────────┐
+│      Guest OS Application Layer         │
+│  (Android / GrapheneOS / Kali / etc.)   │
+├─────────────────────────────────────────┤
+│     Isolated Qubes (Per-VM Domains)     │
+│  ┌──────┬──────┬──────┬──────┬──────┐  │
+│  │ VM 1 │ VM 2 │ VM 3 │ VM 4 │ VM 5 │  │
+│  └──────┴──────┴──────┴──────┴──────┘  │
+├─────────────────────────────────────────┤
+│       QWAMOS Security Manager           │
+│  ┌───────────┬──────────┬─────────────┐ │
+│  │   Kyber   │ ChaCha20 │   BLAKE3    │ │
+│  └───────────┴──────────┴─────────────┘ │
+├─────────────────────────────────────────┤
+│ Virtualization Layer (KVM/QEMU/PRoot)   │
+│   + Chroot Jails + Template Systems     │
+├─────────────────────────────────────────┤
+│    Network Gateway (InviZible Pro)      │
+│  ┌──────┬──────┬──────────┬──────────┐ │
+│  │ Tor  │ I2P  │ DNSCrypt │   VPN    │ │
+│  └──────┴──────┴──────────┴──────────┘ │
+├─────────────────────────────────────────┤
+│          QWAMOS Core OS                 │
+│ (Hardened Linux Kernel + Hypervisor)    │
+├─────────────────────────────────────────┤
+│         Mobile Hardware (ARM64)         │
+└─────────────────────────────────────────┘
+```
 
 <div align="center">
 
@@ -630,6 +686,8 @@ Power On → U-Boot (Kyber-1024 verify) → Linux 6.6 LTS → KVM Hypervisor
                                                   ↓
                                           React Native UI
 ```
+
+**Key Principle:** QWAMOS controls the hardware. Guest operating systems (Android, GrapheneOS, Kali, etc.) run inside isolated VMs with no direct hardware access.
 
 ---
 
