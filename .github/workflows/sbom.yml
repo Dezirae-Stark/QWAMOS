@@ -110,6 +110,8 @@ jobs:
       - name: Commit SBOM to repository
         if: github.event_name != 'release'
         run: |
+          set -o pipefail  # Make pipelines return the exit code of the last failed command
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add sbom/builds/ sbom/latest/
@@ -144,6 +146,7 @@ jobs:
             }
 
             # Try to push, but handle branch protection gracefully
+            # Use pipefail so the if condition gets git push's exit code, not tee's
             if git push origin master 2>&1 | tee /tmp/push_output.txt; then
               echo "✓ Successfully pushed SBOM files to repository"
             else
