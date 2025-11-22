@@ -1,6 +1,8 @@
-<div align="center">
+<p align="center">
+  <img src="assets/QWAMOS_logo.gif" width="100%">
+</p>
 
-![QWAMOS Logo](assets/QWAMOS_logo.png)
+<div align="center">
 
 # QWAMOS - Qubes Whonix Advanced Mobile Operating System
 
